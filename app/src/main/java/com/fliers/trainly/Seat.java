@@ -1,7 +1,7 @@
 /**
 * A class for seats in a Wagon
 *@author Erkin Aydın
-*@version v/1.1
+*@version 23-04-2021__v/1.1
 */
 public class Seat {
 
