@@ -14,8 +14,16 @@ public class Train {
     ArrayList<Schedule> schedules;
     Company linkedCompany;
 
-    public Train( Company company, Line line, ) {
-
+    public Train( Company company, Line line, Place spawnPlace, int businessWagonNum,
+                int economyWagonNum, double bPrice, double ePrice) {
+        linkedCompany = company;
+        this.line = line;
+        posX = spawnPlace.getPosX();
+        posY = spawnPlace.getPosY();
+        this.businessWagonNum = businessWagonNum;
+        this.economyWagonNum = economyWagonNum;
+        businessPrice = bPrice;
+        economyPrice = ePrice;
     }
 
     public int getId() {
