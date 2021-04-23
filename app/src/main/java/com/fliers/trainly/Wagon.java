@@ -14,6 +14,11 @@ public class Wagon {
     boolean business;
     Schedule linkedSchedule;
 
+    /**
+    * The constructor of the Wagon class
+    * @param schedule
+    * @param b
+    */
     public Wagon( Schedule schedule, boolean b) {
 
         linkedSchedule = schedule;
@@ -21,6 +26,9 @@ public class Wagon {
         createSeats();
     }
 
+    /**
+    * Creates empty seats
+    */
     private void createSeats() {
 
         if( isBusiness()) {
@@ -31,14 +39,24 @@ public class Wagon {
         }
     }
 
+    /**
+    * @return business
+    */
     public boolean isBusiness() {
         return business;
     }
 
+    /**
+    * @param i
+    * @return the specified seat
+    */
     public Seat getSeat( int i) {
         return seats.get(i);
     }
 
+    /**
+    * @return total seat number depending on whether the wagon is business class or not
+    */
     public int getTotalSeatNo() {
         if( isBusiness()) {
             return BUSINESS_SEAT_NUM;
@@ -48,6 +66,9 @@ public class Wagon {
         }
     }
 
+    /**
+    * @return linkedSchedule
+    */
     public Schedule getLinkedSchedule() {
         return linkedSchedule;
     }
