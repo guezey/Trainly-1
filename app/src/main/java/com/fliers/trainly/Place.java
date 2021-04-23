@@ -8,7 +8,7 @@ package com.fliers.trainly;
 public class Place implements Locatable {
 
     //properties
-    private  String name;
+    private String name;
     private double longitude;
     private double latitude;
 

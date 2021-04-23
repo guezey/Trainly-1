@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Company extends User {
 
     //properties
-    private balance;
+    private int balance;
     private ArrayList<Train> trains;
     private ArrayList<Line> lines;
     private ArrayList<Employee> employees;
