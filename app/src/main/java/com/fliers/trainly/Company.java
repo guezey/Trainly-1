@@ -10,10 +10,10 @@ import java.util.ArrayList;
 public class Company extends User {
 
     //properties
-    double balance;
-    ArrayList<Train> trains;
-    ArrayList<Line> lines;
-    ArrayList<Employee> employees;
+    private balance;
+    private ArrayList<Train> trains;
+    private ArrayList<Line> lines;
+    private ArrayList<Employee> employees;
 
     //constructor
     public Company(/*to be done*/) {

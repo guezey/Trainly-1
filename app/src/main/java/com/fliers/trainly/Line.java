@@ -8,8 +8,8 @@ package com.fliers.trainly;
 public class Line {
 
     //properties
-    Place arrival;
-    Place departure;
+    private Place arrival;
+    private Place departure;
 
     //constructor
 
