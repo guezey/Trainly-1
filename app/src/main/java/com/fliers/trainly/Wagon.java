@@ -1,5 +1,12 @@
 import java.util.ArrayList;
 
+/*
+* A class for wagons. It will contain properties indicating prices for economy class and business class,
+* an ArrayList for seats, a boolean property indicating wagons business condition and a Schedule
+* @author Erkin Aydın
+* @version v/1.1
+*/
+
 public class Wagon {
     final int BUSINESS_SEAT_NUM = 15;
     final int ECONOMY_SEAT_NUM = 30;
