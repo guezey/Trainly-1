@@ -12,7 +12,7 @@ public class Train {
 
     double businessPrice;
     double economyPrice;
-    static int idCounter;
+    static int idCounter; // Temporary (In TO-DO list)
     int id;
     int posX;
     int posY;
@@ -32,10 +32,12 @@ public class Train {
         this.economyWagonNum = economyWagonNum;
         businessPrice = bPrice;
         economyPrice = ePrice;
-        idCounter++;
-        id = idCounter;
+        idCounter++; // Temporary (In TO-DO list)
+        id = idCounter; // Temporaty (In TO-DO list)
     }
-
+    /**
+    *
+    */
     public int getId() {
         return id;
     }
