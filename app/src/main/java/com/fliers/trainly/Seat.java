@@ -9,24 +9,41 @@ public class Seat {
     String seatNumber;
     Wagon linkedWagon;
 
+    /**
+    * The constructor of the Seat class
+    * @param seatNumber
+    * @param linkedWagon
+    */
     public Seat( String seatNumber, Wagon linkedWagon) {
         isEmpty = true;
         this.seatNumber = seatNumber;
         this.linkedWagon = linkedWagon;
     }
 
+    /**
+    * @return linkedWagon
+    */
     public Wagon getLinkedWagon() {
         return linkedWagon;
     }
 
+    /**
+    * @return seatNumber
+    */
     public String getSeatNumber() {
         return seatNumber;
     }
 
+    /**
+    * @return isEmpty
+    */
     public boolean isEmpty() {
         return isEmpty;
     }
 
+    /**
+    * Sets the seat empty
+    */
     public void setEmpty( boolean isEmpty) {
         this.isEmpty = isEmpty;
     }
