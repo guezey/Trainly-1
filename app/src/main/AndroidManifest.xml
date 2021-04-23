@@ -9,7 +9,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Trainly.NoActionBar">
-        <activity android:name=".AddEmployeeActivity"></activity>
+        <activity android:name=".TravelHistoryActivity"></activity>
+        <activity android:name=".TrainsActivity" />
+        <activity android:name=".TicketsActivity" />
+        <activity android:name=".TicketInfoActivity" />
+        <activity android:name=".WelcomeActivity" />
+        <activity android:name=".LinesActivity" />
+        <activity android:name=".HelpActivity" />
+        <activity android:name=".GeneralInfoActivity" />
+        <activity android:name=".EmployeesActivity" />
+        <activity android:name=".EditScheduleActivity" />
+        <activity android:name=".CustomerHomeActivity" />
+        <activity android:name=".CustomerAccountActivity" />
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".CompanyHomeActivity" />
+        <activity android:name=".CompanyAccountActivity" />
+        <activity android:name=".BuyTicketActivity" />
+        <activity android:name=".AddTrainActivity" />
+        <activity android:name=".AddEmployeeActivity" />
         <activity android:name=".EmailVerificationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
