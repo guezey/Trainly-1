@@ -14,7 +14,7 @@ public class Train {
     ArrayList<Schedule> schedules;
     Company linkedCompany;
 
-    public Train() {
+    public Train( Company company, Line line, ) {
 
     }
 
