@@ -22,6 +22,16 @@ public class Train {
     ArrayList<Schedule> schedules;
     Company linkedCompany;
 
+    /**
+    * Constructor of the Train class
+    * @param company
+    * @param line
+    * @param spawnPlace
+    * @param businessWagonNum
+    * @param economyWagonNum
+    * @param bPrice
+    * @param ePrice
+    */
     public Train( Company company, Line line, Place spawnPlace, int businessWagonNum,
                 int economyWagonNum, double bPrice, double ePrice) {
         linkedCompany = company;
@@ -36,24 +46,39 @@ public class Train {
         id = idCounter; // Temporaty (In TO-DO list)
     }
     /**
-    *
+    * @return id
     */
     public int getId() {
         return id;
     }
-
+    /**
+    * Sets the new business wagon number
+    * @param a
+    */
     public void setBusinessWagonNum( int a) {
         businessWagonNum = a;
     }
 
+    /**
+    * Sets the new economy wagon number
+    * @param a
+    */
     public void setEconomyWagonNum( int a) {
         economyWagonNum = a;
     }
 
+    /**
+    * Adds a new schedule
+    * @param s
+    */
     public void addSchedule( Schedule s) {
         schedules.add(s);
     }
 
+    /**
+    * @param d
+    * @return the current schedule
+    */
     public Schedule getSchedule( Date d) {
         for( int i = 0; i < schedules.size(); i++) {
 
@@ -65,26 +90,45 @@ public class Train {
         return null;
     }
 
+    /**
+    * @return the departure place of the train
+    */
     public Place getDeparturePlace() {
         return line.getDeparturePlace();
     }
 
+    /**
+    * @return the arrival place
+    */
     public Place getArrivalPlace() {
         return line.getArrivalPlace();
     }
 
+    /**
+    * @return the business class price
+    */
     public double getBusinessPrice() {
         return businessPrice;
     }
 
+    /**
+    * @return the business price
+    */
     public double getEconomyPrice() {
         return economyPrice;
     }
 
+    /**
+    * Sets the new line
+    * @param a
+    */
     public void setLine( Line a) {
         line = a;
     }
 
+    /**
+    * @return the company that the train belongs
+    */
     public Company getLinkedCompany() {
         return linkedCompany;
     }
