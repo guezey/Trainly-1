@@ -1,5 +1,16 @@
 package com.fliers.trainly;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.ActionCodeSettings;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -11,177 +22,205 @@ import java.util.HashMap;
 /**
  * Abstract User class to be extended by Customer and Company classes
  * @author Alp Afyonluoğlu
- * @version 22.04.2021
+ * @version 23.04.2021
  */
 abstract class User {
     // Properties
     protected static final String SERVER_KEY = "KEY_Tr21iwuS3obrslfL4";
-    private static final int EMPTY_USER = -1;
-    private static final int LOGGED_IN = 0;
-    private static final int AUTH_FAILED = 1;
-    private static final int USER_ALREADY_EXISTS = 2;
+    protected final String NAME = "userName";
+    protected final String EMAIL = "userEmail";
+    protected final String DEFAULT_NAME = "DEFAULT";
 
-    private String username;
+    private SharedPreferences preferences;
     private String name;
     private String email;
-    private String password;
-    private int status;
+    private String id;
+    private boolean isLoggedIn;
+    private boolean isNewAccount;
 
     // Constructors
     /**
      * Initializes a new user
      */
-    public User() {
-        status = EMPTY_USER;
+    public User( Context context) {
+        name = DEFAULT_NAME;
+        email = "";
+        id = "";
+        isLoggedIn = false;
+        isNewAccount = true;
+
+        preferences = context.getSharedPreferences(String.valueOf(R.string.app_name), 0);
     }
 
     // Methods
     /**
-     * Creates a new user account and saves to server
-     * @param username username with digits and lower-case letters
-     * @param password user password
-     * @param name name and surname
-     * @param email email address
-     * @param listener LoginAndRegisterListener interface that is called
-     *                when data is retrieved from server
+     * Sends login email to the given email address
+     * @param email email address of the user
+     * @param listener EmailListener interface that is called
+     *                when verification email is sent
      */
-    public void createNewUser( String username, String password, String name, String email, LoginAndRegisterListener listener) {
-        if ( status != LOGGED_IN) {
-            this.username = username;
-            this.password = password;
-            this.name = name;
+    public void login( String email, EmailListener listener) {
+        // Variables
+        ActionCodeSettings actionCodeSettings;
+        FirebaseAuth auth;
+
+        // Code
+        if ( !isLoggedIn && checkEmailValidity( email)) {
             this.email = email;
 
-            checkUsername( username, new UsernameCheckListener() {
-                @Override
-                public void onUsernameCheck( String username, boolean isAvailable) {
-                    if ( isAvailable) {
-                        status = LOGGED_IN;
-                        saveToServer();
-                    }
-                    else {
-                        status = USER_ALREADY_EXISTS;
-                    }
+            actionCodeSettings = ActionCodeSettings.newBuilder()
+                    .setUrl( "https://trainly-app.web.app/registration_successful")
+                    .setHandleCodeInApp( true)
+                    .setAndroidPackageName( "com.fliers.trainly", false, "19")
+                    .build();
 
-                    listener.onLoginOrRegister();
-                }
-            });
-        }
-    }
-
-    /**
-     * Logs-in to an existing user account and retrieves user data from server
-     * @param username username with digits and lower-case letters
-     * @param password user password
-     * @param listener LoginAndRegisterListener interface that is called
-     *                when data is retrieved from server
-     */
-    public void login( String username, String password, LoginAndRegisterListener listener) {
-        if ( status != LOGGED_IN) {
-            this.username = username;
-            this.password = password;
-
-            checkCredentials( username, password, new CredentialCheckListener() {
-                @Override
-                public void onCredentialCheck( boolean isValid) {
-                    if ( isValid) {
-                        status = LOGGED_IN;
-                        getFromServer( new ServerSyncListener() {
-                            @Override
-                            public void onSync() {
-                                listener.onLoginOrRegister();
+            auth = FirebaseAuth.getInstance();
+            auth.sendSignInLinkToEmail( email, actionCodeSettings)
+                    .addOnCompleteListener( new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete( @NonNull Task<Void> task) {
+                            if ( task.isSuccessful()) {
+                                listener.onEmailSent( email, true);
                             }
-                        });
-                    }
-                    else {
-                        status = AUTH_FAILED;
-                        listener.onLoginOrRegister();
-                    }
-                }
-            });
+                            else {
+                                listener.onEmailSent( email, false);
+                            }
+                        }
+                    });
+        }
+        else {
+            listener.onEmailSent( email, false);
         }
     }
 
     /**
-     * Checks whether username is in use or not
-     * @param username username to check
-     * @param listener UsernameCheckListener interface that is called
-     *                when data is retrieved from server
+     * Completes login process by using the link that is sent via email
+     * @param email email address of the user
+     * @param emailLink link sent to the email address of the user
+     * @param listener LoginListener interface that is called
+     *                when email link is verified
      */
-    public void checkUsername( String username, UsernameCheckListener listener) {
+    public void completeLogin( String email, String emailLink, LoginListener listener) {
         // Variables
-        FirebaseDatabase database;
-        DatabaseReference reference;
+        FirebaseAuth auth;
 
         // Code
-        database = FirebaseDatabase.getInstance();
-        reference = database.getReference( SERVER_KEY + "/Users/" + username);
+        auth = FirebaseAuth.getInstance();
+        if ( auth.isSignInWithEmailLink( emailLink)) {
+            auth.signInWithEmailLink( email, emailLink).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete( @NonNull Task<AuthResult> task) {
+                            if ( task.isSuccessful()) {
+                                // Email link verified
+                                id = email.replace( "@", "_at_");
+                                id = id.replace( ".", "_dot_");
 
-        // Retrieve data of given username from server
-        reference.addValueEventListener( new ValueEventListener() {
-            @Override
-            public void onDataChange( DataSnapshot dataSnapshot) {
-                reference.removeEventListener( this);
+                                // Check whether user is registering a new account or logging in to an existing account
+                                checkEmailAvailability( email, new EmailAvailabilityCheckListener() {
+                                    @Override
+                                    public void onEmailAvailabilityCheck(String email, boolean isAvailable) {
+                                        isNewAccount = isAvailable;
 
-                // Check if username entry exists on server or not
-                if ( dataSnapshot.exists()) {
-                    listener.onUsernameCheck( username, false);
-                }
-                else {
-                    listener.onUsernameCheck( username, true);
-                }
-            }
+                                        if ( isNewAccount) {
+                                            // Register
 
-            @Override
-            public void onCancelled( DatabaseError error) {
-                // Database error occurred
-                reference.removeEventListener( this);
+                                            // Save user data to server
+                                            saveToServer( new ServerSyncListener() {
+                                                @Override
+                                                public void onSync( boolean isSynced) {
 
-                listener.onUsernameCheck( username, false);
-            }
-        });
+                                                    preferences.edit().putString( NAME, name).apply();
+                                                    preferences.edit().putString( EMAIL, email).apply();
+
+                                                    isLoggedIn = isSynced;
+                                                    listener.onLogin( isLoggedIn);
+                                                }
+                                            });
+                                        }
+                                        else {
+                                            // Log in
+
+                                            // Retrieve user data from server
+                                            getFromServer( new ServerSyncListener() {
+                                                @Override
+                                                public void onSync( boolean isSynced) {
+
+                                                    preferences.edit().putString( NAME, name).apply();
+                                                    preferences.edit().putString( EMAIL, email).apply();
+
+                                                    isLoggedIn = isSynced;
+                                                    listener.onLogin( isLoggedIn);
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+                            else {
+                                // Email link could not be verified
+                                listener.onLogin( false);
+                            }
+                        }
+                    });
+        }
+        else {
+            listener.onLogin( false);
+        }
     }
 
     /**
-     * Checks whether username and password matches with the credentials saved on server side
-     * @param username username to check
-     * @param password user password to check
-     * @param listener CredentialCheckListener interface that is called
+     * Logs in the current user account
+     * @return whether a user is currently logged in or not
+     */
+    public boolean getCurrentUser() {
+        if ( !preferences.getString( EMAIL, "").equals( "")) {
+            name = preferences.getString( NAME, DEFAULT_NAME);
+            email = preferences.getString( EMAIL, "");
+
+            id = email.replace( "@", "_at_");
+            id = id.replace( ".", "_dot_");
+
+            isLoggedIn = true;
+            isNewAccount = false;
+
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    /**
+     * Checks whether email is registered before or not
+     * @param email email address to check
+     * @param listener EmailAvailabilityCheckListener interface that is called
      *                when data is retrieved from server
      */
-    public void checkCredentials( String username, String password, CredentialCheckListener listener) {
+    public void checkEmailAvailability( String email, EmailAvailabilityCheckListener listener) {
         // Variables
         FirebaseDatabase database;
         DatabaseReference reference;
+        String id;
 
         // Code
-        database = FirebaseDatabase.getInstance();
-        reference = database.getReference( SERVER_KEY + "/Users/" + username + "/password");
+        id = email.replace( "@", "_at_");
+        id = id.replace( ".", "_dot_");
 
-        // Retrieve password data of given username from server
+        database = FirebaseDatabase.getInstance();
+        reference = database.getReference( SERVER_KEY + "/Users/" + id);
+
+        // Retrieve data of user with given email address from server
         reference.addValueEventListener( new ValueEventListener() {
             @Override
             public void onDataChange( DataSnapshot dataSnapshot) {
-                // Variables
-                String value;
-
-                // Code
                 reference.removeEventListener( this);
 
-                // Check if username entry exists on server or not
+                // Check if email entry exists on server or not
                 if ( dataSnapshot.exists()) {
-                    value = dataSnapshot.getValue( String.class);
-
-                    // Check whether passwords match or not
-                    if ( value.equals( password)) {
-                        listener.onCredentialCheck( true);
-                    }
-                    else {
-                        listener.onCredentialCheck( false);
-                    }
+                    listener.onEmailAvailabilityCheck( email, false);
                 }
                 else {
-                    listener.onCredentialCheck( false);
+                    listener.onEmailAvailabilityCheck( email, true);
                 }
             }
 
@@ -190,33 +229,36 @@ abstract class User {
                 // Database error occurred
                 reference.removeEventListener( this);
 
-                listener.onCredentialCheck( false);
+                listener.onEmailAvailabilityCheck( email, false);
             }
         });
     }
 
     /**
      * Saves local user data to server
+     * @param listener ServerSyncListener interface that is called
+     *                when data is sent to server
      */
-    protected void saveToServer() {
+    protected void saveToServer( ServerSyncListener listener) {
+        //TODO: Check network connection
+
         // Variables
         FirebaseDatabase database;
         DatabaseReference reference;
         HashMap<String, String> userData;
 
         // Code
-        if ( status == LOGGED_IN) {
+        if ( isLoggedIn) {
             database = FirebaseDatabase.getInstance();
-            reference = database.getReference( SERVER_KEY + "/Users/" + username);
+            reference = database.getReference( SERVER_KEY + "/Users/" + id);
 
             // Create hash map with given user data
             userData = new HashMap<>();
-            userData.put( "password", password);
             userData.put( "name", name);
-            userData.put( "email", email);
 
             // Save map to server
             reference.setValue( userData);
+            listener.onSync( true);
         }
     }
 
@@ -226,15 +268,17 @@ abstract class User {
      *                when data is retrieved from server
      */
     protected void getFromServer( ServerSyncListener listener) {
+        //TODO: Check network connection
+
         // Variables
         FirebaseDatabase database;
         DatabaseReference reference;
 
         // Code
         database = FirebaseDatabase.getInstance();
-        reference = database.getReference( SERVER_KEY + "/Users/" + username);
+        reference = database.getReference( SERVER_KEY + "/Users/" + id);
 
-        // Retrieve password data of given username from server
+        // Retrieve data of the user with given email address from server
         reference.addValueEventListener( new ValueEventListener() {
             @Override
             public void onDataChange( DataSnapshot dataSnapshot) {
@@ -250,16 +294,9 @@ abstract class User {
 
 
                     // Check whether passwords match or not
-                    if ( userData.get( "password").equals( password)) {
-                        name = userData.get( "name");
-                        email = userData.get( "email");
+                    name = userData.get( "name");
 
-                        listener.onSync();
-                    }
-                    else {
-                        status = AUTH_FAILED;
-                        listener.onSync();
-                    }
+                    listener.onSync( true);
                 }
             }
 
@@ -268,11 +305,16 @@ abstract class User {
                 // Database error occurred
                 reference.removeEventListener( this);
 
-                listener.onSync();
+                listener.onSync( false);
             }
         });
     }
 
+    /**
+     * Checks validity of email address
+     * @param email email address to be checked
+     * @return whether email address is valid or not
+     */
     public boolean checkEmailValidity( String email) {
         // Variables
         String[] temp;
@@ -303,14 +345,6 @@ abstract class User {
     }
 
     /**
-     * Getter method for username
-     * @return username
-     */
-    public String getUsername() {
-        return username;
-    }
-
-    /**
      * Getter method for name
      * @return name
      */
@@ -327,19 +361,27 @@ abstract class User {
     }
 
     /**
-     * Getter method for status
-     * @return status
+     * Getter method for id
+     * @return id
      */
-    public int getStatus() {
-        return status;
+    public String getId() {
+        return id;
     }
 
     /**
-     * Setter method for password
-     * @param password new password
+     * Getter method for isLoggedIn
+     * @return isLoggedIn
      */
-    public void setPassword( String password) {
-        this.password = password;
+    public boolean isLoggedIn() {
+        return isLoggedIn;
+    }
+
+    /**
+     * Getter method for isNewAccount
+     * @return isNewAccount
+     */
+    public boolean isNewAccount() {
+        return isNewAccount;
     }
 
     /**
@@ -350,33 +392,19 @@ abstract class User {
         this.name = name;
     }
 
-    /**
-     * Setter method for email
-     * @param email new email
-     */
-    public boolean setEmail( String email) {
-        if ( checkEmailValidity( email)) {
-            this.email = email;
-            return true;
-        }
-        else {
-            return false;
-        }
+    public interface EmailAvailabilityCheckListener {
+        void onEmailAvailabilityCheck( String email, boolean isAvailable);
     }
 
-    public interface UsernameCheckListener {
-        void onUsernameCheck( String username, boolean isAvailable);
+    public interface EmailListener {
+        void onEmailSent( String email, boolean isSent);
     }
 
-    public interface CredentialCheckListener {
-        void onCredentialCheck( boolean isValid);
-    }
-
-    public interface LoginAndRegisterListener {
-        void onLoginOrRegister();
+    public interface LoginListener {
+        void onLogin( boolean isLoggedIn);
     }
 
     private interface ServerSyncListener {
-        void onSync();
+        void onSync( boolean isSynced);
     }
 }
