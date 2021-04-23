@@ -5,7 +5,7 @@ import java.util.ArrayList;
 * A class for trains. It will contain everything necessary for a Train, from its position to ticket prices;
  from its line to the Company it belongs.
 * @author Erkin Aydın
-* @version v/1.1
+* @version 23-04-2021__v/1.1
 */
 
 public class Train {
