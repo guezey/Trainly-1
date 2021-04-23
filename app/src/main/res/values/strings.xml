@@ -1,3 +1,27 @@
 <resources>
     <string name="app_name">Trainly</string>
+
+    <string-array name="wagons">
+        <item>Wagon 3 (Economy class)</item>
+        <item>Wagon 1 (Business class)</item>
+        <item>Wagon 2 (Business class)</item>
+    </string-array>
+
+    <string-array name="lines">
+        <item>Ankara - Istanbul</item>
+        <item>Istanbul - Ankara</item>
+        <item>Ankara - Izmir</item>
+        <item>Izmir - Ankara</item>
+    </string-array>
+
+    <string-array name="places">
+        <item>Ankara</item>
+        <item>Istanbul</item>
+        <item>Izmir</item>
+    </string-array>
+
+    <string-array name="ids">
+        <item>3847</item>
+        <item>5938</item>
+    </string-array>
 </resources>

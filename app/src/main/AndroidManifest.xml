@@ -8,10 +8,42 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Trainly">
+
+        android:theme="@style/Theme.Trainly.NoActionBar">
         <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="${MAPS_API_KEY}" />
+                   android:name="com.google.android.geo.API_KEY"
+                   android:value="${MAPS_API_KEY}" />      
+        <activity android:name=".TravelHistoryActivity"></activity>
+        <activity android:name=".TrainsActivity" />
+        <activity android:name=".TicketsActivity" />
+        <activity android:name=".TicketInfoActivity" />
+        <activity android:name=".WelcomeActivity" />
+        <activity android:name=".LinesActivity" />
+        <activity android:name=".HelpActivity" />
+        <activity android:name=".GeneralInfoActivity" />
+        <activity android:name=".EmployeesActivity" />
+        <activity android:name=".EditScheduleActivity" />
+        <activity android:name=".CustomerHomeActivity" />
+        <activity android:name=".CustomerAccountActivity" />
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".CompanyHomeActivity" />
+        <activity android:name=".CompanyAccountActivity" />
+        <activity android:name=".BuyTicketActivity" />
+        <activity android:name=".AddTrainActivity" />
+        <activity android:name=".AddEmployeeActivity" />
+        <activity android:name=".EmailVerificationActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="trainly-app.firebaseapp.com"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
