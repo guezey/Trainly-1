@@ -79,21 +79,33 @@ public class Company extends User {
     }
 
     /**
-     * Adds a new employee to employee list.
+     * Adds a new employee to employees list.
      * @param newEmployee
      */
     public void addEmployee( Employee newEmployee) {
         employees.add( newEmployee);
     }
 
+    /**
+     * Removes a train from trains list.
+     * @param newEmployee
+     */
     public void removeTrain( Object train) {
         trains.remove( train);
     }
 
+    /**
+     * Removes a line from lines list.
+     * @param newEmployee
+     */
     public void removeLine( Object line) {
         lines.remove( line);
     }
 
+    /**
+     * Removes an employee from employees list.
+     * @param newEmployee
+     */
     public void removeEmployee( Object employee) {
         employees.remove( employee);
     }
