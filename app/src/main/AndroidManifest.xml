@@ -13,26 +13,26 @@
         <meta-data
                    android:name="com.google.android.geo.API_KEY"
                    android:value="${MAPS_API_KEY}" />      
-        <activity android:name=".TravelHistoryActivity"></activity>
-        <activity android:name=".TrainsActivity" />
-        <activity android:name=".TicketsActivity" />
-        <activity android:name=".TicketInfoActivity" />
-        <activity android:name=".WelcomeActivity" />
-        <activity android:name=".LinesActivity" />
-        <activity android:name=".HelpActivity" />
-        <activity android:name=".GeneralInfoActivity" />
-        <activity android:name=".EmployeesActivity" />
-        <activity android:name=".EditScheduleActivity" />
-        <activity android:name=".CustomerHomeActivity" />
-        <activity android:name=".CustomerAccountActivity" />
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".CompanyHomeActivity" />
-        <activity android:name=".CompanyAccountActivity" />
-        <activity android:name=".BuyTicketActivity" />
-        <activity android:name=".AddTrainActivity" />
-        <activity android:name=".AddEmployeeActivity" />
-        <activity android:name=".EmailVerificationActivity">
+        <activity android:name=".activities.TravelHistoryActivity"></activity>
+        <activity android:name=".activities.TrainsActivity" />
+        <activity android:name=".activities.TicketsActivity" />
+        <activity android:name=".activities.TicketInfoActivity" />
+        <activity android:name=".activities.WelcomeActivity" />
+        <activity android:name=".activities.LinesActivity" />
+        <activity android:name=".activities.HelpActivity" />
+        <activity android:name=".activities.GeneralInfoActivity" />
+        <activity android:name=".activities.EmployeesActivity" />
+        <activity android:name=".activities.EditScheduleActivity" />
+        <activity android:name=".activities.CustomerHomeActivity" />
+        <activity android:name=".activities.CustomerAccountActivity" />
+        <activity android:name=".activities.RegisterActivity" />
+        <activity android:name=".activities.LoginActivity" />
+        <activity android:name=".activities.CompanyHomeActivity" />
+        <activity android:name=".activities.CompanyAccountActivity" />
+        <activity android:name=".activities.BuyTicketActivity" />
+        <activity android:name=".activities.AddTrainActivity" />
+        <activity android:name=".activities.AddEmployeeActivity" />
+        <activity android:name=".activities.EmailVerificationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -44,7 +44,7 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
