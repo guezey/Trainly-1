@@ -28,8 +28,8 @@ import java.util.HashMap;
 abstract class User {
     // Properties
     protected static final String SERVER_KEY = "KEY_Tr21iwuS3obrslfL4";
-    private final String NAME = "userName";
-    private final String EMAIL = "userEmail";
+    private final String NAME = "name";
+    private final String EMAIL = "email";
     private final String TEMP_EMAIL = "tempEmail";
     private final String TEMP_NAME = "tempName";
     private final String DEFAULT_NAME = "DEFAULT";
@@ -138,9 +138,6 @@ abstract class User {
                                             saveToServer( new ServerSyncListener() {
                                                 @Override
                                                 public void onSync( boolean isSynced) {
-                                                    preferences.edit().putString( NAME, name).apply();
-                                                    preferences.edit().putString( EMAIL, email).apply();
-
                                                     isLoggedIn = isSynced;
                                                     listener.onLogin( isLoggedIn);
                                                 }
@@ -153,9 +150,6 @@ abstract class User {
                                             getFromServer( new ServerSyncListener() {
                                                 @Override
                                                 public void onSync( boolean isSynced) {
-                                                    preferences.edit().putString( NAME, name).apply();
-                                                    preferences.edit().putString( EMAIL, email).apply();
-
                                                     isLoggedIn = isSynced;
                                                     listener.onLogin( isLoggedIn);
                                                 }
@@ -260,6 +254,14 @@ abstract class User {
     }
 
     /**
+     * Saves user data to local storage
+     */
+    protected void saveToLocalStorage() {
+        preferences.edit().putString( NAME, name).apply();
+        preferences.edit().putString( EMAIL, email).apply();
+    }
+
+    /**
      * Saves local user data to server
      * @param listener ServerSyncListener interface that is called
      *                 when data is sent to server
@@ -281,6 +283,7 @@ abstract class User {
 
             // Save map to server
             reference.setValue( userData);
+            saveToLocalStorage();
             listener.onSync( true);
         }
         else {
@@ -321,6 +324,7 @@ abstract class User {
                         // Check whether passwords match or not
                         name = userData.get( "name");
 
+                        saveToLocalStorage();
                         listener.onSync( true);
                     }
                 }

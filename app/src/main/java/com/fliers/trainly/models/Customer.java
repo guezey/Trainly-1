@@ -16,9 +16,8 @@ import java.util.HashMap;
  * @version 22.04.2021
 */
 public class Customer extends User {
-    
     // Properties
-    private final String POINTS = "userPoints";
+    private final String POINTS = "points";
     private final String TEMP_POINTS = "tempPoints";
 
     private int discountPoints;
@@ -46,49 +45,6 @@ public class Customer extends User {
     }
 
     /**
-     * Sends login email to the given email address
-     * @param email email address of the user
-     * @param listener EmailListener interface that is called
-     *                 when verification email is sent
-     * @author Alp Afyonluoğlu
-     */
-    @Override
-    public void login( String email, EmailListener listener) {
-        super.login( email, new EmailListener() {
-            @Override
-            public void onEmailSent( String email, boolean isSent) {
-                if ( isSent) {
-                    preferences.edit().putInt( TEMP_POINTS, discountPoints).apply();
-                }
-
-                listener.onEmailSent( email, isSent);
-            }
-        });
-    }
-
-    /**
-     * Completes login process by using the link that is sent via email
-     * @param emailLink link sent to the email address of the user
-     * @param listener LoginListener interface that is called
-     *                 when email link is verified
-     * @author Alp Afyonluoğlu
-     */
-    public void completeLogin( String emailLink, LoginListener listener) {
-        discountPoints = preferences.getInt( TEMP_POINTS, 0);
-
-        super.completeLogin( emailLink, new LoginListener() {
-            @Override
-            public void onLogin( boolean isLoggedIn) {
-                if ( isLoggedIn) {
-                    preferences.edit().putInt( POINTS, discountPoints).apply();
-                }
-
-                listener.onLogin( isLoggedIn);
-            }
-        });
-    }
-
-    /**
      * Logs in the current user account
      * @param update whether data should be with the server data
      *               or not
@@ -97,6 +53,7 @@ public class Customer extends User {
      *                 from local storage
      * @author Alp Afyonluoğlu
      */
+    @Override
     public void getCurrentUser( boolean update, ServerSyncListener listener) {
         super.getCurrentUser( update, new ServerSyncListener() {
             @Override
@@ -111,11 +68,21 @@ public class Customer extends User {
     }
 
     /**
+     * Saves user data to local storage
+     */
+    @Override
+    protected void saveToLocalStorage() {
+        super.saveToLocalStorage();
+        preferences.edit().putInt( POINTS, discountPoints).apply();
+    }
+
+    /**
      * Saves local user data to server
      * @param listener ServerSyncListener interface that is called
      *                 when data is sent to server
      * @author Alp Afyonluoğlu
      */
+    @Override
     public void saveToServer( ServerSyncListener listener) {
         super.saveToServer( new ServerSyncListener() {
             @Override
@@ -151,6 +118,7 @@ public class Customer extends User {
      *                 when data is retrieved from server
      * @author Alp Afyonluoğlu
      */
+    @Override
     public void getFromServer( ServerSyncListener listener) {
         super.getFromServer( new ServerSyncListener() {
             @Override

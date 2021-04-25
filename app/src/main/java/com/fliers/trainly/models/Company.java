@@ -10,26 +10,35 @@ import java.util.ArrayList;
  * @version 22.04.2021
  */
 public class Company extends User {
+    // Properties
+    private final String COMPANY_ID = "company_id";
+    private final String BALANCE = "balance";
 
-    //properties
-    private double balance;
+    private String companyId;
+    private int balance;
     private ArrayList<Train> trains;
     private ArrayList<Line> lines;
     private ArrayList<Employee> employees;
 
-    //constructor
+    // Constructor
+    /**
+     * Initializes a new company
+     */
     public Company( Context context) {
         super( context);
-        //to be done
+        companyId = "000";
+        balance = 0;
+        trains = new ArrayList<>();
+        lines = new ArrayList<>();
+        employees = new ArrayList<>();
     }
 
-    //methods
-
+    // Methods
     /**
      * Sets the balance.
      * @param newBalance new balance value
      */
-    public void setBalance( double newBalance) {
+    public void setBalance( int newBalance) {
         balance = newBalance;
     }
 
@@ -37,7 +46,7 @@ public class Company extends User {
      * Returns balance.
      * @return balance
      */
-    public double getBalance() {
+    public int getBalance() {
         return balance;
     }
 
@@ -118,7 +127,7 @@ public class Company extends User {
      * @return customer number
      */
     public int getLastWeeksCustomerNum() {
-        //to be done
+        // TODO: to be done
         return 0;
     }
 
@@ -127,7 +136,8 @@ public class Company extends User {
      * @return revenue
      */
     public double getLastWeeksRevenue() {
-        //to be done
+        // TODO: to be done
         return 0;
     }
+
 }
