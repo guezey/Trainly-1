@@ -23,23 +23,23 @@ import java.util.HashMap;
 /**
  * Abstract User class to be extended by Customer and Company classes
  * @author Alp Afyonluoğlu
- * @version 23.04.2021
+ * @version 25.04.2021
  */
 abstract class User {
     // Properties
     protected static final String SERVER_KEY = "KEY_Tr21iwuS3obrslfL4";
-    protected final String NAME = "userName";
-    protected final String EMAIL = "userEmail";
-    protected final String TEMP_EMAIL = "tempEmail";
-    protected final String TEMP_NAME = "tempName";
-    protected final String DEFAULT_NAME = "DEFAULT";
+    private final String NAME = "userName";
+    private final String EMAIL = "userEmail";
+    private final String TEMP_EMAIL = "tempEmail";
+    private final String TEMP_NAME = "tempName";
+    private final String DEFAULT_NAME = "DEFAULT";
 
-    private SharedPreferences preferences;
+    protected SharedPreferences preferences;
     private String name;
     private String email;
-    private String id;
-    private boolean isLoggedIn;
-    private boolean isNewAccount;
+    protected String id;
+    protected boolean isLoggedIn;
+    protected boolean isNewAccount;
     private Context context;
 
     // Constructors
@@ -48,11 +48,11 @@ abstract class User {
      */
     public User( Context context) {
         this.context = context;
-        name = DEFAULT_NAME;
         email = "";
         id = "";
         isLoggedIn = false;
         isNewAccount = true;
+        setName( DEFAULT_NAME);
 
         preferences = context.getSharedPreferences( String.valueOf( R.string.app_name), 0);
     }
@@ -71,8 +71,6 @@ abstract class User {
 
         // Code
         if ( !isLoggedIn && checkEmailValidity( email) && isConnectedToInternet()) {
-            this.email = email;
-
             actionCodeSettings = ActionCodeSettings.newBuilder()
                     .setUrl( "https://trainly-app.web.app/register")
                     .setHandleCodeInApp( true)
@@ -87,6 +85,7 @@ abstract class User {
                             if ( task.isSuccessful()) {
                                 preferences.edit().putString( TEMP_EMAIL, email).apply();
                                 preferences.edit().putString( TEMP_NAME, name).apply();
+
                                 listener.onEmailSent( email, true);
                             }
                             else {
@@ -139,7 +138,6 @@ abstract class User {
                                             saveToServer( new ServerSyncListener() {
                                                 @Override
                                                 public void onSync( boolean isSynced) {
-
                                                     preferences.edit().putString( NAME, name).apply();
                                                     preferences.edit().putString( EMAIL, email).apply();
 
@@ -155,7 +153,6 @@ abstract class User {
                                             getFromServer( new ServerSyncListener() {
                                                 @Override
                                                 public void onSync( boolean isSynced) {
-
                                                     preferences.edit().putString( NAME, name).apply();
                                                     preferences.edit().putString( EMAIL, email).apply();
 
