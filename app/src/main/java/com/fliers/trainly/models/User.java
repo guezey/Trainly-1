@@ -62,7 +62,7 @@ abstract class User {
      * Sends login email to the given email address
      * @param email email address of the user
      * @param listener EmailListener interface that is called
-     *                when verification email is sent
+     *                 when verification email is sent
      */
     public void login( String email, EmailListener listener) {
         // Variables
@@ -103,7 +103,7 @@ abstract class User {
      * Completes login process by using the link that is sent via email
      * @param emailLink link sent to the email address of the user
      * @param listener LoginListener interface that is called
-     *                when email link is verified
+     *                 when email link is verified
      */
     public void completeLogin( String emailLink, LoginListener listener) {
         // Variables
@@ -178,23 +178,35 @@ abstract class User {
 
     /**
      * Logs in the current user account
-     * @return whether a user is currently logged in or not
+     * @param update whether data should be with the server data
+     *               or not
+     * @param listener ServerSyncListener interface that is called
+     *                 when data is retrieved from server or loaded
+     *                 from local storage
      */
-    public boolean getCurrentUser() {
+    public void getCurrentUser( boolean update, ServerSyncListener listener) {
         if ( !preferences.getString( EMAIL, "").equals( "")) {
-            name = preferences.getString( NAME, DEFAULT_NAME);
             email = preferences.getString( EMAIL, "");
-
             id = email.replace( "@", "_at_");
             id = id.replace( ".", "_dot_");
-
             isLoggedIn = true;
             isNewAccount = false;
 
-            return true;
+            if ( update) {
+                getFromServer( new ServerSyncListener() {
+                    @Override
+                    public void onSync( boolean isSynced) {
+                        listener.onSync( isSynced);
+                    }
+                });
+            }
+            else {
+                name = preferences.getString( NAME, DEFAULT_NAME);
+                listener.onSync( true);
+            }
         }
         else {
-            return false;
+            listener.onSync( false);
         }
     }
 
@@ -202,7 +214,7 @@ abstract class User {
      * Checks whether email is registered before or not
      * @param email email address to check
      * @param listener EmailAvailabilityCheckListener interface that is called
-     *                when data is retrieved from server
+     *                 when data is retrieved from server
      */
     public void checkEmailAvailability( String email, EmailAvailabilityCheckListener listener) {
         // Variables
@@ -250,7 +262,7 @@ abstract class User {
     /**
      * Saves local user data to server
      * @param listener ServerSyncListener interface that is called
-     *                when data is sent to server
+     *                 when data is sent to server
      */
     public void saveToServer( ServerSyncListener listener) {
         // Variables
@@ -279,7 +291,7 @@ abstract class User {
     /**
      * Updates local user data with data retrieved from server
      * @param listener ServerSyncListener interface that is called
-     *                when data is retrieved from server
+     *                 when data is retrieved from server
      */
     public void getFromServer( ServerSyncListener listener) {
         // Variables

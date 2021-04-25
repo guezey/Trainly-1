@@ -49,7 +49,7 @@ public class Customer extends User {
      * Sends login email to the given email address
      * @param email email address of the user
      * @param listener EmailListener interface that is called
-     *                when verification email is sent
+     *                 when verification email is sent
      * @author Alp Afyonluoğlu
      */
     @Override
@@ -70,70 +70,50 @@ public class Customer extends User {
      * Completes login process by using the link that is sent via email
      * @param emailLink link sent to the email address of the user
      * @param listener LoginListener interface that is called
-     *                when email link is verified
+     *                 when email link is verified
      * @author Alp Afyonluoğlu
      */
     public void completeLogin( String emailLink, LoginListener listener) {
+        discountPoints = preferences.getInt( TEMP_POINTS, 0);
+
         super.completeLogin( emailLink, new LoginListener() {
             @Override
             public void onLogin( boolean isLoggedIn) {
-                discountPoints = preferences.getInt( TEMP_POINTS, 0);
-
                 if ( isLoggedIn) {
-                    if ( isNewAccount) {
-                        // Register
-
-                        // Save user data to server
-                        saveToServer( new ServerSyncListener() {
-                            @Override
-                            public void onSync( boolean isSynced) {
-                                preferences.edit().putInt( POINTS, discountPoints).apply();
-
-                                listener.onLogin( isLoggedIn);
-                            }
-                        });
-                    }
-                    else {
-                        // Log in
-
-                        // Retrieve user data from server
-                        getFromServer( new ServerSyncListener() {
-                            @Override
-                            public void onSync( boolean isSynced) {
-                                preferences.edit().putInt( POINTS, discountPoints).apply();
-
-                                listener.onLogin( isLoggedIn);
-                            }
-                        });
-                    }
+                    preferences.edit().putInt( POINTS, discountPoints).apply();
                 }
-                else {
-                    listener.onLogin( isLoggedIn);
-                }
+
+                listener.onLogin( isLoggedIn);
             }
         });
     }
 
     /**
      * Logs in the current user account
-     * @return whether a user is currently logged in or not
+     * @param update whether data should be with the server data
+     *               or not
+     * @param listener ServerSyncListener interface that is called
+     *                 when data is retrieved from server or loaded
+     *                 from local storage
      * @author Alp Afyonluoğlu
      */
-    public boolean getCurrentUser() {
-        if ( super.getCurrentUser()) {
-            discountPoints = preferences.getInt( POINTS, 0);
+    public void getCurrentUser( boolean update, ServerSyncListener listener) {
+        super.getCurrentUser( update, new ServerSyncListener() {
+            @Override
+            public void onSync( boolean isSynced) {
+                if ( isSynced && !update) {
+                    discountPoints = preferences.getInt( POINTS, 0);
+                }
 
-            return true;
-        }
-        else {
-            return false;
-        }
+                listener.onSync( isSynced);
+            }
+        });
     }
 
     /**
      * Saves local user data to server
      * @param listener ServerSyncListener interface that is called
-     *                when data is sent to server
+     *                 when data is sent to server
      * @author Alp Afyonluoğlu
      */
     public void saveToServer( ServerSyncListener listener) {
@@ -168,7 +148,7 @@ public class Customer extends User {
     /**
      * Updates local user data with data retrieved from server
      * @param listener ServerSyncListener interface that is called
-     *                when data is retrieved from server
+     *                 when data is retrieved from server
      * @author Alp Afyonluoğlu
      */
     public void getFromServer( ServerSyncListener listener) {
