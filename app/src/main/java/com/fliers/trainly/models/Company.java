@@ -1,5 +1,7 @@
 package com.fliers.trainly.models;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 
 /**
@@ -16,7 +18,8 @@ public class Company extends User {
     private ArrayList<Employee> employees;
 
     //constructor
-    public Company(/*to be done*/) {
+    public Company( Context context) {
+        super( context);
         //to be done
     }
 

@@ -2,7 +2,7 @@ package com.fliers.trainly.models;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
+import android.net.ConnectivityManager;
 
 import androidx.annotation.NonNull;
 
@@ -30,6 +30,8 @@ abstract class User {
     protected static final String SERVER_KEY = "KEY_Tr21iwuS3obrslfL4";
     protected final String NAME = "userName";
     protected final String EMAIL = "userEmail";
+    protected final String TEMP_EMAIL = "tempEmail";
+    protected final String TEMP_NAME = "tempName";
     protected final String DEFAULT_NAME = "DEFAULT";
 
     private SharedPreferences preferences;
@@ -38,19 +40,21 @@ abstract class User {
     private String id;
     private boolean isLoggedIn;
     private boolean isNewAccount;
+    private Context context;
 
     // Constructors
     /**
      * Initializes a new user
      */
     public User( Context context) {
+        this.context = context;
         name = DEFAULT_NAME;
         email = "";
         id = "";
         isLoggedIn = false;
         isNewAccount = true;
 
-        preferences = context.getSharedPreferences(String.valueOf(R.string.app_name), 0);
+        preferences = context.getSharedPreferences( String.valueOf( R.string.app_name), 0);
     }
 
     // Methods
@@ -66,11 +70,11 @@ abstract class User {
         FirebaseAuth auth;
 
         // Code
-        if ( !isLoggedIn && checkEmailValidity( email)) {
+        if ( !isLoggedIn && checkEmailValidity( email) && isConnectedToInternet()) {
             this.email = email;
 
             actionCodeSettings = ActionCodeSettings.newBuilder()
-                    .setUrl( "https://trainly-app.web.app/registration_successful")
+                    .setUrl( "https://trainly-app.web.app/register")
                     .setHandleCodeInApp( true)
                     .setAndroidPackageName( "com.fliers.trainly", false, "19")
                     .build();
@@ -81,6 +85,8 @@ abstract class User {
                         @Override
                         public void onComplete( @NonNull Task<Void> task) {
                             if ( task.isSuccessful()) {
+                                preferences.edit().putString( TEMP_EMAIL, email).apply();
+                                preferences.edit().putString( TEMP_NAME, name).apply();
                                 listener.onEmailSent( email, true);
                             }
                             else {
@@ -96,19 +102,22 @@ abstract class User {
 
     /**
      * Completes login process by using the link that is sent via email
-     * @param email email address of the user
      * @param emailLink link sent to the email address of the user
      * @param listener LoginListener interface that is called
      *                when email link is verified
      */
-    public void completeLogin( String email, String emailLink, LoginListener listener) {
+    public void completeLogin( String emailLink, LoginListener listener) {
         // Variables
         FirebaseAuth auth;
+        String email;
 
         // Code
+        name = preferences.getString( TEMP_NAME, DEFAULT_NAME);
+        email = preferences.getString( TEMP_EMAIL, "");
+
         auth = FirebaseAuth.getInstance();
-        if ( auth.isSignInWithEmailLink( emailLink)) {
-            auth.signInWithEmailLink( email, emailLink).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        if ( auth.isSignInWithEmailLink( emailLink) && isConnectedToInternet()) {
+            auth.signInWithEmailLink( email, emailLink).addOnCompleteListener( new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete( @NonNull Task<AuthResult> task) {
                             if ( task.isSuccessful()) {
@@ -120,6 +129,7 @@ abstract class User {
                                 checkEmailAvailability( email, new EmailAvailabilityCheckListener() {
                                     @Override
                                     public void onEmailAvailabilityCheck(String email, boolean isAvailable) {
+                                        isLoggedIn = true;
                                         isNewAccount = isAvailable;
 
                                         if ( isNewAccount) {
@@ -204,35 +214,40 @@ abstract class User {
         String id;
 
         // Code
-        id = email.replace( "@", "_at_");
-        id = id.replace( ".", "_dot_");
+        if ( isConnectedToInternet()) {
+            id = email.replace( "@", "_at_");
+            id = id.replace( ".", "_dot_");
 
-        database = FirebaseDatabase.getInstance();
-        reference = database.getReference( SERVER_KEY + "/Users/" + id);
+            database = FirebaseDatabase.getInstance();
+            reference = database.getReference( SERVER_KEY + "/Users/" + id);
 
-        // Retrieve data of user with given email address from server
-        reference.addValueEventListener( new ValueEventListener() {
-            @Override
-            public void onDataChange( DataSnapshot dataSnapshot) {
-                reference.removeEventListener( this);
+            // Retrieve data of user with given email address from server
+            reference.addValueEventListener( new ValueEventListener() {
+                @Override
+                public void onDataChange( DataSnapshot dataSnapshot) {
+                    reference.removeEventListener( this);
 
-                // Check if email entry exists on server or not
-                if ( dataSnapshot.exists()) {
+                    // Check if email entry exists on server or not
+                    if ( dataSnapshot.exists()) {
+                        listener.onEmailAvailabilityCheck( email, false);
+                    }
+                    else {
+                        listener.onEmailAvailabilityCheck( email, true);
+                    }
+                }
+
+                @Override
+                public void onCancelled( DatabaseError error) {
+                    // Database error occurred
+                    reference.removeEventListener( this);
+
                     listener.onEmailAvailabilityCheck( email, false);
                 }
-                else {
-                    listener.onEmailAvailabilityCheck( email, true);
-                }
-            }
-
-            @Override
-            public void onCancelled( DatabaseError error) {
-                // Database error occurred
-                reference.removeEventListener( this);
-
-                listener.onEmailAvailabilityCheck( email, false);
-            }
-        });
+            });
+        }
+        else {
+            listener.onEmailAvailabilityCheck( email, false);
+        }
     }
 
     /**
@@ -240,16 +255,14 @@ abstract class User {
      * @param listener ServerSyncListener interface that is called
      *                when data is sent to server
      */
-    protected void saveToServer( ServerSyncListener listener) {
-        //TODO: Check network connection
-
+    public void saveToServer( ServerSyncListener listener) {
         // Variables
         FirebaseDatabase database;
         DatabaseReference reference;
         HashMap<String, String> userData;
 
         // Code
-        if ( isLoggedIn) {
+        if ( isLoggedIn && isConnectedToInternet()) {
             database = FirebaseDatabase.getInstance();
             reference = database.getReference( SERVER_KEY + "/Users/" + id);
 
@@ -261,6 +274,9 @@ abstract class User {
             reference.setValue( userData);
             listener.onSync( true);
         }
+        else {
+            listener.onSync( false);
+        }
     }
 
     /**
@@ -268,47 +284,50 @@ abstract class User {
      * @param listener ServerSyncListener interface that is called
      *                when data is retrieved from server
      */
-    protected void getFromServer( ServerSyncListener listener) {
-        //TODO: Check network connection
-
+    public void getFromServer( ServerSyncListener listener) {
         // Variables
         FirebaseDatabase database;
         DatabaseReference reference;
 
         // Code
-        database = FirebaseDatabase.getInstance();
-        reference = database.getReference( SERVER_KEY + "/Users/" + id);
+        if ( isLoggedIn && isConnectedToInternet()) {
+            database = FirebaseDatabase.getInstance();
+            reference = database.getReference( SERVER_KEY + "/Users/" + id);
 
-        // Retrieve data of the user with given email address from server
-        reference.addValueEventListener( new ValueEventListener() {
-            @Override
-            public void onDataChange( DataSnapshot dataSnapshot) {
-                // Variables
-                HashMap<String, String> userData;
+            // Retrieve data of the user with given email address from server
+            reference.addValueEventListener( new ValueEventListener() {
+                @Override
+                public void onDataChange( DataSnapshot dataSnapshot) {
+                    // Variables
+                    HashMap<String, String> userData;
 
-                // Code
-                reference.removeEventListener( this);
+                    // Code
+                    reference.removeEventListener( this);
 
-                // Check if username entry exists on server or not
-                if ( dataSnapshot.exists()) {
-                    userData = (HashMap<String, String>) dataSnapshot.getValue();
+                    // Check if username entry exists on server or not
+                    if ( dataSnapshot.exists()) {
+                        userData = (HashMap<String, String>) dataSnapshot.getValue();
 
 
-                    // Check whether passwords match or not
-                    name = userData.get( "name");
+                        // Check whether passwords match or not
+                        name = userData.get( "name");
 
-                    listener.onSync( true);
+                        listener.onSync( true);
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled( DatabaseError error) {
-                // Database error occurred
-                reference.removeEventListener( this);
+                @Override
+                public void onCancelled( DatabaseError error) {
+                    // Database error occurred
+                    reference.removeEventListener( this);
 
-                listener.onSync( false);
-            }
-        });
+                    listener.onSync( false);
+                }
+            });
+        }
+        else {
+            listener.onSync( false);
+        }
     }
 
     /**
@@ -386,6 +405,19 @@ abstract class User {
     }
 
     /**
+     * Checks connection status
+     * @return whether device is connected to internet or not
+     */
+    protected boolean isConnectedToInternet() {
+        // Variables
+        ConnectivityManager connectivityManager;
+
+        // Code
+        connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected();
+    }
+
+    /**
      * Setter method for name
      * @param name new name
      */
@@ -405,7 +437,7 @@ abstract class User {
         void onLogin( boolean isLoggedIn);
     }
 
-    private interface ServerSyncListener {
+    public interface ServerSyncListener {
         void onSync( boolean isSynced);
     }
 }

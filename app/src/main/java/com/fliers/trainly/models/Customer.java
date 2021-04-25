@@ -1,5 +1,7 @@
 package com.fliers.trainly.models;
 
+import android.content.Context;
+
 /**
  * Customer Object 
  * @author Cengizhan Terzioğlu
@@ -11,8 +13,8 @@ public class Customer extends User {
     private double discountPoints;
 
     // Constructors
-    public Customer( /*to be done */ ) {
-        super( /* to be done */ );
+    public Customer( Context context) {
+        super( context);
         //to be done
         setDiscountPoints( 0 );
     }
