@@ -1,5 +1,6 @@
 package com.fliers.trainly.models;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.ArrayList;
 
@@ -11,24 +12,33 @@ import java.util.ArrayList;
 public class Schedule {
     
     // Properties
-    private Date departureDate;
-    private Date arrivalDate;
+    private Calendar departureDate;
+    private Calendar arrivalDate;
     private ArrayList<Wagon> wagons;
     private Train linkedTrain;
+    private Line line;
 
     // Constructors
-    public Schedule( Date departureDate, Date arrivalDate, int business, int economy ) {
+    public Schedule( Calendar departureDate, Calendar arrivalDate, Line line, int business, int economy ) {
         this.departureDate = departureDate;
         this.arrivalDate = arrivalDate;
+        this.line = line;
+        createWagons( business, economy );
+    }
+
+    public Schedule( String departureDateId, String arrivalDateId, Line line, int business, int economy ) {
+        this.departureDate = getDateFromIdRepresentation( departureDateId);
+        this.arrivalDate = getDateFromIdRepresentation( arrivalDateId);
+        this.line = line;
         createWagons( business, economy );
     }
 
     // Methods
-    public Date getDepartureDate() {
+    public Calendar getDepartureDate() {
         return this.departureDate;
     }
 
-    public Date getArrivalDate() {
+    public Calendar getArrivalDate() {
         return this.arrivalDate;
     }
 
@@ -44,6 +54,28 @@ public class Schedule {
         return this.linkedTrain;
     }
 
+    /**
+     * @return the departure place of the train
+     */
+    public Place getDeparturePlace() {
+        return line.getDeparture();
+    }
+
+    /**
+     * @return the arrival place
+     */
+    public Place getArrivalPlace() {
+        return line.getArrival();
+    }
+
+    /**
+     * Sets the new line
+     * @param a
+     */
+    public void setLine( Line a) {
+        line = a;
+    }
+
     private void createWagons( int business, int economy ) {
         Wagon currentWagon;
 
@@ -56,5 +88,69 @@ public class Schedule {
             currentWagon = new Wagon( this, false );
             this.getWagons().add( currentWagon );
         }
+    }
+
+    /**
+     * Calculates String version of given date to be used in ids
+     * @return date as string
+     * @author Alp Afyonluoğlu
+     */
+    public String getIdRepresentation( Calendar date) {
+        // Variables
+        String year;
+        String month;
+        String day;
+        String hour;
+        String minute;
+
+        // Code
+        year = String.valueOf( date.get( Calendar.YEAR));
+        month = String.valueOf( date.get( Calendar.MONTH));
+        day = String.valueOf( date.get( Calendar.DAY_OF_MONTH));
+        hour = String.valueOf( date.get( Calendar.HOUR_OF_DAY));
+        minute = String.valueOf( date.get( Calendar.MINUTE));
+
+        if ( month.length() == 1) {
+            month = "0" + month;
+        }
+        if ( day.length() == 1) {
+            day = "0" + day;
+        }
+        if ( hour.length() == 1) {
+            hour = "0" + hour;
+        }
+        if ( minute.length() == 1) {
+            minute = "0" + minute;
+        }
+
+        return year + month + day + hour + minute;
+    }
+
+    /**
+     * Calculates Date version of given id representation string
+     * @param idRepresentation date as string
+     * @return date as Date object
+     * @author Alp Afyonluoğlu
+     */
+    public Calendar getDateFromIdRepresentation( String idRepresentation) {
+        // Variables
+        int year;
+        int month;
+        int day;
+        int hour;
+        int minute;
+        Calendar date;
+
+        // Code
+        year = Integer.parseInt( idRepresentation.substring( 0, 4));
+        month = Integer.parseInt( idRepresentation.substring( 4, 6));
+        day = Integer.parseInt( idRepresentation.substring( 6, 8));
+        hour = Integer.parseInt( idRepresentation.substring( 8, 10));
+        minute = Integer.parseInt( idRepresentation.substring( 10, 12));
+
+        date = Calendar.getInstance();
+        date.set( year, month - 1, day, hour, minute);
+
+        return date;
     }
 }

@@ -9,7 +9,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Class that represents company users.
@@ -18,8 +22,18 @@ import java.util.HashMap;
  */
 public class Company extends User {
     // Properties
-    private final String COMPANY_ID = "company_id";
+    private final String COMPANY_ID = "companyId";
     private final String BALANCE = "balance";
+    private final String TRAINS = "trainIds";
+    private final String SCHEDULES = "schedules";
+    private final String ESTIMATED_ARRIVAL = "estimatedArrival";
+    private final String BUSINESS_WAGON_NO = "businessWagonNo";
+    private final String ECONOMY_WAGON_NO = "economyWagonNo";
+    private final String BUSINESS_PRICE = "businessPrice";
+    private final String ECONOMY_PRICE = "economyPrice";
+    private final String CURRENT_LOCATION = "currentLocation";
+    private final String FROM = "from";
+    private final String TO = "to";
 
     private String companyId;
     private int balance;
@@ -244,12 +258,40 @@ public class Company extends User {
      */
     @Override
     public void getCurrentUser( boolean update, ServerSyncListener listener) {
+        // Variables
+        final Company THIS_COMPANY = this;
+
+        // Code
         super.getCurrentUser( update, new ServerSyncListener() {
             @Override
             public void onSync( boolean isSynced) {
+                // Variables
+                Set<String> trainIds;
+                String[] trainIdsArray;
+                Train train;
+                Place defaultPlace;
+                Line defaultLine;
+
+                // Code
                 if ( isSynced && !update) {
                     companyId = preferences.getString( COMPANY_ID, "000");
                     balance = preferences.getInt( BALANCE, 0);
+
+                    // Create default place and line
+                    defaultPlace = new Place( "Unknown", 0, 0);
+                    defaultLine = new Line( defaultPlace, defaultPlace);
+
+                    // Create trains
+                    trainIds = preferences.getStringSet( TRAINS, null);
+                    trains = new ArrayList<>();
+                    if ( trainIds != null) {
+                         trainIdsArray = trainIds.toArray( new String[trainIds.size()]);
+
+                         for ( String trainId : trainIdsArray) {
+                             train = new Train( THIS_COMPANY, defaultPlace, 0, 0, 0, 0, new ArrayList<>(), trainId);
+                             trains.add( train);
+                         }
+                    }
                 }
 
                 listener.onSync( isSynced);
@@ -262,10 +304,20 @@ public class Company extends User {
      */
     @Override
     protected void saveToLocalStorage() {
+        // Variables
+        Set<String> trainIds;
+
+        // Code
         super.saveToLocalStorage();
         preferences.edit().putString( COMPANY_ID, companyId).apply();
         preferences.edit().putString( COMPANY_ID, companyId).apply();
         preferences.edit().putInt( BALANCE, balance).apply();
+
+        trainIds = new HashSet<String>();
+        for ( int count = 0; count < trains.size(); count++) {
+            trainIds.add( String.valueOf( trains.get( count).getId()));
+        }
+        preferences.edit().putStringSet( TRAINS, trainIds).apply();
     }
 
     /**
@@ -284,6 +336,9 @@ public class Company extends User {
                     FirebaseDatabase database;
                     DatabaseReference reference;
                     HashMap<String, String> data;
+                    Train train;
+                    ArrayList<Schedule> schedules;
+                    Schedule schedule;
 
                     // Code
                     database = FirebaseDatabase.getInstance();
@@ -301,7 +356,40 @@ public class Company extends User {
                     data.put( BALANCE, String.valueOf( balance));
                     reference.setValue( data);
 
-                    listener.onSync( true);
+                    // Save trains data to server
+                    reference = database.getReference( SERVER_KEY + "/Companies/" + companyId + "/trains");
+                    for ( int count = 0; count < trains.size(); count++) {
+                        train = trains.get( count);
+
+                        // Save train related general info
+                        data = new HashMap<>();
+                        data.put( BUSINESS_WAGON_NO, String.valueOf( train.businessWagonNum));
+                        data.put( ECONOMY_WAGON_NO, String.valueOf( train.economyWagonNum));
+                        data.put( BUSINESS_PRICE, String.valueOf( train.businessPrice));
+                        data.put( ECONOMY_PRICE, String.valueOf( train.economyPrice));
+                        reference.child( train.id).setValue( data);
+                        // TODO: Add availability
+
+                        // Save current location of train
+                        data = new HashMap<>();
+                        data.put( "x", String.valueOf( train.lon));
+                        data.put( "y", String.valueOf( train.lat));
+                        reference.child( train.id).child( CURRENT_LOCATION).setValue( data);
+
+                        // Save schedules and their lines
+                        schedules = train.schedules;
+                        for ( int scheduleCount = 0; scheduleCount < schedules.size(); scheduleCount++) {
+                            schedule = schedules.get( scheduleCount);
+
+                            data = new HashMap<>();
+                            data.put( FROM, String.valueOf( schedule.getDeparturePlace().getName()));
+                            data.put( TO, String.valueOf( schedule.getArrivalPlace().getName()));
+                            data.put( ESTIMATED_ARRIVAL, schedule.getIdRepresentation( schedule.getArrivalDate()));
+                            reference.child( train.id).child( SCHEDULES).child( schedule.getIdRepresentation( schedule.getDepartureDate())).setValue( data);
+                        }
+
+                        listener.onSync( true);
+                    }
                 }
                 else {
                     listener.onSync( false);
@@ -318,6 +406,10 @@ public class Company extends User {
      */
     @Override
     public void getFromServer( ServerSyncListener listener) {
+        // Variables
+        final Company THIS_COMPANY = this;
+
+        // Code
         super.getFromServer( new ServerSyncListener() {
             @Override
             public void onSync( boolean isSynced) {
@@ -353,12 +445,61 @@ public class Company extends User {
                                     public void onDataChange( DataSnapshot dataSnapshot) {
                                         // Variables
                                         HashMap<String, Object> companyData;
+                                        Train train;
+                                        String trainId;
+                                        int businessWagonNo;
+                                        int economyWagonNo;
+                                        int businessPrice;
+                                        int economyPrice;
+                                        int currentX;
+                                        int currentY;
+                                        Place currentLocation;
+                                        ArrayList<Schedule> schedules;
+                                        Schedule schedule;
+                                        String departureId;
+                                        String arrivalId;
+                                        String from;
+                                        String to;
+                                        Place departure;
+                                        Place arrival;
+                                        Line line;
 
                                         // Code
                                         referenceCompany.removeEventListener( this);
                                         if ( dataSnapshot.exists()) {
                                             companyData = (HashMap<String, Object>) dataSnapshot.getValue();
                                             balance = Integer.parseInt( (String) companyData.get( COMPANY_ID));
+
+                                            // Create trains with server data
+                                            trains = new ArrayList<>();
+                                            for ( DataSnapshot trainData : dataSnapshot.child( "trains").getChildren()) {
+                                                trainId = trainData.getKey();
+                                                businessWagonNo = Integer.parseInt( trainData.child( trainId).child( BUSINESS_WAGON_NO).getValue( String.class));
+                                                economyWagonNo = Integer.parseInt( trainData.child( trainId).child( ECONOMY_WAGON_NO).getValue( String.class));
+                                                businessPrice = Integer.parseInt( trainData.child( trainId).child( BUSINESS_PRICE).getValue( String.class));
+                                                economyPrice = Integer.parseInt( trainData.child( trainId).child( ECONOMY_PRICE).getValue( String.class));
+                                                currentX = Integer.parseInt( trainData.child( trainId).child( CURRENT_LOCATION).child( "x").getValue( String.class));
+                                                currentY = Integer.parseInt( trainData.child( trainId).child( CURRENT_LOCATION).child( "y").getValue( String.class));
+                                                currentLocation = new Place( "Train " + trainId, currentY, currentX);
+
+                                                schedules = new ArrayList<>();
+                                                for ( DataSnapshot scheduleData : dataSnapshot.child( trainId).child( SCHEDULES).getChildren()) {
+                                                    departureId = scheduleData.getKey();
+                                                    arrivalId = trainData.child( ESTIMATED_ARRIVAL).getValue( String.class);
+                                                    from = trainData.child( FROM).getValue( String.class);
+                                                    to = trainData.child( TO).getValue( String.class);
+
+                                                    departure = new Place( from, 0, 0); // TODO: Get coordinates from place list
+                                                    arrival = new Place( to, 0, 0); // TODO: Get coordinates from place list
+                                                    line = new Line( departure, arrival);
+
+                                                    schedule = new Schedule( departureId, arrivalId, line, businessWagonNo, economyWagonNo);
+                                                    schedules.add( schedule);
+                                                }
+
+                                                train = new Train( THIS_COMPANY, currentLocation, businessWagonNo, economyWagonNo, businessPrice, economyPrice, schedules, trainId);
+                                                trains.add( train);
+                                            }
 
                                             listener.onSync( true);
                                         }
