@@ -46,8 +46,8 @@ public class Customer extends User {
 
     /**
      * Logs in the current user account
-     * @param update whether data should be with the server data
-     *               or not
+     * @param update whether user data should be updated with the
+     *               server data or not
      * @param listener ServerSyncListener interface that is called
      *                 when data is retrieved from server or loaded
      *                 from local storage
@@ -99,7 +99,7 @@ public class Customer extends User {
 
                     // Create hash map with given user data
                     userData = new HashMap<>();
-                    userData.put( "points", String.valueOf( discountPoints));
+                    userData.put( POINTS, String.valueOf( discountPoints));
 
                     // Save map to server
                     reference.setValue( userData);
@@ -147,7 +147,7 @@ public class Customer extends User {
                                 userData = (HashMap<String, String>) dataSnapshot.getValue();
 
                                 // Check whether passwords match or not
-                                discountPoints = Integer.parseInt( userData.get( "points"));
+                                discountPoints = Integer.parseInt( userData.get( POINTS));
 
                                 listener.onSync( true);
                             }

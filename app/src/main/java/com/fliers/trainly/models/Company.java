@@ -2,7 +2,14 @@ package com.fliers.trainly.models;
 
 import android.content.Context;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Class that represents company users.
@@ -18,6 +25,7 @@ public class Company extends User {
     private int balance;
     private ArrayList<Train> trains;
     private ArrayList<Line> lines;
+    private ArrayList<Line> feedback;
     private ArrayList<Employee> employees;
 
     // Constructor
@@ -30,6 +38,7 @@ public class Company extends User {
         balance = 0;
         trains = new ArrayList<>();
         lines = new ArrayList<>();
+        feedback = new ArrayList<>();
         employees = new ArrayList<>();
     }
 
@@ -140,4 +149,249 @@ public class Company extends User {
         return 0;
     }
 
+    /**
+     * Overridable method to be modified by sub classes to assign ids, if
+     * required, before server sync
+     * @param listener LoginListener interface of completeLogin method to
+     *                 be called when server sync is completed
+     */
+    @Override
+    protected void onLoginEmailVerified( LoginListener listener) {
+        createCompanyId( new IdCreateListener() {
+            @Override
+            public void onIdCreated( boolean isCreated) {
+                if ( isCreated) {
+                    Company.super.onLoginEmailVerified( new LoginListener() {
+                        @Override
+                        public void onLogin( boolean isLoggedIn) {
+                            listener.onLogin( isLoggedIn);
+                        }
+                    });
+                }
+                else {
+                    listener.onLogin( false);
+                }
+            }
+        });
+    }
+
+    /**
+     * Creates company id
+     * @param listener IdCreateListener interface that is called
+     *                 id is created with data retrieved from server
+     */
+    private void createCompanyId( IdCreateListener listener) {
+        // Variables
+        FirebaseDatabase database;
+        DatabaseReference reference;
+
+        // Code
+        if ( isNewAccount) {
+            // Assign company id
+            database = FirebaseDatabase.getInstance();
+            reference = database.getReference( SERVER_KEY + "/Companies/");
+
+            // Retrieve company id with the highest value registered so far
+            reference.addValueEventListener( new ValueEventListener() {
+                @Override
+                public void onDataChange( DataSnapshot dataSnapshot) {
+                    // Variables
+                    int idVal;
+                    int highestIdVal;
+
+                    // Code
+                    reference.removeEventListener( this);
+
+                    // Get highest id value
+                    highestIdVal = 1;
+                    if ( dataSnapshot.exists()) {
+                        for ( DataSnapshot company : dataSnapshot.getChildren()) {
+                            idVal = Integer.parseInt( company.getKey());
+                            if ( idVal > highestIdVal) {
+                                highestIdVal = idVal;
+                            }
+                        }
+                    }
+
+                    // Create company id
+                    companyId = String.valueOf( highestIdVal + 1);
+                    while ( companyId.length() != 3) {
+                        companyId = "0" + companyId;
+                    }
+
+                    listener.onIdCreated( true);
+                }
+
+                @Override
+                public void onCancelled( DatabaseError error) {
+                    // Database error occurred
+                    reference.removeEventListener( this);
+
+                    listener.onIdCreated( false);
+                }
+            });
+        }
+    }
+
+    /**
+     * Logs in the current user account
+     * @param update whether user data should be updated with the
+     *               server data or not
+     * @param listener ServerSyncListener interface that is called
+     *                 when data is retrieved from server or loaded
+     *                 from local storage
+     * @author Alp Afyonluoğlu
+     */
+    @Override
+    public void getCurrentUser( boolean update, ServerSyncListener listener) {
+        super.getCurrentUser( update, new ServerSyncListener() {
+            @Override
+            public void onSync( boolean isSynced) {
+                if ( isSynced && !update) {
+                    companyId = preferences.getString( COMPANY_ID, "000");
+                    balance = preferences.getInt( BALANCE, 0);
+                }
+
+                listener.onSync( isSynced);
+            }
+        });
+    }
+
+    /**
+     * Saves user data to local storage
+     */
+    @Override
+    protected void saveToLocalStorage() {
+        super.saveToLocalStorage();
+        preferences.edit().putString( COMPANY_ID, companyId).apply();
+        preferences.edit().putString( COMPANY_ID, companyId).apply();
+        preferences.edit().putInt( BALANCE, balance).apply();
+    }
+
+    /**
+     * Saves local user data to server
+     * @param listener ServerSyncListener interface that is called
+     *                 when data is sent to server
+     * @author Alp Afyonluoğlu
+     */
+    @Override
+    public void saveToServer( ServerSyncListener listener) {
+        super.saveToServer( new ServerSyncListener() {
+            @Override
+            public void onSync( boolean isSynced) {
+                if ( isSynced) {
+                    // Variables
+                    FirebaseDatabase database;
+                    DatabaseReference reference;
+                    HashMap<String, String> data;
+
+                    // Code
+                    database = FirebaseDatabase.getInstance();
+
+                    // Save user data to server
+                    reference = database.getReference( SERVER_KEY + "/Users/" + id);
+                    data = new HashMap<>();
+                    data.put( COMPANY_ID, companyId);
+                    reference.setValue( data);
+
+                    // Save company data to server
+                    reference = database.getReference( SERVER_KEY + "/Companies/" + companyId);
+                    data = new HashMap<>();
+                    data.put( NAME, name);
+                    data.put( BALANCE, String.valueOf( balance));
+                    reference.setValue( data);
+
+                    listener.onSync( true);
+                }
+                else {
+                    listener.onSync( false);
+                }
+            }
+        });
+    }
+
+    /**
+     * Updates local user data with data retrieved from server
+     * @param listener ServerSyncListener interface that is called
+     *                 when data is retrieved from server
+     * @author Alp Afyonluoğlu
+     */
+    @Override
+    public void getFromServer( ServerSyncListener listener) {
+        super.getFromServer( new ServerSyncListener() {
+            @Override
+            public void onSync( boolean isSynced) {
+                if ( isSynced) {
+                    // Variables
+                    FirebaseDatabase database;
+                    DatabaseReference reference;
+
+                    // Code
+                    database = FirebaseDatabase.getInstance();
+                    reference = database.getReference( SERVER_KEY + "/Users/" + id);
+
+                    // Retrieve user data from server
+                    reference.addValueEventListener( new ValueEventListener() {
+                        @Override
+                        public void onDataChange( DataSnapshot dataSnapshot) {
+                            // Variables
+                            HashMap<String, String> userData;
+                            DatabaseReference referenceCompany;
+
+                            // Code
+                            reference.removeEventListener( this);
+                            if ( dataSnapshot.exists()) {
+                                userData = (HashMap<String, String>) dataSnapshot.getValue();
+                                companyId = userData.get( COMPANY_ID);
+
+                                // Retrieve company data from server
+                                referenceCompany = database.getReference( SERVER_KEY + "/Companies/" + companyId);
+
+                                // Retrieve user data from server
+                                referenceCompany.addValueEventListener( new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange( DataSnapshot dataSnapshot) {
+                                        // Variables
+                                        HashMap<String, Object> companyData;
+
+                                        // Code
+                                        referenceCompany.removeEventListener( this);
+                                        if ( dataSnapshot.exists()) {
+                                            companyData = (HashMap<String, Object>) dataSnapshot.getValue();
+                                            balance = Integer.parseInt( (String) companyData.get( COMPANY_ID));
+
+                                            listener.onSync( true);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled( DatabaseError error) {
+                                        // Database error occurred
+                                        referenceCompany.removeEventListener( this);
+
+                                        listener.onSync( false);
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled( DatabaseError error) {
+                            // Database error occurred
+                            reference.removeEventListener( this);
+
+                            listener.onSync( false);
+                        }
+                    });
+                }
+                else {
+                    listener.onSync( false);
+                }
+            }
+        });
+    }
+
+    private interface IdCreateListener {
+        void onIdCreated( boolean isCreated);
+    }
 }

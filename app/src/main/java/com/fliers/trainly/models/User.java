@@ -28,14 +28,14 @@ import java.util.HashMap;
 abstract class User {
     // Properties
     protected static final String SERVER_KEY = "KEY_Tr21iwuS3obrslfL4";
-    private final String NAME = "name";
+    protected final String NAME = "name";
     private final String EMAIL = "email";
     private final String TEMP_EMAIL = "tempEmail";
     private final String TEMP_NAME = "tempName";
     private final String DEFAULT_NAME = "DEFAULT";
 
     protected SharedPreferences preferences;
-    private String name;
+    protected String name;
     private String email;
     protected String id;
     protected boolean isLoggedIn;
@@ -54,7 +54,7 @@ abstract class User {
         isNewAccount = true;
         setName( DEFAULT_NAME);
 
-        preferences = context.getSharedPreferences( String.valueOf( R.string.app_name), 0);
+        preferences = context.getSharedPreferences( String.valueOf( R.string.app_name), Context.MODE_PRIVATE);
     }
 
     // Methods
@@ -131,30 +131,7 @@ abstract class User {
                                         isLoggedIn = true;
                                         isNewAccount = isAvailable;
 
-                                        if ( isNewAccount) {
-                                            // Register
-
-                                            // Save user data to server
-                                            saveToServer( new ServerSyncListener() {
-                                                @Override
-                                                public void onSync( boolean isSynced) {
-                                                    isLoggedIn = isSynced;
-                                                    listener.onLogin( isLoggedIn);
-                                                }
-                                            });
-                                        }
-                                        else {
-                                            // Log in
-
-                                            // Retrieve user data from server
-                                            getFromServer( new ServerSyncListener() {
-                                                @Override
-                                                public void onSync( boolean isSynced) {
-                                                    isLoggedIn = isSynced;
-                                                    listener.onLogin( isLoggedIn);
-                                                }
-                                            });
-                                        }
+                                        onLoginEmailVerified( listener);
                                     }
                                 });
                             }
@@ -171,9 +148,42 @@ abstract class User {
     }
 
     /**
+     * Overridable method to be modified by sub classes to assign ids, if
+     * required, before server sync
+     * @param listener LoginListener interface of completeLogin method to
+     *                 be called when server sync is completed
+     */
+    protected void onLoginEmailVerified( LoginListener listener) {
+        if ( isNewAccount) {
+            // Register
+
+            // Save user data to server
+            saveToServer( new ServerSyncListener() {
+                @Override
+                public void onSync( boolean isSynced) {
+                    isLoggedIn = isSynced;
+                    listener.onLogin( isLoggedIn);
+                }
+            });
+        }
+        else {
+            // Log in
+
+            // Retrieve user data from server
+            getFromServer( new ServerSyncListener() {
+                @Override
+                public void onSync( boolean isSynced) {
+                    isLoggedIn = isSynced;
+                    listener.onLogin( isLoggedIn);
+                }
+            });
+        }
+    }
+
+    /**
      * Logs in the current user account
-     * @param update whether data should be with the server data
-     *               or not
+     * @param update whether user data should be updated with the
+     *               server data or not
      * @param listener ServerSyncListener interface that is called
      *                 when data is retrieved from server or loaded
      *                 from local storage
@@ -279,7 +289,7 @@ abstract class User {
 
             // Create hash map with given user data
             userData = new HashMap<>();
-            userData.put( "name", name);
+            userData.put( NAME, name);
 
             // Save map to server
             reference.setValue( userData);
@@ -322,7 +332,7 @@ abstract class User {
 
 
                         // Check whether passwords match or not
-                        name = userData.get( "name");
+                        name = userData.get( NAME);
 
                         saveToLocalStorage();
                         listener.onSync( true);
