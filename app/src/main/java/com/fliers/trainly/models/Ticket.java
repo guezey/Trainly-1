@@ -8,15 +8,13 @@ package com.fliers.trainly.models;
 public class Ticket {
     
     // Properties
-    private int id;
     private Seat seat;
     private Customer customer;
     private String comment;
     private int starRating;
 
     // Constructors
-    public Ticket( int id, Seat seat, Customer customer ) {
-        this.id = id;
+    public Ticket( Seat seat, Customer customer ) {
         this.seat = seat;
         this.customer = customer;
         setComment( "" );
@@ -24,8 +22,9 @@ public class Ticket {
     }
 
     // Methods
-    public int getId() {
-        return this.id;
+    public String getId() {
+        // TODO: return this.id;
+        return "";
     }
 
     public Seat getSeat() {

@@ -9,8 +9,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -36,13 +34,17 @@ public class Company extends User {
     private final String TO = "to";
     private final String EMPLOYEE_NAMES = "employeeNames";
     private final String EMPLOYEE_LINKED_TRAIN_IDS = "employeeLinkedTrainIds";
+    private final String FEEDBACK_STARS = "feedbackStars";
+    private final String FEEDBACK_COMMENTS = "feedbackComments";
+    private final String AVERAGE_POINT = "averagePoint";
 
     private String companyId;
     private int balance;
     private ArrayList<Train> trains;
-    private ArrayList<Line> lines;
-    private ArrayList<Line> feedback;
+    private ArrayList<Place> places;
+    private ArrayList<Ticket> anonymousFeedback;
     private ArrayList<Employee> employees;
+    private double averagePoint;
 
     // Constructor
     /**
@@ -53,9 +55,10 @@ public class Company extends User {
         companyId = "000";
         balance = 0;
         trains = new ArrayList<>();
-        lines = new ArrayList<>();
-        feedback = new ArrayList<>();
+        places = new ArrayList<>();
+        anonymousFeedback = new ArrayList<>();
         employees = new ArrayList<>();
+        averagePoint = 0;
     }
 
     // Methods
@@ -84,11 +87,11 @@ public class Company extends User {
     }
 
     /**
-     * Returns lines list
-     * @return lines
+     * Returns places list
+     * @return places
      */
-    public ArrayList<Line> getLines() {
-        return lines;
+    public ArrayList<Place> getPlaces() {
+        return places;
     }
 
     /**
@@ -108,11 +111,11 @@ public class Company extends User {
     }
 
     /**
-     * Adds a new line to lines list.
-     * @param newLine a new line
+     * Adds a new place to places list.
+     * @param newPlace a new place
      */
-    public void addLine( Line newLine) {
-        lines.add( newLine);
+    public void addPlace( Place newPlace) {
+        places.add( newPlace);
     }
 
     /**
@@ -132,11 +135,11 @@ public class Company extends User {
     }
 
     /**
-     * Removes a line from lines list.
-     * @param line a line from list
+     * Removes a place from places list.
+     * @param place a place from list
      */
-    public void removeLine( Object line) {
-        lines.remove( line);
+    public void removePlace( Object place) {
+        places.remove( place);
     }
 
     /**
@@ -166,10 +169,60 @@ public class Company extends User {
     }
 
     /**
+     * Getter method for tickets with anonymous feedback
+     * @return list of tickets
+     * @author Alp Afyonluoğlu
+     */
+    public ArrayList<Ticket> getAnonymousFeedback() {
+        return anonymousFeedback;
+    }
+
+    /**
+     * Getter method for average point
+     * @return average point
+     * @author Alp Afyonluoğlu
+     */
+    public double getAveragePoint() {
+        return averagePoint;
+    }
+
+    /**
+     * Calculates average point by using feedback data
+     * @author Alp Afyonluoğlu
+     */
+    private void calculateAveragePoint() {
+        // Variables
+        FirebaseDatabase database;
+        DatabaseReference reference;
+        int sum;
+
+        // Code
+        sum = 0;
+        for ( int count = 0; count < anonymousFeedback.size(); count++) {
+            sum = sum + anonymousFeedback.get( count).getStarRating();
+        }
+
+        if ( anonymousFeedback.size() == 0) {
+            averagePoint = 0;
+        }
+        else {
+            averagePoint = (double) sum / anonymousFeedback.size();
+        }
+
+        // Save to server
+        if ( isLoggedIn && isConnectedToInternet()) {
+            database = FirebaseDatabase.getInstance();
+            reference = database.getReference( SERVER_KEY + "/Companies/" + companyId);
+            reference.child( AVERAGE_POINT).setValue( String.valueOf( averagePoint));
+        }
+    }
+
+    /**
      * Overridable method to be modified by sub classes to assign ids, if
      * required, before server sync
      * @param listener LoginListener interface of completeLogin method to
      *                 be called when server sync is completed
+     * @author Alp Afyonluoğlu
      */
     @Override
     protected void onLoginEmailVerified( LoginListener listener) {
@@ -195,6 +248,7 @@ public class Company extends User {
      * Creates company id
      * @param listener IdCreateListener interface that is called
      *                 id is created with data retrieved from server
+     * @author Alp Afyonluoğlu
      */
     private void createCompanyId( IdCreateListener listener) {
         // Variables
@@ -271,13 +325,18 @@ public class Company extends User {
                 Set<String> trainIds;
                 Set<String> employeeNames;
                 Set<String> employeeLinkedIds;
+                Set<String> feedbackStars;
+                Set<String> feedbackComments;
                 String[] trainIdsArray;
                 String[] employeeNamesArray;
                 String[] employeeLinkedIdsArray;
+                String[] feedbackStarsArray;
+                String[] feedbackCommentsArray;
                 Train train;
                 Place defaultPlace;
                 Employee employee;
                 boolean islinkedTrainFound;
+                Ticket ticket;
 
                 // Code
                 if ( isSynced && !update) {
@@ -326,6 +385,23 @@ public class Company extends User {
                             }
                         }
                     }
+
+                    // Create anonymous feedback tickets
+                    feedbackStars = preferences.getStringSet( FEEDBACK_STARS, null);
+                    feedbackComments = preferences.getStringSet( FEEDBACK_COMMENTS, null);
+                    anonymousFeedback = new ArrayList<>();
+                    if ( feedbackStars != null) {
+                        feedbackStarsArray = feedbackStars.toArray( new String[feedbackStars.size()]);
+                        feedbackCommentsArray = feedbackComments.toArray( new String[feedbackComments.size()]);
+
+                        for ( int count = 0; count < feedbackStarsArray.length; count++) {
+                            ticket = new Ticket( null, null);
+                            ticket.setStarRating( Integer.parseInt( feedbackStarsArray[count]));
+                            ticket.setComment( feedbackCommentsArray[count]);
+                            anonymousFeedback.add( ticket);
+                        }
+                    }
+                    calculateAveragePoint();
                 }
 
                 listener.onSync( isSynced);
@@ -342,6 +418,8 @@ public class Company extends User {
         Set<String> trainIds;
         Set<String> employeeLinkIds;
         Set<String> employeeNames;
+        Set<String> feedbackStars;
+        Set<String> feedbackComments;
 
         // Code
         super.saveToLocalStorage();
@@ -355,14 +433,14 @@ public class Company extends User {
         }
         preferences.edit().putStringSet( TRAINS, trainIds).apply();
 
-        employeeLinkIds = new HashSet<String>();
-        employeeNames = new HashSet<String>();
-        for ( int count = 0; count < employees.size(); count++) {
-            employeeLinkIds.add( employees.get( count).getAssignedTrain().getId());
-            employeeNames.add( employees.get( count).getName());
+        feedbackStars = new HashSet<String>();
+        feedbackComments = new HashSet<String>();
+        for ( int count = 0; count < anonymousFeedback.size(); count++) {
+            feedbackStars.add( String.valueOf( anonymousFeedback.get( count).getStarRating()));
+            feedbackComments.add( anonymousFeedback.get( count).getComment());
         }
-        preferences.edit().putStringSet( EMPLOYEE_NAMES, employeeNames).apply();
-        preferences.edit().putStringSet( EMPLOYEE_LINKED_TRAIN_IDS, employeeLinkIds).apply();
+        preferences.edit().putStringSet( FEEDBACK_STARS, feedbackStars).apply();
+        preferences.edit().putStringSet( FEEDBACK_COMMENTS, feedbackComments).apply();
     }
 
     /**
@@ -444,6 +522,10 @@ public class Company extends User {
                     }
                     reference.setValue( data);
 
+                    // Save average point data to server
+                    reference = database.getReference( SERVER_KEY + "/Companies/" + companyId);
+                    reference.child( AVERAGE_POINT).setValue( String.valueOf( averagePoint));
+
                     listener.onSync( true);
                 }
                 else {
@@ -522,6 +604,9 @@ public class Company extends User {
                                         String employeeName;
                                         boolean islinkedTrainFound;
                                         Employee employee;
+                                        int feedbackStar;
+                                        String feedbackComment;
+                                        Ticket ticket;
 
                                         // Code
                                         referenceCompany.removeEventListener( this);
@@ -583,6 +668,19 @@ public class Company extends User {
                                                     employees.add( employee);
                                                 }
                                             }
+
+                                            // Create anonymous feedback tickets with server data
+                                            anonymousFeedback = new ArrayList<>();
+                                            for ( DataSnapshot ticketData : dataSnapshot.child( "employees").getChildren()) {
+                                                feedbackStar = Integer.parseInt( ticketData.child( FEEDBACK_STARS).getValue( String.class));
+                                                feedbackComment = ticketData.child( FEEDBACK_COMMENTS).getValue( String.class);
+
+                                                ticket = new Ticket( null, null);
+                                                ticket.setComment( feedbackComment);
+                                                ticket.setStarRating( feedbackStar);
+                                                anonymousFeedback.add( ticket);
+                                            }
+                                            calculateAveragePoint();
 
                                             listener.onSync( true);
                                         }
