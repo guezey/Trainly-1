@@ -8,27 +8,27 @@ package com.fliers.trainly.models;
 public class Employee {
 
     //properties
-    private int id;
+    private String name;
     private Train assignedTrain;
 
     //constructor
     /**
-     * Creates an employee with ID and train info.
-     * @param id employee ID
+     * Creates an employee with name and train info.
+     * @param name employee name
      * @param assignedTrain employee's assigned train
      */
-    public Employee( int id, Train assignedTrain) {
-        this.id = id;
+    public Employee( String name, Train assignedTrain) {
+        this.name = name;
         this.assignedTrain = assignedTrain;
     }
 
     //methods
     /**
-     * Returns employee's ID
-     * @return ID
+     * Returns employee's name
+     * @return name
      */
-    public int getId() {
-        return id;
+    public String getName() {
+        return name;
     }
 
     /**

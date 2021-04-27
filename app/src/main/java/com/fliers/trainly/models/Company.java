@@ -34,6 +34,8 @@ public class Company extends User {
     private final String CURRENT_LOCATION = "currentLocation";
     private final String FROM = "from";
     private final String TO = "to";
+    private final String EMPLOYEE_NAMES = "employeeNames";
+    private final String EMPLOYEE_LINKED_TRAIN_IDS = "employeeLinkedTrainIds";
 
     private String companyId;
     private int balance;
@@ -267,19 +269,23 @@ public class Company extends User {
             public void onSync( boolean isSynced) {
                 // Variables
                 Set<String> trainIds;
+                Set<String> employeeNames;
+                Set<String> employeeLinkedIds;
                 String[] trainIdsArray;
+                String[] employeeNamesArray;
+                String[] employeeLinkedIdsArray;
                 Train train;
                 Place defaultPlace;
-                Line defaultLine;
+                Employee employee;
+                boolean islinkedTrainFound;
 
                 // Code
                 if ( isSynced && !update) {
                     companyId = preferences.getString( COMPANY_ID, "000");
                     balance = preferences.getInt( BALANCE, 0);
 
-                    // Create default place and line
+                    // Create default place
                     defaultPlace = new Place( "Unknown", 0, 0);
-                    defaultLine = new Line( defaultPlace, defaultPlace);
 
                     // Create trains
                     trainIds = preferences.getStringSet( TRAINS, null);
@@ -291,6 +297,34 @@ public class Company extends User {
                              train = new Train( THIS_COMPANY, defaultPlace, 0, 0, 0, 0, new ArrayList<>(), trainId);
                              trains.add( train);
                          }
+                    }
+
+                    // Create employees
+                    employeeNames = preferences.getStringSet( EMPLOYEE_NAMES, null);
+                    employeeLinkedIds = preferences.getStringSet( EMPLOYEE_LINKED_TRAIN_IDS, null);
+                    employees = new ArrayList<>();
+                    if ( employeeNames != null) {
+                        employeeNamesArray = employeeNames.toArray( new String[employeeNames.size()]);
+                        employeeLinkedIdsArray = employeeLinkedIds.toArray( new String[employeeLinkedIds.size()]);
+
+                        for ( int count = 0; count < employeeLinkedIdsArray.length; count++) {
+                            // Find linked train of the employee
+                            islinkedTrainFound = false;
+                            for ( Train linkedTrain : trains) {
+                                if ( linkedTrain.getId().equals( employeeLinkedIdsArray[count])) {
+                                    employee = new Employee( employeeNamesArray[count], linkedTrain);
+                                    employees.add( employee);
+
+                                    islinkedTrainFound = true;
+                                    break;
+                                }
+                            }
+
+                            if ( !islinkedTrainFound) {
+                                employee = new Employee( employeeNamesArray[count], null);
+                                employees.add( employee);
+                            }
+                        }
                     }
                 }
 
@@ -306,6 +340,8 @@ public class Company extends User {
     protected void saveToLocalStorage() {
         // Variables
         Set<String> trainIds;
+        Set<String> employeeLinkIds;
+        Set<String> employeeNames;
 
         // Code
         super.saveToLocalStorage();
@@ -315,9 +351,18 @@ public class Company extends User {
 
         trainIds = new HashSet<String>();
         for ( int count = 0; count < trains.size(); count++) {
-            trainIds.add( String.valueOf( trains.get( count).getId()));
+            trainIds.add( trains.get( count).getId());
         }
         preferences.edit().putStringSet( TRAINS, trainIds).apply();
+
+        employeeLinkIds = new HashSet<String>();
+        employeeNames = new HashSet<String>();
+        for ( int count = 0; count < employees.size(); count++) {
+            employeeLinkIds.add( employees.get( count).getAssignedTrain().getId());
+            employeeNames.add( employees.get( count).getName());
+        }
+        preferences.edit().putStringSet( EMPLOYEE_NAMES, employeeNames).apply();
+        preferences.edit().putStringSet( EMPLOYEE_LINKED_TRAIN_IDS, employeeLinkIds).apply();
     }
 
     /**
@@ -339,6 +384,7 @@ public class Company extends User {
                     Train train;
                     ArrayList<Schedule> schedules;
                     Schedule schedule;
+                    Employee employee;
 
                     // Code
                     database = FirebaseDatabase.getInstance();
@@ -387,9 +433,18 @@ public class Company extends User {
                             data.put( ESTIMATED_ARRIVAL, schedule.getIdRepresentation( schedule.getArrivalDate()));
                             reference.child( train.id).child( SCHEDULES).child( schedule.getIdRepresentation( schedule.getDepartureDate())).setValue( data);
                         }
-
-                        listener.onSync( true);
                     }
+
+                    // Save employees data to server
+                    reference = database.getReference( SERVER_KEY + "/Companies/" + companyId + "/employees");
+                    data = new HashMap<>();
+                    for ( int count = 0; count < employees.size(); count++) {
+                        employee = employees.get( count);
+                        data.put( employee.getAssignedTrain().getId(), employee.getName());
+                    }
+                    reference.setValue( data);
+
+                    listener.onSync( true);
                 }
                 else {
                     listener.onSync( false);
@@ -463,6 +518,10 @@ public class Company extends User {
                                         Place departure;
                                         Place arrival;
                                         Line line;
+                                        String employeeLinkedId;
+                                        String employeeName;
+                                        boolean islinkedTrainFound;
+                                        Employee employee;
 
                                         // Code
                                         referenceCompany.removeEventListener( this);
@@ -499,6 +558,30 @@ public class Company extends User {
 
                                                 train = new Train( THIS_COMPANY, currentLocation, businessWagonNo, economyWagonNo, businessPrice, economyPrice, schedules, trainId);
                                                 trains.add( train);
+                                            }
+
+                                            // Create employees with server data
+                                            employees = new ArrayList<>();
+                                            for ( DataSnapshot employeeData : dataSnapshot.child( "employees").getChildren()) {
+                                                employeeLinkedId = employeeData.getKey();
+                                                employeeName = employeeData.child( employeeLinkedId).getValue( String.class);
+
+                                                // Find linked train of the employee
+                                                islinkedTrainFound = false;
+                                                for ( Train linkedTrain : trains) {
+                                                    if ( linkedTrain.getId().equals( employeeLinkedId)) {
+                                                        employee = new Employee( employeeName, linkedTrain);
+                                                        employees.add( employee);
+
+                                                        islinkedTrainFound = true;
+                                                        break;
+                                                    }
+                                                }
+
+                                                if ( !islinkedTrainFound) {
+                                                    employee = new Employee( employeeName, null);
+                                                    employees.add( employee);
+                                                }
                                             }
 
                                             listener.onSync( true);
