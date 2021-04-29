@@ -45,9 +45,7 @@ public class AddTrainActivity extends AppCompatActivity {
 
     public void goToManageTrains() {
 
-
-
-
+        //TO-DO
 
         Intent switchActivityIntent = new Intent(this, TrainsActivity.class);
         startActivity(switchActivityIntent);
