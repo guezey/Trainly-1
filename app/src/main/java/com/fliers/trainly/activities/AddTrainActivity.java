@@ -10,7 +10,7 @@ import java.awt.Button;
 
 public class AddTrainActivity extends AppCompatActivity {
 
-    private Spinner lineSpinner;
+    private Spinner placeSpinner;
     Button add;
 
     @Override
@@ -18,7 +18,7 @@ public class AddTrainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_train);
 
-        lineSpinner = (Spinner) findViewById(R.id.lineSpinner);
+        placeSpinner = (Spinner) findViewById(R.id.lineSpinner);
         add = findViewById(R.id.buttonAdd);
     }
 
