@@ -37,11 +37,15 @@ public class Company extends User {
     private final String FEEDBACK_STARS = "feedbackStars";
     private final String FEEDBACK_COMMENTS = "feedbackComments";
     private final String AVERAGE_POINT = "averagePoint";
+    private final String LINE_DEPARTURES = "lineDepartures";
+    private final String LINE_ARRIVALS = "lineArrivals";
+    private final String DEPARTURE = "departure";
+    private final String ARRIVAL = "arrival";
 
     private String companyId;
     private int balance;
     private ArrayList<Train> trains;
-    private ArrayList<Place> places;
+    private ArrayList<Line> lines;
     private ArrayList<Ticket> anonymousFeedback;
     private ArrayList<Employee> employees;
     private double averagePoint;
@@ -55,7 +59,7 @@ public class Company extends User {
         companyId = "000";
         balance = 0;
         trains = new ArrayList<>();
-        places = new ArrayList<>();
+        lines = new ArrayList<>();
         anonymousFeedback = new ArrayList<>();
         employees = new ArrayList<>();
         averagePoint = 0;
@@ -87,11 +91,11 @@ public class Company extends User {
     }
 
     /**
-     * Returns places list
-     * @return places
+     * Returns lines list
+     * @return lines
      */
-    public ArrayList<Place> getPlaces() {
-        return places;
+    public ArrayList<Line> getLines() {
+        return lines;
     }
 
     /**
@@ -111,11 +115,11 @@ public class Company extends User {
     }
 
     /**
-     * Adds a new place to places list.
-     * @param newPlace a new place
+     * Adds a new line to lines list.
+     * @param newLine a new line
      */
-    public void addPlace( Place newPlace) {
-        places.add( newPlace);
+    public void addLine( Line newLine) {
+        lines.add( newLine);
     }
 
     /**
@@ -135,11 +139,11 @@ public class Company extends User {
     }
 
     /**
-     * Removes a place from places list.
-     * @param place a place from list
+     * Removes a line from lines list.
+     * @param line a line from list
      */
-    public void removePlace( Object place) {
-        places.remove( place);
+    public void removeLine( Object line) {
+        lines.remove( line);
     }
 
     /**
@@ -327,16 +331,23 @@ public class Company extends User {
                 Set<String> employeeLinkedIds;
                 Set<String> feedbackStars;
                 Set<String> feedbackComments;
+                Set<String> lineDepartures;
+                Set<String> lineArrivals;
                 String[] trainIdsArray;
                 String[] employeeNamesArray;
                 String[] employeeLinkedIdsArray;
                 String[] feedbackStarsArray;
                 String[] feedbackCommentsArray;
+                String[] lineDeparturesArray;
+                String[] lineArrivalsArray;
                 Train train;
                 Place defaultPlace;
                 Employee employee;
                 boolean islinkedTrainFound;
                 Ticket ticket;
+                Line line;
+                Place departure;
+                Place arrival;
 
                 // Code
                 if ( isSynced && !update) {
@@ -402,6 +413,23 @@ public class Company extends User {
                         }
                     }
                     calculateAveragePoint();
+
+                    // Create lines
+                    lineDepartures = preferences.getStringSet( LINE_DEPARTURES, null);
+                    lineArrivals = preferences.getStringSet( LINE_ARRIVALS, null);
+                    lines = new ArrayList<>();
+                    if ( lineDepartures != null) {
+                        lineDeparturesArray = lineDepartures.toArray( new String[lineDepartures.size()]);
+                        lineArrivalsArray = lineArrivals.toArray( new String[lineArrivals.size()]);
+
+                        for ( int count = 0; count < lineDeparturesArray.length; count++) {
+                            arrival = new Place( lineArrivalsArray[count], 0, 0); // TODO: Get coordinates
+                            departure = new Place( lineDeparturesArray[count], 0, 0); // TODO: Get coordinates
+
+                            line = new Line( departure, arrival);
+                            lines.add( line);
+                        }
+                    }
                 }
 
                 listener.onSync( isSynced);
@@ -420,6 +448,8 @@ public class Company extends User {
         Set<String> employeeNames;
         Set<String> feedbackStars;
         Set<String> feedbackComments;
+        Set<String> lineDepartures;
+        Set<String> lineArrivals;
 
         // Code
         super.saveToLocalStorage();
@@ -427,12 +457,24 @@ public class Company extends User {
         preferences.edit().putString( COMPANY_ID, companyId).apply();
         preferences.edit().putInt( BALANCE, balance).apply();
 
+        // Save trains
         trainIds = new HashSet<String>();
         for ( int count = 0; count < trains.size(); count++) {
             trainIds.add( trains.get( count).getId());
         }
         preferences.edit().putStringSet( TRAINS, trainIds).apply();
 
+        // Save employees
+        employeeLinkIds = new HashSet<String>();
+        employeeNames = new HashSet<String>();
+        for ( int count = 0; count < employees.size(); count++) {
+            employeeLinkIds.add( String.valueOf( employees.get( count).getAssignedTrain()));
+            employeeNames.add( employees.get( count).getName());
+        }
+        preferences.edit().putStringSet( EMPLOYEE_LINKED_TRAIN_IDS, employeeLinkIds).apply();
+        preferences.edit().putStringSet( EMPLOYEE_NAMES, employeeNames).apply();
+
+        // Save feedback
         feedbackStars = new HashSet<String>();
         feedbackComments = new HashSet<String>();
         for ( int count = 0; count < anonymousFeedback.size(); count++) {
@@ -441,6 +483,16 @@ public class Company extends User {
         }
         preferences.edit().putStringSet( FEEDBACK_STARS, feedbackStars).apply();
         preferences.edit().putStringSet( FEEDBACK_COMMENTS, feedbackComments).apply();
+
+        // Save lines
+        lineDepartures = new HashSet<String>();
+        lineArrivals = new HashSet<String>();
+        for ( int count = 0; count < lines.size(); count++) {
+            lineDepartures.add( lines.get( count).getDeparture().getName());
+            lineArrivals.add( lines.get( count).getArrival().getName());
+        }
+        preferences.edit().putStringSet( LINE_DEPARTURES, lineDepartures).apply();
+        preferences.edit().putStringSet( LINE_ARRIVALS, lineArrivals).apply();
     }
 
     /**
@@ -463,6 +515,7 @@ public class Company extends User {
                     ArrayList<Schedule> schedules;
                     Schedule schedule;
                     Employee employee;
+                    Line line;
 
                     // Code
                     database = FirebaseDatabase.getInstance();
@@ -525,6 +578,17 @@ public class Company extends User {
                     // Save average point data to server
                     reference = database.getReference( SERVER_KEY + "/Companies/" + companyId);
                     reference.child( AVERAGE_POINT).setValue( String.valueOf( averagePoint));
+
+                    // Save lines data to server
+                    reference = database.getReference( SERVER_KEY + "/Companies/" + companyId + "/lines");
+                    for ( int count = 1; count <= lines.size(); count++) {
+                        line = lines.get( count);
+
+                        data = new HashMap<>();
+                        data.put( ARRIVAL, line.getArrival().getName());
+                        data.put( DEPARTURE, line.getDeparture().getName());
+                        reference.child( String.valueOf( count)).setValue( data);
+                    }
 
                     listener.onSync( true);
                 }
@@ -607,6 +671,8 @@ public class Company extends User {
                                         int feedbackStar;
                                         String feedbackComment;
                                         Ticket ticket;
+                                        String lineDeparture;
+                                        String lineArrival;
 
                                         // Code
                                         referenceCompany.removeEventListener( this);
@@ -681,6 +747,19 @@ public class Company extends User {
                                                 anonymousFeedback.add( ticket);
                                             }
                                             calculateAveragePoint();
+
+                                            // Create lines  with server data
+                                            lines = new ArrayList<>();
+                                            for ( DataSnapshot ticketData : dataSnapshot.child( "lines").getChildren()) {
+                                                lineDeparture = ticketData.child( DEPARTURE).getValue( String.class);
+                                                lineArrival = ticketData.child( ARRIVAL).getValue( String.class);
+
+                                                arrival = new Place( lineArrival, 0, 0); // TODO: Get coordinates
+                                                departure = new Place( lineDeparture, 0, 0); // TODO: Get coordinates
+
+                                                line = new Line( departure, arrival);
+                                                lines.add( line);
+                                            }
 
                                             listener.onSync( true);
                                         }
