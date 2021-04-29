@@ -2,7 +2,7 @@ package com.fliers.trainly.models;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
+import android.net.ConnectivityManager;
 
 import androidx.annotation.NonNull;
 
@@ -23,34 +23,39 @@ import java.util.HashMap;
 /**
  * Abstract User class to be extended by Customer and Company classes
  * @author Alp Afyonluoğlu
- * @version 23.04.2021
+ * @version 25.04.2021
  */
-abstract class User {
+public abstract class User {
     // Properties
     protected static final String SERVER_KEY = "KEY_Tr21iwuS3obrslfL4";
-    protected final String NAME = "userName";
-    protected final String EMAIL = "userEmail";
-    protected final String DEFAULT_NAME = "DEFAULT";
+    protected final String NAME = "name";
+    private final String EMAIL = "email";
+    private final String TEMP_EMAIL = "tempEmail";
+    private final String TEMP_NAME = "tempName";
+    private final String DEFAULT_NAME = "DEFAULT";
 
-    private SharedPreferences preferences;
-    private String name;
+    private static User currentUserInstance = null;
+    protected SharedPreferences preferences;
+    protected String name;
     private String email;
-    private String id;
-    private boolean isLoggedIn;
-    private boolean isNewAccount;
+    protected String id;
+    protected boolean isLoggedIn;
+    protected boolean isNewAccount;
+    private Context context;
 
     // Constructors
     /**
      * Initializes a new user
      */
     public User( Context context) {
-        name = DEFAULT_NAME;
+        this.context = context;
         email = "";
         id = "";
         isLoggedIn = false;
         isNewAccount = true;
+        setName( DEFAULT_NAME);
 
-        preferences = context.getSharedPreferences(String.valueOf(R.string.app_name), 0);
+        preferences = context.getSharedPreferences( String.valueOf( R.string.app_name), Context.MODE_PRIVATE);
     }
 
     // Methods
@@ -58,7 +63,7 @@ abstract class User {
      * Sends login email to the given email address
      * @param email email address of the user
      * @param listener EmailListener interface that is called
-     *                when verification email is sent
+     *                 when verification email is sent
      */
     public void login( String email, EmailListener listener) {
         // Variables
@@ -66,11 +71,9 @@ abstract class User {
         FirebaseAuth auth;
 
         // Code
-        if ( !isLoggedIn && checkEmailValidity( email)) {
-            this.email = email;
-
+        if ( !isLoggedIn && checkEmailValidity( email) && isConnectedToInternet()) {
             actionCodeSettings = ActionCodeSettings.newBuilder()
-                    .setUrl( "https://trainly-app.web.app/registration_successful")
+                    .setUrl( "https://trainly-app.web.app/register")
                     .setHandleCodeInApp( true)
                     .setAndroidPackageName( "com.fliers.trainly", false, "19")
                     .build();
@@ -81,6 +84,9 @@ abstract class User {
                         @Override
                         public void onComplete( @NonNull Task<Void> task) {
                             if ( task.isSuccessful()) {
+                                preferences.edit().putString( TEMP_EMAIL, email).apply();
+                                preferences.edit().putString( TEMP_NAME, name).apply();
+
                                 listener.onEmailSent( email, true);
                             }
                             else {
@@ -96,19 +102,22 @@ abstract class User {
 
     /**
      * Completes login process by using the link that is sent via email
-     * @param email email address of the user
      * @param emailLink link sent to the email address of the user
      * @param listener LoginListener interface that is called
-     *                when email link is verified
+     *                 when email link is verified
      */
-    public void completeLogin( String email, String emailLink, LoginListener listener) {
+    public void completeLogin( String emailLink, LoginListener listener) {
         // Variables
         FirebaseAuth auth;
+        String email;
 
         // Code
+        name = preferences.getString( TEMP_NAME, DEFAULT_NAME);
+        email = preferences.getString( TEMP_EMAIL, "");
+
         auth = FirebaseAuth.getInstance();
-        if ( auth.isSignInWithEmailLink( emailLink)) {
-            auth.signInWithEmailLink( email, emailLink).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        if ( auth.isSignInWithEmailLink( emailLink) && isConnectedToInternet()) {
+            auth.signInWithEmailLink( email, emailLink).addOnCompleteListener( new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete( @NonNull Task<AuthResult> task) {
                             if ( task.isSuccessful()) {
@@ -120,40 +129,10 @@ abstract class User {
                                 checkEmailAvailability( email, new EmailAvailabilityCheckListener() {
                                     @Override
                                     public void onEmailAvailabilityCheck(String email, boolean isAvailable) {
+                                        isLoggedIn = true;
                                         isNewAccount = isAvailable;
 
-                                        if ( isNewAccount) {
-                                            // Register
-
-                                            // Save user data to server
-                                            saveToServer( new ServerSyncListener() {
-                                                @Override
-                                                public void onSync( boolean isSynced) {
-
-                                                    preferences.edit().putString( NAME, name).apply();
-                                                    preferences.edit().putString( EMAIL, email).apply();
-
-                                                    isLoggedIn = isSynced;
-                                                    listener.onLogin( isLoggedIn);
-                                                }
-                                            });
-                                        }
-                                        else {
-                                            // Log in
-
-                                            // Retrieve user data from server
-                                            getFromServer( new ServerSyncListener() {
-                                                @Override
-                                                public void onSync( boolean isSynced) {
-
-                                                    preferences.edit().putString( NAME, name).apply();
-                                                    preferences.edit().putString( EMAIL, email).apply();
-
-                                                    isLoggedIn = isSynced;
-                                                    listener.onLogin( isLoggedIn);
-                                                }
-                                            });
-                                        }
+                                        onLoginEmailVerified( listener);
                                     }
                                 });
                             }
@@ -170,24 +149,86 @@ abstract class User {
     }
 
     /**
-     * Logs in the current user account
-     * @return whether a user is currently logged in or not
+     * Overridable method to be modified by sub classes to assign ids, if
+     * required, before server sync
+     * @param listener LoginListener interface of completeLogin method to
+     *                 be called when server sync is completed
      */
-    public boolean getCurrentUser() {
-        if ( !preferences.getString( EMAIL, "").equals( "")) {
-            name = preferences.getString( NAME, DEFAULT_NAME);
-            email = preferences.getString( EMAIL, "");
+    protected void onLoginEmailVerified( LoginListener listener) {
+        if ( isNewAccount) {
+            // Register
 
+            // Save user data to server
+            saveToServer( new ServerSyncListener() {
+                @Override
+                public void onSync( boolean isSynced) {
+                    isLoggedIn = isSynced;
+                    listener.onLogin( isLoggedIn);
+                }
+            });
+        }
+        else {
+            // Log in
+
+            // Retrieve user data from server
+            getFromServer( new ServerSyncListener() {
+                @Override
+                public void onSync( boolean isSynced) {
+                    isLoggedIn = isSynced;
+                    listener.onLogin( isLoggedIn);
+                }
+            });
+        }
+    }
+
+    /**
+     * Getter method for static current user instance
+     * @return current user instance
+     */
+    public static User getCurrentUserInstance() {
+        return currentUserInstance;
+
+    }
+
+    /**
+     * Getter method for static current user instance
+     * @param user current user instance to be set
+     */
+    public static void setCurrentUserInstance( User user) {
+        User.currentUserInstance = user;
+    }
+
+    /**
+     * Logs in the current user account
+     * @param update whether user data should be updated with the
+     *               server data or not
+     * @param listener ServerSyncListener interface that is called
+     *                 when data is retrieved from server or loaded
+     *                 from local storage
+     */
+    public void getCurrentUser( boolean update, ServerSyncListener listener) {
+        if ( !preferences.getString( EMAIL, "").equals( "")) {
+            email = preferences.getString( EMAIL, "");
             id = email.replace( "@", "_at_");
             id = id.replace( ".", "_dot_");
-
             isLoggedIn = true;
             isNewAccount = false;
 
-            return true;
+            if ( update) {
+                getFromServer( new ServerSyncListener() {
+                    @Override
+                    public void onSync( boolean isSynced) {
+                        listener.onSync( isSynced);
+                    }
+                });
+            }
+            else {
+                name = preferences.getString( NAME, DEFAULT_NAME);
+                listener.onSync( true);
+            }
         }
         else {
-            return false;
+            listener.onSync( false);
         }
     }
 
@@ -195,7 +236,7 @@ abstract class User {
      * Checks whether email is registered before or not
      * @param email email address to check
      * @param listener EmailAvailabilityCheckListener interface that is called
-     *                when data is retrieved from server
+     *                 when data is retrieved from server
      */
     public void checkEmailAvailability( String email, EmailAvailabilityCheckListener listener) {
         // Variables
@@ -204,111 +245,130 @@ abstract class User {
         String id;
 
         // Code
-        id = email.replace( "@", "_at_");
-        id = id.replace( ".", "_dot_");
+        if ( isConnectedToInternet()) {
+            id = email.replace( "@", "_at_");
+            id = id.replace( ".", "_dot_");
 
-        database = FirebaseDatabase.getInstance();
-        reference = database.getReference( SERVER_KEY + "/Users/" + id);
+            database = FirebaseDatabase.getInstance();
+            reference = database.getReference( SERVER_KEY + "/Users/" + id);
 
-        // Retrieve data of user with given email address from server
-        reference.addValueEventListener( new ValueEventListener() {
-            @Override
-            public void onDataChange( DataSnapshot dataSnapshot) {
-                reference.removeEventListener( this);
+            // Retrieve data of user with given email address from server
+            reference.addValueEventListener( new ValueEventListener() {
+                @Override
+                public void onDataChange( DataSnapshot dataSnapshot) {
+                    reference.removeEventListener( this);
 
-                // Check if email entry exists on server or not
-                if ( dataSnapshot.exists()) {
+                    // Check if email entry exists on server or not
+                    if ( dataSnapshot.exists()) {
+                        listener.onEmailAvailabilityCheck( email, false);
+                    }
+                    else {
+                        listener.onEmailAvailabilityCheck( email, true);
+                    }
+                }
+
+                @Override
+                public void onCancelled( DatabaseError error) {
+                    // Database error occurred
+                    reference.removeEventListener( this);
+
                     listener.onEmailAvailabilityCheck( email, false);
                 }
-                else {
-                    listener.onEmailAvailabilityCheck( email, true);
-                }
-            }
+            });
+        }
+        else {
+            listener.onEmailAvailabilityCheck( email, false);
+        }
+    }
 
-            @Override
-            public void onCancelled( DatabaseError error) {
-                // Database error occurred
-                reference.removeEventListener( this);
-
-                listener.onEmailAvailabilityCheck( email, false);
-            }
-        });
+    /**
+     * Saves user data to local storage
+     */
+    protected void saveToLocalStorage() {
+        preferences.edit().putString( NAME, name).apply();
+        preferences.edit().putString( EMAIL, email).apply();
     }
 
     /**
      * Saves local user data to server
      * @param listener ServerSyncListener interface that is called
-     *                when data is sent to server
+     *                 when data is sent to server
      */
-    protected void saveToServer( ServerSyncListener listener) {
-        //TODO: Check network connection
-
+    public void saveToServer( ServerSyncListener listener) {
         // Variables
         FirebaseDatabase database;
         DatabaseReference reference;
         HashMap<String, String> userData;
 
         // Code
-        if ( isLoggedIn) {
+        if ( isLoggedIn && isConnectedToInternet()) {
             database = FirebaseDatabase.getInstance();
             reference = database.getReference( SERVER_KEY + "/Users/" + id);
 
             // Create hash map with given user data
             userData = new HashMap<>();
-            userData.put( "name", name);
+            userData.put( NAME, name);
 
             // Save map to server
             reference.setValue( userData);
+            saveToLocalStorage();
             listener.onSync( true);
+        }
+        else {
+            listener.onSync( false);
         }
     }
 
     /**
      * Updates local user data with data retrieved from server
      * @param listener ServerSyncListener interface that is called
-     *                when data is retrieved from server
+     *                 when data is retrieved from server
      */
-    protected void getFromServer( ServerSyncListener listener) {
-        //TODO: Check network connection
-
+    public void getFromServer( ServerSyncListener listener) {
         // Variables
         FirebaseDatabase database;
         DatabaseReference reference;
 
         // Code
-        database = FirebaseDatabase.getInstance();
-        reference = database.getReference( SERVER_KEY + "/Users/" + id);
+        if ( isLoggedIn && isConnectedToInternet()) {
+            database = FirebaseDatabase.getInstance();
+            reference = database.getReference( SERVER_KEY + "/Users/" + id);
 
-        // Retrieve data of the user with given email address from server
-        reference.addValueEventListener( new ValueEventListener() {
-            @Override
-            public void onDataChange( DataSnapshot dataSnapshot) {
-                // Variables
-                HashMap<String, String> userData;
+            // Retrieve data of the user with given email address from server
+            reference.addValueEventListener( new ValueEventListener() {
+                @Override
+                public void onDataChange( DataSnapshot dataSnapshot) {
+                    // Variables
+                    HashMap<String, String> userData;
 
-                // Code
-                reference.removeEventListener( this);
+                    // Code
+                    reference.removeEventListener( this);
 
-                // Check if username entry exists on server or not
-                if ( dataSnapshot.exists()) {
-                    userData = (HashMap<String, String>) dataSnapshot.getValue();
+                    // Check if username entry exists on server or not
+                    if ( dataSnapshot.exists()) {
+                        userData = (HashMap<String, String>) dataSnapshot.getValue();
 
 
-                    // Check whether passwords match or not
-                    name = userData.get( "name");
+                        // Check whether passwords match or not
+                        name = userData.get( NAME);
 
-                    listener.onSync( true);
+                        saveToLocalStorage();
+                        listener.onSync( true);
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled( DatabaseError error) {
-                // Database error occurred
-                reference.removeEventListener( this);
+                @Override
+                public void onCancelled( DatabaseError error) {
+                    // Database error occurred
+                    reference.removeEventListener( this);
 
-                listener.onSync( false);
-            }
-        });
+                    listener.onSync( false);
+                }
+            });
+        }
+        else {
+            listener.onSync( false);
+        }
     }
 
     /**
@@ -386,6 +446,19 @@ abstract class User {
     }
 
     /**
+     * Checks connection status
+     * @return whether device is connected to internet or not
+     */
+    protected boolean isConnectedToInternet() {
+        // Variables
+        ConnectivityManager connectivityManager;
+
+        // Code
+        connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected();
+    }
+
+    /**
      * Setter method for name
      * @param name new name
      */
@@ -405,7 +478,7 @@ abstract class User {
         void onLogin( boolean isLoggedIn);
     }
 
-    private interface ServerSyncListener {
+    public interface ServerSyncListener {
         void onSync( boolean isSynced);
     }
 }

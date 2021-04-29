@@ -15,12 +15,11 @@ public class Train {
     double businessPrice;
     double economyPrice;
     static int idCounter; // Temporary (In TO-DO list)
-    int id;
+    String id;
     double lat;
     double lon;
     int businessWagonNum;
     int economyWagonNum;
-    Line line;
     ArrayList<Schedule> schedules;
     Company linkedCompany;
 
@@ -34,23 +33,22 @@ public class Train {
     * @param bPrice
     * @param ePrice
     */
-    public Train( Company company, Line line, Place spawnPlace, int businessWagonNum,
-                int economyWagonNum, double bPrice, double ePrice) {
+    public Train( Company company, Place spawnPlace, int businessWagonNum,
+                int economyWagonNum, double bPrice, double ePrice, ArrayList<Schedule> schedules, String id) {
         linkedCompany = company;
-        this.line = line;
         lat = spawnPlace.getLatitude();
         lon = spawnPlace.getLongitude();
         this.businessWagonNum = businessWagonNum;
         this.economyWagonNum = economyWagonNum;
+        this.schedules = schedules;
         businessPrice = bPrice;
         economyPrice = ePrice;
-        idCounter++; // Temporary (In TO-DO list)
-        id = idCounter; // Temporaty (In TO-DO list)
+        this.id = id;
     }
     /**
     * @return id
     */
-    public int getId() {
+    public String getId() {
         return id;
     }
     /**
@@ -84,26 +82,13 @@ public class Train {
     public Schedule getSchedule( Date d) {
         for( int i = 0; i < schedules.size(); i++) {
 
-            if( d.after( schedules.get(i).getDepartureDate()) && d.before( schedules.get(i).getArrivalDate())
+            // TODO: Modify for Calendar class
+            /* if( d.after( schedules.get(i).getDepartureDate()) && d.before( schedules.get(i).getArrivalDate())
                     || d.compareTo( schedules.get(i).getDepartureDate()) == 0) {
                 return schedules.get(i);
-            }
+            } */
         }
         return null;
-    }
-
-    /**
-    * @return the departure place of the train
-    */
-    public Place getDeparturePlace() {
-        return line.getDeparture();
-    }
-
-    /**
-    * @return the arrival place
-    */
-    public Place getArrivalPlace() {
-        return line.getArrival();
     }
 
     /**
@@ -118,14 +103,6 @@ public class Train {
     */
     public double getEconomyPrice() {
         return economyPrice;
-    }
-
-    /**
-    * Sets the new line
-    * @param a
-    */
-    public void setLine( Line a) {
-        line = a;
     }
 
     /**
