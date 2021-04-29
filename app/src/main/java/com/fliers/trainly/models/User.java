@@ -25,7 +25,7 @@ import java.util.HashMap;
  * @author Alp Afyonluoğlu
  * @version 25.04.2021
  */
-abstract class User {
+public abstract class User {
     // Properties
     protected static final String SERVER_KEY = "KEY_Tr21iwuS3obrslfL4";
     protected final String NAME = "name";
@@ -34,6 +34,7 @@ abstract class User {
     private final String TEMP_NAME = "tempName";
     private final String DEFAULT_NAME = "DEFAULT";
 
+    private static User currentUserInstance = null;
     protected SharedPreferences preferences;
     protected String name;
     private String email;
@@ -178,6 +179,23 @@ abstract class User {
                 }
             });
         }
+    }
+
+    /**
+     * Getter method for static current user instance
+     * @return current user instance
+     */
+    public static User getCurrentUserInstance() {
+        return currentUserInstance;
+
+    }
+
+    /**
+     * Getter method for static current user instance
+     * @param user current user instance to be set
+     */
+    public static void setCurrentUserInstance( User user) {
+        User.currentUserInstance = user;
     }
 
     /**
