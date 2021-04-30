@@ -24,8 +24,6 @@ public class AddTrainActivity extends AppCompatActivity {
 
         departurePlaceSpinner = (Spinner) findViewById(R.id.departurePlaceSpinner);
         arrivalPlaceSpinner = (Spinner) findViewById(R.id.arrivalPlaceSpinner);
-        txtBusinessWagonNum = (TextView) findViewById(R.id.textView30);
-        txtEconomyWagonNum = (TextView) findViewById(R.id.textView31);
         goDetails = findViewById(R.id.buttonGoDetails);
     }
 
