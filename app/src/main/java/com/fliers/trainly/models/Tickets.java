@@ -243,6 +243,37 @@ s     * @param db SQL Database
     }
 
     /**
+     * Sets the owner of given seat as the given customer
+     * @param ticket to be bought
+     * @param listener ServerSyncListener interface that is called
+     *                 when data is sent to server
+     */
+    public void buy( Ticket ticket, ServerSyncListener listener) {
+        // Variables
+        SQLiteDatabase db;
+        int dbId;
+
+        // Code
+        if ( isConnectedToInternet()) {
+            db = this.getWritableDatabase();
+            dbId = getDbId( ticket.getSeat());
+
+            db.execSQL( "UPDATE " + TABLE_NAME + " SET " + OWNER + " = '" + ticket.getCustomer().getId() + "' WHERE " + ID + " = " + dbId + ";");
+            db.close();
+
+            saveToServer( dbId, new ServerSyncListener() {
+                @Override
+                public void onSync( boolean isSynced) {
+                    listener.onSync( isSynced);
+                }
+            });
+        }
+        else {
+            listener.onSync( false);
+        }
+    }
+
+    /**
      * Data cursor for the ticket with given seat
      * @param seat seat to be searched
      * @return data cursor
@@ -473,8 +504,6 @@ s     * @param db SQL Database
         String hour;
         String minute;
         String departureDate;
-        String from;
-        String to;
         String wagonNo;
         String seatNo;
         String customerId;
@@ -520,6 +549,74 @@ s     * @param db SQL Database
                     reference.child( companyId).child( TRAINS).child( trainId).child( SCHEDULES).child( departureDate).child( WAGONS).child( wagonNo).child( seatNo).setValue( customerId);
                 } while ( data.moveToNext());
             }
+
+            listener.onSync( true);
+        }
+        else {
+            listener.onSync( false);
+        }
+    }
+
+    /**
+     * Saves ticket data on local database to server
+     * @param dbId single database id to be saved to server
+     * @param listener ServerSyncListener interface that is called
+     *                 when data is sent to server
+     */
+    private void saveToServer( int dbId, ServerSyncListener listener) {
+        // Variables
+        FirebaseDatabase database;
+        DatabaseReference reference;
+        SQLiteDatabase db;
+        Cursor data;
+        String companyId;
+        String trainId;
+        String year;
+        String month;
+        String day;
+        String hour;
+        String minute;
+        String departureDate;
+        String wagonNo;
+        String seatNo;
+        String customerId;
+
+        // Code
+        if ( isConnectedToInternet()) {
+            database = FirebaseDatabase.getInstance();
+            reference = database.getReference( SERVER_KEY + "/Companies/");
+
+            db = this.getWritableDatabase();
+            data = db.rawQuery( "SELECT * FROM " + TABLE_NAME + " WHERE " + ID + " = " + dbId + ";", null);
+
+            companyId = data.getString( data.getColumnIndex( COMPANY_ID));
+            trainId = data.getString( data.getColumnIndex( TRAIN_ID));
+
+            year = String.valueOf( data.getInt( data.getColumnIndex( DEPARTURE_YEAR)));
+            month = String.valueOf( data.getInt( data.getColumnIndex( DEPARTURE_MONTH)));
+            day = String.valueOf( data.getInt( data.getColumnIndex( DEPARTURE_DAY)));
+            hour = String.valueOf( data.getInt( data.getColumnIndex( DEPARTURE_HOUR)));
+            minute = String.valueOf( data.getInt( data.getColumnIndex( DEPARTURE_MINUTE)));
+
+            if ( month.length() == 1) {
+                month = "0" + month;
+            }
+            if ( day.length() == 1) {
+                day = "0" + day;
+            }
+            if ( hour.length() == 1) {
+                hour = "0" + hour;
+            }
+            if ( minute.length() == 1) {
+                minute = "0" + minute;
+            }
+            departureDate = year + month + day + hour + minute;
+
+            wagonNo = String.valueOf( data.getInt( data.getColumnIndex( WAGON_NO)));
+            seatNo = data.getString( data.getColumnIndex( SEAT_NO));
+            customerId = data.getString( data.getColumnIndex( OWNER));
+
+            reference.child( companyId).child( TRAINS).child( trainId).child( SCHEDULES).child( departureDate).child( WAGONS).child( wagonNo).child( seatNo).setValue( customerId);
 
             listener.onSync( true);
         }
