@@ -233,7 +233,12 @@ s     * @param db SQL Database
                 }
             }
 
-            // TODO: saveToServer(); & listener.onSync();
+            saveToServer( new ServerSyncListener() {
+                @Override
+                public void onSync( boolean isSynced) {
+                    listener.onSync( isSynced);
+                }
+            });
         }
     }
 
@@ -450,11 +455,85 @@ s     * @param db SQL Database
     }
 
     /**
+     * Saves ticket data on local database to server
+     * @param listener ServerSyncListener interface that is called
+     *                 when data is sent to server
+     */
+    private void saveToServer( ServerSyncListener listener) {
+        // Variables
+        FirebaseDatabase database;
+        DatabaseReference reference;
+        SQLiteDatabase db;
+        Cursor data;
+        String companyId;
+        String trainId;
+        String year;
+        String month;
+        String day;
+        String hour;
+        String minute;
+        String departureDate;
+        String from;
+        String to;
+        String wagonNo;
+        String seatNo;
+        String customerId;
+
+        // Code
+        if ( isConnectedToInternet()) {
+            database = FirebaseDatabase.getInstance();
+            reference = database.getReference( SERVER_KEY + "/Companies/");
+
+            db = this.getWritableDatabase();
+            data = db.rawQuery( "SELECT * FROM " + TABLE_NAME + ";", null);
+
+            if ( !isEmpty()) {
+                data.moveToFirst();
+                do {
+                    companyId = data.getString( data.getColumnIndex( COMPANY_ID));
+                    trainId = data.getString( data.getColumnIndex( TRAIN_ID));
+
+                    year = String.valueOf( data.getInt( data.getColumnIndex( DEPARTURE_YEAR)));
+                    month = String.valueOf( data.getInt( data.getColumnIndex( DEPARTURE_MONTH)));
+                    day = String.valueOf( data.getInt( data.getColumnIndex( DEPARTURE_DAY)));
+                    hour = String.valueOf( data.getInt( data.getColumnIndex( DEPARTURE_HOUR)));
+                    minute = String.valueOf( data.getInt( data.getColumnIndex( DEPARTURE_MINUTE)));
+
+                    if ( month.length() == 1) {
+                        month = "0" + month;
+                    }
+                    if ( day.length() == 1) {
+                        day = "0" + day;
+                    }
+                    if ( hour.length() == 1) {
+                        hour = "0" + hour;
+                    }
+                    if ( minute.length() == 1) {
+                        minute = "0" + minute;
+                    }
+                    departureDate = year + month + day + hour + minute;
+
+                    wagonNo = String.valueOf( data.getInt( data.getColumnIndex( WAGON_NO)));
+                    seatNo = data.getString( data.getColumnIndex( SEAT_NO));
+                    customerId = data.getString( data.getColumnIndex( OWNER));
+
+                    reference.child( companyId).child( TRAINS).child( trainId).child( SCHEDULES).child( departureDate).child( WAGONS).child( wagonNo).child( seatNo).setValue( customerId);
+                } while ( data.moveToNext());
+            }
+
+            listener.onSync( true);
+        }
+        else {
+            listener.onSync( false);
+        }
+    }
+
+    /**
      * Updates local database tickets with data retrieved from server
      * @param listener ServerSyncListener interface that is called
      *                 when data is retrieved from server
      */
-    public void update( ServerSyncListener listener) {
+    public void update( ServerSyncListener listener) { // Has the same function with saveToServer() method of other classes
         // Variables
         FirebaseDatabase database;
         DatabaseReference reference;
@@ -520,12 +599,9 @@ s     * @param db SQL Database
                                 }
                             }
                         }
+                    }
 
-                        listener.onSync( true);
-                    }
-                    else {
-                        listener.onSync( true);
-                    }
+                    listener.onSync( true);
                 }
 
                 @Override
