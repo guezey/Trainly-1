@@ -8,12 +8,15 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.fliers.trainly.R;
+import com.fliers.trainly.models.Place;
+import com.fliers.trainly.models.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -39,6 +42,7 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
     private Marker prevArrMarker;
     private int mYear, mMonth, mDay;
     private TextView txtDate, txtAdvanced;
+    private ImageView menuButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +53,13 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
         departureSpinner.setOnItemSelectedListener(this);
         arrivalSpinner.setOnItemSelectedListener(this);
         Button search = findViewById(R.id.buttonSearch);
+        menuButton = findViewById(R.id.imageView2);
+        menuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         txtDate = (TextView) findViewById(R.id.textView28);
         txtAdvanced = (TextView) findViewById(R.id.textView29);
         search.setOnClickListener(new View.OnClickListener() {
@@ -141,6 +152,16 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
                 prevDepMarker = mMap.addMarker(new MarkerOptions().position(izmir).title("Departure: " + text));
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(izmir));
             }
+//            Places places = new Places();
+//            places.getFromServer();
+//            if ( prevDepMarker != null)
+//                prevDepMarker.remove();
+//            Place place = places.findByName( parent.getItemAtPosition(pos).toString());
+//            // Add a marker and move the camera
+//            LatLng location = new LatLng( place.getLatitude(), place.getLongitude() );
+//            prevDepMarker = mMap.addMarker(
+//                    new MarkerOptions().position(location).title("Departure: " + parent.getItemAtPosition(pos).toString()));
+//            mMap.animateCamera(CameraUpdateFactory.newLatLng(location));
         }
         else if ( parent == arrivalSpinner) {
             if (parent.getItemAtPosition(pos).toString().equals("Istanbul")) {
