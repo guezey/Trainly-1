@@ -670,8 +670,8 @@ public class Company extends User {
                                         String trainId;
                                         int businessWagonNo;
                                         int economyWagonNo;
-                                        int businessPrice;
-                                        int economyPrice;
+                                        double businessPrice;
+                                        double economyPrice;
                                         int currentX;
                                         int currentY;
                                         Place currentLocation;
@@ -706,8 +706,8 @@ public class Company extends User {
                                                 trainId = trainData.getKey();
                                                 businessWagonNo = Integer.parseInt( trainData.child( trainId).child( BUSINESS_WAGON_NO).getValue( String.class));
                                                 economyWagonNo = Integer.parseInt( trainData.child( trainId).child( ECONOMY_WAGON_NO).getValue( String.class));
-                                                businessPrice = Integer.parseInt( trainData.child( trainId).child( BUSINESS_PRICE).getValue( String.class));
-                                                economyPrice = Integer.parseInt( trainData.child( trainId).child( ECONOMY_PRICE).getValue( String.class));
+                                                businessPrice = Double.parseDouble( trainData.child( trainId).child( BUSINESS_PRICE).getValue( String.class));
+                                                economyPrice = Double.parseDouble( trainData.child( trainId).child( ECONOMY_PRICE).getValue( String.class));
                                                 currentX = Integer.parseInt( trainData.child( trainId).child( CURRENT_LOCATION).child( "x").getValue( String.class));
                                                 currentY = Integer.parseInt( trainData.child( trainId).child( CURRENT_LOCATION).child( "y").getValue( String.class));
                                                 currentLocation = new Place( "Train " + trainId, currentY, currentX);

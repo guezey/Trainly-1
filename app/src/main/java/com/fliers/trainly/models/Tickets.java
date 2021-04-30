@@ -28,6 +28,7 @@ public class Tickets extends SQLiteOpenHelper {
     protected static final String SERVER_KEY = "KEY_Tr21iwuS3obrslfL4";
     private final String TABLE_NAME = "tickets";
     private final String ID = "id";
+    private final String COMPANY_NAME = "company_name";
     private final String COMPANY_ID = "company_id";
     private final String TRAIN_ID = "train_id";
     private final String DEPARTURE_TIME = "departure_time";
@@ -35,6 +36,10 @@ public class Tickets extends SQLiteOpenHelper {
     private final String ARRIVAL = "arrival";
     private final String WAGON_NO = "wagon_no";
     private final String SEAT_NO = "seat_no";
+    private final String BUSINESS_WAGON_NO = "business_wagon_no";
+    private final String ECONOMY_WAGON_NO = "economy_wagon_no";
+    private final String BUSINESS_PRICE = "business_price";
+    private final String ECONOMY_PRICE = "economy_price";
     private final String OWNER = "owner";
     private final String NULL = "null";
     private final String UNKNOWN = "unk";
@@ -44,6 +49,11 @@ public class Tickets extends SQLiteOpenHelper {
     private final String TRAINS = "trains";
     private final String SCHEDULES = "schedules";
     private final String WAGONS = "wagons";
+    private final String NAME = "name";
+    private final String BUSINESS_WAGON_NO_FB = "businessWagonNo";
+    private final String ECONOMY_WAGON_NO_FB = "economyWagonNo";
+    private final String BUSINESS_PRICE_FB = "businessPrice";
+    private final String ECONOMY_PRICE_FB = "economyPrice";
 
     private Context context;
 
@@ -65,6 +75,7 @@ s     * @param db SQL Database
     @Override
     public void onCreate( SQLiteDatabase db) {
         db.execSQL( "CREATE TABLE " + TABLE_NAME + " (" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COMPANY_NAME + " TEXT, " +
                 COMPANY_ID + " TEXT, " +
                 TRAIN_ID + " TEXT, " +
                 DEPARTURE_TIME + " LONG, " +
@@ -72,6 +83,10 @@ s     * @param db SQL Database
                 ARRIVAL + " TEXT, " +
                 WAGON_NO + " INTEGER, " +
                 SEAT_NO + " TEXT, " +
+                BUSINESS_WAGON_NO + " INTEGER, " +
+                ECONOMY_WAGON_NO + " INTEGER, " +
+                BUSINESS_PRICE + " DOUBLE, " +
+                ECONOMY_PRICE + " DOUBLE, " +
                 OWNER + " TEXT)");
     }
 
@@ -112,6 +127,7 @@ s     * @param db SQL Database
         Company company;
         Calendar departureTimeCalendar;
         Customer customer;
+        String companyName;
         String companyId;
         String trainId;
         String year;
@@ -123,8 +139,12 @@ s     * @param db SQL Database
         String from;
         String to;
         int wagonNo;
-        String seatNo;
         String customerId;
+        int businessWagonNo;
+        int economyWagonNo;
+        double businessPrice;
+        double economyPrice;
+        String seatNo;
 
         // Code
         db = this.getWritableDatabase();
@@ -140,8 +160,13 @@ s     * @param db SQL Database
         departureTimeCalendar = schedule.getDepartureDate();
         customer = ticket.getCustomer();
 
+        companyName = company.getName();
         companyId = company.getCompanyId();
         trainId = train.getId();
+        businessWagonNo = train.getBusinessWagonNum();
+        economyWagonNo = train.getEconomyWagonNum();
+        businessPrice = train.getBusinessPrice();
+        economyPrice = train.getEconomyPrice();
         year = String.valueOf( departureTimeCalendar.get( Calendar.YEAR));
         month = String.valueOf( departureTimeCalendar.get( Calendar.MONTH));
         day = String.valueOf( departureTimeCalendar.get( Calendar.DAY_OF_MONTH));
@@ -174,11 +199,12 @@ s     * @param db SQL Database
             customerId = customer.getId();
         }
 
-        add( companyId, trainId, departureTime, from, to, wagonNo, seatNo, customerId);
+        add( companyName, companyId, trainId, departureTime, from, to, wagonNo, seatNo, businessWagonNo, economyWagonNo, businessPrice, economyPrice, customerId);
     }
 
     /**
      * Adds given ticket to the database
+     * @param companyName company name
      * @param companyId company id
      * @param trainId train id
      * @param departureTime departure time as long value
@@ -186,9 +212,13 @@ s     * @param db SQL Database
      * @param to arrival place
      * @param wagonNo wagon number
      * @param seatNo seat number
+     * @param businessWagonNo business wagon number
+     * @param economyWagonNo economy wagon no
+     * @param businessPrice business price
+     * @param economyPrice economy price
      * @param customerId customer id of the owner
      */
-    private void add( String companyId, String trainId, long departureTime, String from, String to, int wagonNo, String seatNo, String customerId) {
+    private void add( String companyName, String companyId, String trainId, long departureTime, String from, String to, int wagonNo, String seatNo, int businessWagonNo, int economyWagonNo, double businessPrice, double economyPrice, String customerId) {
         // Variables
         SQLiteDatabase db;
         ContentValues values;
@@ -197,6 +227,7 @@ s     * @param db SQL Database
         db = this.getWritableDatabase();
         values = new ContentValues();
 
+        values.put( COMPANY_NAME, companyName);
         values.put( COMPANY_ID, companyId);
         values.put( TRAIN_ID, trainId);
         values.put( DEPARTURE_TIME, departureTime);
@@ -204,6 +235,10 @@ s     * @param db SQL Database
         values.put( ARRIVAL, to);
         values.put( WAGON_NO, wagonNo);
         values.put( SEAT_NO, seatNo);
+        values.put( BUSINESS_WAGON_NO, businessWagonNo);
+        values.put( ECONOMY_WAGON_NO, economyWagonNo);
+        values.put( BUSINESS_PRICE, businessPrice);
+        values.put( ECONOMY_PRICE, economyPrice);
         values.put( OWNER, customerId);
 
         db.insert( TABLE_NAME, null, values);
@@ -441,6 +476,7 @@ s     * @param db SQL Database
     private ArrayList<Ticket> dataToArrayList( Cursor data) {
         // Variables
         ArrayList<Ticket> tickets;
+        String companyName;
         String companyId;
         String trainId;
         String departureTime;
@@ -448,6 +484,10 @@ s     * @param db SQL Database
         String arrivalPlaceName;
         int wagonNo;
         String seatNo;
+        int businessWagonNo;
+        int economyWagonNo;
+        double businessPrice;
+        double economyPrice;
         String customerId;
         Company company;
         Train train;
@@ -467,6 +507,7 @@ s     * @param db SQL Database
             data.moveToFirst();
             do {
                 // Get ticket info
+                companyName = data.getString( data.getColumnIndex( COMPANY_NAME));
                 companyId = data.getString( data.getColumnIndex( COMPANY_ID));
                 trainId = data.getString( data.getColumnIndex( TRAIN_ID));
                 departureTime = String.valueOf( data.getLong( data.getColumnIndex( DEPARTURE_TIME)));
@@ -474,18 +515,22 @@ s     * @param db SQL Database
                 arrivalPlaceName = data.getString( data.getColumnIndex( ARRIVAL));
                 wagonNo = data.getInt( data.getColumnIndex( WAGON_NO));
                 seatNo = data.getString( data.getColumnIndex( SEAT_NO));
+                businessWagonNo = data.getInt( data.getColumnIndex( BUSINESS_WAGON_NO));
+                economyWagonNo = data.getInt( data.getColumnIndex( ECONOMY_WAGON_NO));
+                businessPrice = data.getLong( data.getColumnIndex( BUSINESS_PRICE));
+                economyPrice = data.getLong( data.getColumnIndex( ECONOMY_PRICE));
                 customerId = data.getString( data.getColumnIndex( OWNER));
 
                 // Create ticket
-                company = new Company( "", companyId, context); // TODO: Add company name
+                company = new Company( companyName, companyId, context);
 
                 defaultPlace = new Place( "Train" + trainId, 0, 0);
-                train = new Train( company, defaultPlace, 1, 1, 0, 0, trainId); // TODO: Add economy/business price and wagon num
+                train = new Train( company, defaultPlace, businessWagonNo, economyWagonNo, businessPrice, economyPrice, trainId);
 
                 departurePlace = new Place( departurePlaceName, 0, 0); // TODO: Get coordinates
                 arrivalPlace = new Place( arrivalPlaceName, 0, 0); // TODO: Get coordinates
                 line = new Line( departurePlace, arrivalPlace);
-                schedule = new Schedule( departureTime, "", line, 1, 1, train); // TODO: Add economy/business wagon num
+                schedule = new Schedule( departureTime, "", line, businessWagonNo, economyWagonNo, train);
                 train.addSchedule( schedule);
 
                 wagon = schedule.getWagon( wagonNo - 1);
@@ -702,6 +747,7 @@ s     * @param db SQL Database
                 @Override
                 public void onDataChange( DataSnapshot dataSnapshot) {
                     // Variables
+                    String companyName;
                     String companyId;
                     String trainId;
                     String departureTimeStr;
@@ -710,6 +756,10 @@ s     * @param db SQL Database
                     String to;
                     int wagonNo;
                     String seatNo;
+                    int businessWagonNo;
+                    int economyWagonNo;
+                    double businessPrice;
+                    double economyPrice;
                     String customerId;
 
                     // Code
@@ -720,9 +770,14 @@ s     * @param db SQL Database
                     if ( dataSnapshot.exists()) {
                         for ( DataSnapshot company : dataSnapshot.getChildren()) {
                             companyId = company.getKey();
+                            companyName = company.child( NAME).getValue( String.class);
 
                             for ( DataSnapshot train : company.child( TRAINS).getChildren()) {
                                 trainId = train.getKey();
+                                businessWagonNo = Integer.parseInt( train.child( BUSINESS_WAGON_NO_FB).getValue( String.class));
+                                economyWagonNo = Integer.parseInt( train.child( ECONOMY_WAGON_NO_FB).getValue( String.class));
+                                businessPrice = Double.parseDouble( train.child( BUSINESS_PRICE_FB).getValue( String.class));
+                                economyPrice = Double.parseDouble( train.child( ECONOMY_PRICE_FB).getValue( String.class));
 
                                 for ( DataSnapshot schedule : train.child( SCHEDULES).getChildren()) {
                                     departureTimeStr = schedule.getKey();
@@ -737,7 +792,7 @@ s     * @param db SQL Database
                                             seatNo = seat.getKey();
                                             customerId = seat.getValue( String.class);
 
-                                            add( companyId, trainId, departureTime, from, to, wagonNo, seatNo, customerId);
+                                            add( companyName, companyId, trainId, departureTime, from, to, wagonNo, seatNo, businessWagonNo, economyWagonNo, businessPrice, economyPrice, customerId);
                                         }
                                     }
                                 }

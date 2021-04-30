@@ -111,4 +111,22 @@ public class Train {
     public Company getLinkedCompany() {
         return linkedCompany;
     }
+
+    /**
+     * Getter method for business wagon number
+     * @return business wagon number
+     * @author Alp Afyonluoğlu
+     */
+    public int getBusinessWagonNum() {
+        return businessWagonNum;
+    }
+
+    /**
+     * Getter method for economy wagon number
+     * @return economy wagon number
+     * @author Alp Afyonluoğlu
+     */
+    public int getEconomyWagonNum() {
+        return economyWagonNum;
+    }
 }
