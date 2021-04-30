@@ -100,6 +100,14 @@ public class Wagon {
     }
 
     /**
+     * Getter method for array list of seats
+     * @return array list of seats
+     */
+    public ArrayList<Seat> getSeats() {
+        return seats;
+    }
+
+    /**
     * @return total seat number depending on whether the wagon is business class or not
     */
     public int getTotalSeatNo() {

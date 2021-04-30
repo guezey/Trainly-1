@@ -34,8 +34,6 @@ public class MainActivity extends AppCompatActivity {
         Train train = new Train( company, place, 1, 1, 100, 70, "001");
         Schedule schedule = new Schedule( "202105011000", "202105011330", line, 1, 1, train);
         train.addSchedule( schedule);
-        Wagon w = schedule.getWagon( 1);
-        Seat s = w.getSeat( "C1");
 
         Customer customer = new Customer( getApplicationContext());
 //        customer.login("alpafyonluoglu@gmail.com", new User.EmailListener() {
@@ -52,10 +50,15 @@ public class MainActivity extends AppCompatActivity {
                 Log.d( "TRAINLY_APP", "User ID: " + customer.getId());
                 Log.d( "TRAINLY_APP", "Email: " + customer.getEmail());
 
-                Ticket ticket = new Ticket( s, customer);
                 Tickets tickets = new Tickets( getApplicationContext());
-                tickets.add( ticket);
                 tickets.printTable();
+                tickets.createTickets(schedule, new Tickets.ServerSyncListener() {
+                    @Override
+                    public void onSync( boolean isSynced) {
+                        Log.d( "TRAINLY_APP", "Tickets created and synced");
+                        tickets.printTable();
+                    }
+                });
             }
         });
     }
