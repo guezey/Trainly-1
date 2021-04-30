@@ -30,6 +30,7 @@ public class Tickets extends SQLiteOpenHelper {
     private final String SEAT_NO = "seat_no";
     private final String OWNER = "owner";
     private final String NULL = "null";
+    private final String UNKNOWN = "unk";
 
     private ArrayList<Ticket> tickets;
 
@@ -134,16 +135,15 @@ s     * @param db SQL Database
     }
 
     /**
-     * Getter method for database id of the given ticket
-     * @param ticket ticket to be searched
-     * @return database id of the ticket
+     * Data cursor for the ticket with given seat
+     * @param seat seat to be searched
+     * @return data cursor
      */
-    private int getTicketDbId( Ticket ticket) {
+    private Cursor getData( Seat seat) {
         // Variables
         SQLiteDatabase db;
         ContentValues values;
         Cursor data;
-        Seat seat;
         Wagon wagon;
         Schedule schedule;
         Train train;
@@ -154,13 +154,11 @@ s     * @param db SQL Database
         // Code
         db = this.getWritableDatabase();
 
-        seat = ticket.getSeat();
         wagon = seat.getLinkedWagon();
         schedule = wagon.getLinkedSchedule();
         train = schedule.getLinkedTrain();
         company = train.getLinkedCompany();
         departureTime = schedule.getDepartureDate();
-        customer = ticket.getCustomer();
 
         data = db.rawQuery( "SELECT * FROM " + TABLE_NAME + " WHERE "
                 + COMPANY_ID + " = " + company.getCompanyId() + " AND "
@@ -173,6 +171,20 @@ s     * @param db SQL Database
                 + WAGON_NO + " = " + wagon.getWagonNumber() + " AND "
                 + SEAT_NO + " = " + seat.getSeatNumber() + ";", null);
 
+        return data;
+    }
+
+    /**
+     * Searches for id of the ticket with given seat
+     * @param seat seat to be searched
+     * @return database id of the seat
+     */
+    private int getDbId( Seat seat) {
+        // Variables
+        Cursor data;
+
+        // Variables
+        data = getData( seat);
         if ( data.getCount() == 0) {
             // Database does not have this ticket
             return 0;
@@ -180,6 +192,45 @@ s     * @param db SQL Database
         else {
             data.moveToFirst();
             return data.getInt( data.getColumnIndex( ID));
+        }
+    }
+
+    /**
+     * Searches for the owner of the ticket with given seat
+     * @param seat seat to be searched
+     * @return owner id of the seat
+     */
+    private String getOwnerId( Seat seat) {
+        // Variables
+        Cursor data;
+
+        // Variables
+        data = getData( seat);
+        if ( data.getCount() == 0) {
+            return UNKNOWN;
+        }
+        else {
+            data.moveToFirst();
+            return data.getString( data.getColumnIndex( OWNER));
+        }
+    }
+
+    /**
+     * Check if seat is available to buy
+     * @param seat seat to be searched
+     * @return whether seat is available to buy or not
+     */
+    public boolean isSeatEmpty( Seat seat) {
+        // Variables
+        String ownerId;
+
+        // Code
+        ownerId = getOwnerId( seat);
+        if ( ownerId.equals( NULL)) {
+            return true;
+        }
+        else {
+            return false;
         }
     }
 
