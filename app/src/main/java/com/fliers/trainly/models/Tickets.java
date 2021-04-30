@@ -45,7 +45,6 @@ public class Tickets extends SQLiteOpenHelper {
     private final String SCHEDULES = "schedules";
     private final String WAGONS = "wagons";
 
-    private ArrayList<Ticket> tickets;
     private Context context;
 
     // Constructors
@@ -416,6 +415,90 @@ s     * @param db SQL Database
         data = db.rawQuery( "SELECT * FROM " + TABLE_NAME + ";", null);
 
         return data.getCount() == 0;
+    }
+
+    /**
+     * Sends query to get a list of given customer's tickets
+     * @param customer customer, owner of tickets
+     * @return list of tickets
+     */
+    public ArrayList<Ticket> getBoughtTickets( Customer customer) {
+        // Variables
+        SQLiteDatabase db;
+        Cursor data;
+
+        // Code
+        db = this.getWritableDatabase();
+        data = db.rawQuery( "SELECT * FROM " + TABLE_NAME + " WHERE " + OWNER + " = '" + customer.getId() + "';", null);
+        return dataToArrayList( data);
+    }
+
+    /**
+     * Extracts tickets from given data
+     * @param data data to be analyzed
+     * @return list of tickets
+     */
+    private ArrayList<Ticket> dataToArrayList( Cursor data) {
+        // Variables
+        ArrayList<Ticket> tickets;
+        String companyId;
+        String trainId;
+        String departureTime;
+        String departurePlaceName;
+        String arrivalPlaceName;
+        int wagonNo;
+        String seatNo;
+        String customerId;
+        Company company;
+        Train train;
+        Place defaultPlace;
+        Schedule schedule;
+        Line line;
+        Place departurePlace;
+        Place arrivalPlace;
+        Wagon wagon;
+        Seat seat;
+        Customer customer;
+        Ticket ticket;
+
+        // Code
+        tickets = new ArrayList<>();
+        if ( data.getCount() != 0) {
+            data.moveToFirst();
+            do {
+                // Get ticket info
+                companyId = data.getString( data.getColumnIndex( COMPANY_ID));
+                trainId = data.getString( data.getColumnIndex( TRAIN_ID));
+                departureTime = String.valueOf( data.getLong( data.getColumnIndex( DEPARTURE_TIME)));
+                departurePlaceName = data.getString( data.getColumnIndex( DEPARTURE));
+                arrivalPlaceName = data.getString( data.getColumnIndex( ARRIVAL));
+                wagonNo = data.getInt( data.getColumnIndex( WAGON_NO));
+                seatNo = data.getString( data.getColumnIndex( SEAT_NO));
+                customerId = data.getString( data.getColumnIndex( OWNER));
+
+                // Create ticket
+                company = new Company( "", companyId, context); // TODO: Add company name
+
+                defaultPlace = new Place( "Train" + trainId, 0, 0);
+                train = new Train( company, defaultPlace, 1, 1, 0, 0, trainId); // TODO: Add economy/business price and wagon num
+
+                departurePlace = new Place( departurePlaceName, 0, 0); // TODO: Get coordinates
+                arrivalPlace = new Place( arrivalPlaceName, 0, 0); // TODO: Get coordinates
+                line = new Line( departurePlace, arrivalPlace);
+                schedule = new Schedule( departureTime, "", line, 1, 1, train); // TODO: Add economy/business wagon num
+                train.addSchedule( schedule);
+
+                wagon = schedule.getWagon( wagonNo - 1);
+                seat = wagon.getSeat( seatNo);
+
+                customer = new Customer( customerId, context);
+
+                ticket = new Ticket( seat, customer);
+                tickets.add( ticket);
+            } while ( data.moveToNext());
+        }
+
+        return tickets;
     }
 
     /**

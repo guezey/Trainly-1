@@ -68,11 +68,13 @@ public class Company extends User {
 
     /**
      * Initializes a new company with given company id
+     * @param name name of the company
      * @param companyId company id
      * @param context application context
      */
-    public Company( String companyId, Context context) {
+    public Company( String name, String companyId, Context context) {
         super( context);
+        this.name = name;
         this.companyId = companyId;
         balance = 0;
         trains = new ArrayList<>();

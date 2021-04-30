@@ -25,9 +25,21 @@ public class Customer extends User {
     // Constructors
     /**
      * Initializes a new customer
+     * @param context application context
      */
     public Customer( Context context) {
         super( context);
+        setDiscountPoints( 0 );
+    }
+
+    /**
+     * Initializes a new customer with given id
+     * @param id customer id
+     * @param context application context
+     */
+    public Customer( String id, Context context) {
+        super( context);
+        this.id = id;
         setDiscountPoints( 0 );
     }
 
