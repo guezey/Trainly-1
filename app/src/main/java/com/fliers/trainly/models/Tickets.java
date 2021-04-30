@@ -469,6 +469,99 @@ s     * @param db SQL Database
     }
 
     /**
+     * Sends query to get a list of given company's tickets sold in last week
+     * @param company company
+     * @return list of tickets
+     */
+    public ArrayList<Ticket> getRecentlySoldTickets( Company company) {
+        // Variables
+        SQLiteDatabase db;
+        Cursor data;
+        long departureTimeStart;
+        long departureTimeEnd;
+        Calendar calendarStart;
+        Calendar calendarEnd;
+
+        // Code
+
+        calendarEnd = Calendar.getInstance();
+        departureTimeEnd = getLongFromCalendar( calendarEnd);
+
+        calendarStart = calendarEnd;
+        calendarStart.add( Calendar.DAY_OF_MONTH, -7);
+        departureTimeStart = getLongFromCalendar( calendarStart);
+
+        db = this.getWritableDatabase();
+        data = db.rawQuery( "SELECT * FROM " + TABLE_NAME + " WHERE " + COMPANY_ID + " = '" + company.getCompanyId() + "' AND " + DEPARTURE_TIME + " >= " + departureTimeStart + " AND " + DEPARTURE_TIME + " <= " + departureTimeEnd + ";", null);
+        return dataToArrayList( data);
+    }
+
+    /**
+     * Sends query to get a list of tickets available to buy
+     * @param departure departure place
+     * @param arrival arrival place
+     * @param departureTime departure time
+     * @return list of tickets
+     */
+    public ArrayList<Ticket> getQueriedTickets( Place departure, Place arrival, Calendar departureTime) {
+        // Variables
+        SQLiteDatabase db;
+        Cursor data;
+        long departureTimeStart;
+        long departureTimeEnd;
+        Calendar calendarStart;
+        Calendar calendarEnd;
+
+        // Code
+        calendarEnd = departureTime;
+        departureTimeEnd = getLongFromCalendar( calendarEnd);
+
+        calendarStart = calendarEnd;
+        calendarStart.add( Calendar.DAY_OF_MONTH, 1);
+        departureTimeStart = getLongFromCalendar( calendarStart);
+
+        db = this.getWritableDatabase();
+        data = db.rawQuery( "SELECT * FROM " + TABLE_NAME + " WHERE " + DEPARTURE + " = '" + departure.getName() + "' AND " + ARRIVAL + " = '" + arrival.getName() + "' AND " + DEPARTURE_TIME + " >= " + departureTimeStart + " AND " + DEPARTURE_TIME + " <= " + departureTimeEnd + " AND " + OWNER + " = ''" + NULL +"'';", null);
+        return dataToArrayList( data);
+    }
+
+    /**
+     * Creates long representation of the given calendar object
+     * @param calendar calendar to be converted
+     * @return long representation
+     */
+    private long getLongFromCalendar( Calendar calendar) {
+        // Variables
+        String year;
+        String month;
+        String day;
+        String hour;
+        String minute;
+
+        // Code
+        year = String.valueOf( calendar.get( Calendar.YEAR));
+        month = String.valueOf( calendar.get( Calendar.MONTH));
+        day = String.valueOf( calendar.get( Calendar.DAY_OF_MONTH));
+        hour = String.valueOf( calendar.get( Calendar.HOUR_OF_DAY));
+        minute = String.valueOf( calendar.get( Calendar.MINUTE));
+
+        if ( month.length() == 1) {
+            month = "0" + month;
+        }
+        if ( day.length() == 1) {
+            day = "0" + day;
+        }
+        if ( hour.length() == 1) {
+            hour = "0" + hour;
+        }
+        if ( minute.length() == 1) {
+            minute = "0" + minute;
+        }
+
+        return Long.parseLong( year + month + day + hour + minute);
+    }
+
+    /**
      * Extracts tickets from given data
      * @param data data to be analyzed
      * @return list of tickets
