@@ -3,6 +3,7 @@ package com.fliers.trainly.models;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -122,6 +123,7 @@ public abstract class User {
                         public void onComplete( @NonNull Task<AuthResult> task) {
                             if ( task.isSuccessful()) {
                                 // Email link verified
+                                preferences.edit().putString( EMAIL, email).apply();
                                 id = email.replace( "@", "_at_");
                                 id = id.replace( ".", "_dot_");
 
@@ -286,7 +288,6 @@ public abstract class User {
      */
     protected void saveToLocalStorage() {
         preferences.edit().putString( NAME, name).apply();
-        preferences.edit().putString( EMAIL, email).apply();
     }
 
     /**
@@ -298,19 +299,13 @@ public abstract class User {
         // Variables
         FirebaseDatabase database;
         DatabaseReference reference;
-        HashMap<String, String> userData;
 
         // Code
         if ( isLoggedIn && isConnectedToInternet()) {
             database = FirebaseDatabase.getInstance();
             reference = database.getReference( SERVER_KEY + "/Users/" + id);
 
-            // Create hash map with given user data
-            userData = new HashMap<>();
-            userData.put( NAME, name);
-
-            // Save map to server
-            reference.setValue( userData);
+            reference.child( NAME).setValue( name);
             saveToLocalStorage();
             listener.onSync( true);
         }
@@ -390,7 +385,7 @@ public abstract class User {
             username = temp[0];
 
             if ( temp[1].contains( ".")) {
-                temp = temp[1].split( ".");
+                temp = temp[1].split( "\\.");
                 domainName = temp[0];
                 domain = temp[1];
 

@@ -6,8 +6,6 @@ package com.fliers.trainly.models;
 *@version 23-04-2021__v/1.1
 */
 public class Seat {
-
-    boolean isEmpty;
     String seatNumber;
     Wagon linkedWagon;
 
@@ -17,7 +15,6 @@ public class Seat {
     * @param linkedWagon
     */
     public Seat( String seatNumber, Wagon linkedWagon) {
-        isEmpty = true;
         this.seatNumber = seatNumber;
         this.linkedWagon = linkedWagon;
     }
@@ -34,19 +31,5 @@ public class Seat {
     */
     public String getSeatNumber() {
         return seatNumber;
-    }
-
-    /**
-    * @return isEmpty
-    */
-    public boolean isEmpty() {
-        return isEmpty;
-    }
-
-    /**
-    * Sets the seat empty
-    */
-    public void setEmpty( boolean isEmpty) {
-        this.isEmpty = isEmpty;
     }
 }

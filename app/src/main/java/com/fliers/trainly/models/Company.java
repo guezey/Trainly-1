@@ -53,10 +53,29 @@ public class Company extends User {
     // Constructor
     /**
      * Initializes a new company
+     * @param context application context
      */
     public Company( Context context) {
         super( context);
         companyId = "000";
+        balance = 0;
+        trains = new ArrayList<>();
+        lines = new ArrayList<>();
+        anonymousFeedback = new ArrayList<>();
+        employees = new ArrayList<>();
+        averagePoint = 0;
+    }
+
+    /**
+     * Initializes a new company with given company id
+     * @param name name of the company
+     * @param companyId company id
+     * @param context application context
+     */
+    public Company( String name, String companyId, Context context) {
+        super( context);
+        this.name = name;
+        this.companyId = companyId;
         balance = 0;
         trains = new ArrayList<>();
         lines = new ArrayList<>();
@@ -170,6 +189,15 @@ public class Company extends User {
     public double getLastWeeksRevenue() {
         // TODO: to be done
         return 0;
+    }
+
+    /**
+     * Getter method for company id
+     * @return company id
+     * @author Alp Afyonluoğlu
+     */
+    public String getCompanyId() {
+        return companyId;
     }
 
     /**
@@ -364,7 +392,7 @@ public class Company extends User {
                          trainIdsArray = trainIds.toArray( new String[trainIds.size()]);
 
                          for ( String trainId : trainIdsArray) {
-                             train = new Train( THIS_COMPANY, defaultPlace, 0, 0, 0, 0, new ArrayList<>(), trainId);
+                             train = new Train( THIS_COMPANY, defaultPlace, 0, 0, 0, 0, trainId);
                              trains.add( train);
                          }
                     }
@@ -522,16 +550,12 @@ public class Company extends User {
 
                     // Save user data to server
                     reference = database.getReference( SERVER_KEY + "/Users/" + id);
-                    data = new HashMap<>();
-                    data.put( COMPANY_ID, companyId);
-                    reference.setValue( data);
+                    reference.child( COMPANY_ID).setValue( companyId);
 
                     // Save company data to server
                     reference = database.getReference( SERVER_KEY + "/Companies/" + companyId);
-                    data = new HashMap<>();
-                    data.put( NAME, name);
-                    data.put( BALANCE, String.valueOf( balance));
-                    reference.setValue( data);
+                    reference.child( NAME).setValue( name);
+                    reference.child( BALANCE).setValue( String.valueOf( balance));
 
                     // Save trains data to server
                     reference = database.getReference( SERVER_KEY + "/Companies/" + companyId + "/trains");
@@ -539,12 +563,10 @@ public class Company extends User {
                         train = trains.get( count);
 
                         // Save train related general info
-                        data = new HashMap<>();
-                        data.put( BUSINESS_WAGON_NO, String.valueOf( train.businessWagonNum));
-                        data.put( ECONOMY_WAGON_NO, String.valueOf( train.economyWagonNum));
-                        data.put( BUSINESS_PRICE, String.valueOf( train.businessPrice));
-                        data.put( ECONOMY_PRICE, String.valueOf( train.economyPrice));
-                        reference.child( train.id).setValue( data);
+                        reference.child( train.id).child( BUSINESS_WAGON_NO).setValue( String.valueOf( train.businessWagonNum));
+                        reference.child( train.id).child( ECONOMY_WAGON_NO).setValue( String.valueOf( train.economyWagonNum));
+                        reference.child( train.id).child( BUSINESS_PRICE).setValue( String.valueOf( train.businessPrice));
+                        reference.child( train.id).child( ECONOMY_PRICE).setValue( String.valueOf( train.economyPrice));
                         // TODO: Add availability
 
                         // Save current location of train
@@ -558,11 +580,9 @@ public class Company extends User {
                         for ( int scheduleCount = 0; scheduleCount < schedules.size(); scheduleCount++) {
                             schedule = schedules.get( scheduleCount);
 
-                            data = new HashMap<>();
-                            data.put( FROM, String.valueOf( schedule.getDeparturePlace().getName()));
-                            data.put( TO, String.valueOf( schedule.getArrivalPlace().getName()));
-                            data.put( ESTIMATED_ARRIVAL, schedule.getIdRepresentation( schedule.getArrivalDate()));
-                            reference.child( train.id).child( SCHEDULES).child( schedule.getIdRepresentation( schedule.getDepartureDate())).setValue( data);
+                            reference.child( train.id).child( SCHEDULES).child( schedule.getIdRepresentation( schedule.getDepartureDate())).child( FROM).setValue( String.valueOf( schedule.getDeparturePlace().getName()));
+                            reference.child( train.id).child( SCHEDULES).child( schedule.getIdRepresentation( schedule.getDepartureDate())).child( TO).setValue( String.valueOf( schedule.getArrivalPlace().getName()));
+                            reference.child( train.id).child( SCHEDULES).child( schedule.getIdRepresentation( schedule.getDepartureDate())).child( ESTIMATED_ARRIVAL).setValue( schedule.getIdRepresentation( schedule.getArrivalDate()));
                         }
                     }
 
@@ -650,8 +670,8 @@ public class Company extends User {
                                         String trainId;
                                         int businessWagonNo;
                                         int economyWagonNo;
-                                        int businessPrice;
-                                        int economyPrice;
+                                        double businessPrice;
+                                        double economyPrice;
                                         int currentX;
                                         int currentY;
                                         Place currentLocation;
@@ -686,12 +706,13 @@ public class Company extends User {
                                                 trainId = trainData.getKey();
                                                 businessWagonNo = Integer.parseInt( trainData.child( trainId).child( BUSINESS_WAGON_NO).getValue( String.class));
                                                 economyWagonNo = Integer.parseInt( trainData.child( trainId).child( ECONOMY_WAGON_NO).getValue( String.class));
-                                                businessPrice = Integer.parseInt( trainData.child( trainId).child( BUSINESS_PRICE).getValue( String.class));
-                                                economyPrice = Integer.parseInt( trainData.child( trainId).child( ECONOMY_PRICE).getValue( String.class));
+                                                businessPrice = Double.parseDouble( trainData.child( trainId).child( BUSINESS_PRICE).getValue( String.class));
+                                                economyPrice = Double.parseDouble( trainData.child( trainId).child( ECONOMY_PRICE).getValue( String.class));
                                                 currentX = Integer.parseInt( trainData.child( trainId).child( CURRENT_LOCATION).child( "x").getValue( String.class));
                                                 currentY = Integer.parseInt( trainData.child( trainId).child( CURRENT_LOCATION).child( "y").getValue( String.class));
                                                 currentLocation = new Place( "Train " + trainId, currentY, currentX);
 
+                                                train = new Train( THIS_COMPANY, currentLocation, businessWagonNo, economyWagonNo, businessPrice, economyPrice, trainId);
                                                 schedules = new ArrayList<>();
                                                 for ( DataSnapshot scheduleData : dataSnapshot.child( trainId).child( SCHEDULES).getChildren()) {
                                                     departureId = scheduleData.getKey();
@@ -703,11 +724,10 @@ public class Company extends User {
                                                     arrival = new Place( to, 0, 0); // TODO: Get coordinates from place list
                                                     line = new Line( departure, arrival);
 
-                                                    schedule = new Schedule( departureId, arrivalId, line, businessWagonNo, economyWagonNo);
+                                                    schedule = new Schedule( departureId, arrivalId, line, businessWagonNo, economyWagonNo, train);
+                                                    train.addSchedule( schedule);
                                                     schedules.add( schedule);
                                                 }
-
-                                                train = new Train( THIS_COMPANY, currentLocation, businessWagonNo, economyWagonNo, businessPrice, economyPrice, schedules, trainId);
                                                 trains.add( train);
                                             }
 
