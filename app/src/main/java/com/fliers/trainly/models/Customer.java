@@ -91,18 +91,12 @@ public class Customer extends User {
                     // Variables
                     FirebaseDatabase database;
                     DatabaseReference reference;
-                    HashMap<String, String> userData;
 
                     // Code
                     database = FirebaseDatabase.getInstance();
                     reference = database.getReference( SERVER_KEY + "/Users/" + id);
 
-                    // Create hash map with given user data
-                    userData = new HashMap<>();
-                    userData.put( POINTS, String.valueOf( discountPoints));
-
-                    // Save map to server
-                    reference.setValue( userData);
+                    reference.child( POINTS).setValue( String.valueOf( discountPoints));
                     listener.onSync( true);
                 }
                 else {

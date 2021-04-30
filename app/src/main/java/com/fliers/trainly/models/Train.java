@@ -26,7 +26,6 @@ public class Train {
     /**
     * Constructor of the Train class
     * @param company
-    * @param line
     * @param spawnPlace
     * @param businessWagonNum
     * @param economyWagonNum
@@ -34,7 +33,7 @@ public class Train {
     * @param ePrice
     */
     public Train( Company company, Place spawnPlace, int businessWagonNum,
-                int economyWagonNum, double bPrice, double ePrice, ArrayList<Schedule> schedules, String id) {
+                int economyWagonNum, double bPrice, double ePrice, String id) {
         linkedCompany = company;
         lat = spawnPlace.getLatitude();
         lon = spawnPlace.getLongitude();
@@ -43,6 +42,7 @@ public class Train {
         this.schedules = schedules;
         businessPrice = bPrice;
         economyPrice = ePrice;
+        schedules = new ArrayList<>();
         this.id = id;
     }
     /**

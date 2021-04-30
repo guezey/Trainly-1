@@ -19,17 +19,21 @@ public class Schedule {
     private Line line;
 
     // Constructors
-    public Schedule( Calendar departureDate, Calendar arrivalDate, Line line, int business, int economy ) {
+    public Schedule( Calendar departureDate, Calendar arrivalDate, Line line, int business, int economy, Train linkedTrain) {
         this.departureDate = departureDate;
         this.arrivalDate = arrivalDate;
         this.line = line;
+        this.linkedTrain = linkedTrain;
+        wagons = new ArrayList<>();
         createWagons( business, economy );
     }
 
-    public Schedule( String departureDateId, String arrivalDateId, Line line, int business, int economy ) {
+    public Schedule( String departureDateId, String arrivalDateId, Line line, int business, int economy, Train linkedTrain) {
         this.departureDate = getDateFromIdRepresentation( departureDateId);
         this.arrivalDate = getDateFromIdRepresentation( arrivalDateId);
         this.line = line;
+        this.linkedTrain = linkedTrain;
+        wagons = new ArrayList<>();
         createWagons( business, economy );
     }
 
@@ -80,12 +84,12 @@ public class Schedule {
         Wagon currentWagon;
 
         for ( int i = 0; i < business; i++ ) {
-            currentWagon = new Wagon( this, true );
+            currentWagon = new Wagon( this, true, i + 1);
             this.getWagons().add( currentWagon );
         }
 
         for ( int j = 0; j < economy; j++ ) {
-            currentWagon = new Wagon( this, false );
+            currentWagon = new Wagon( this, false, business + j + 1);
             this.getWagons().add( currentWagon );
         }
     }
