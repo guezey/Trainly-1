@@ -71,7 +71,7 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
         txtAdvanced.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switchToAdvanced();
+                //switchToAdvanced();
             }
         });
         txtDate.setOnClickListener(new View.OnClickListener() {
@@ -206,8 +206,8 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
         startActivity(switchActivityIntent);
     }
 
-    private void switchToAdvanced() {
-        Intent switchActivityIntent = new Intent(this, AdvancedSearchActivity.class);
-        startActivity(switchActivityIntent);
-    }
+//    private void switchToAdvanced() {
+//        Intent switchActivityIntent = new Intent(this, AdvancedSearchActivity.class);
+//        startActivity(switchActivityIntent);
+//    }
 }

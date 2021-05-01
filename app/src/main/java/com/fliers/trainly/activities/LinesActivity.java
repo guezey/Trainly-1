@@ -3,12 +3,17 @@ package com.fliers.trainly.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Button;
+import android.view.View;
 
 import com.fliers.trainly.R;
 
-import java.awt.Button;
+//import java.awt.Button;
+//import java.awt.View;
 
-import javax.swing.text.View;
+//import javax.swing.text.View;
 
 public class LinesActivity extends AppCompatActivity {
 
@@ -16,7 +21,7 @@ public class LinesActivity extends AppCompatActivity {
     private TextView textView21;
     private EditText editTextTextPersonName2;
     private EditText editTextTextPersonName3;
-    private Textview x1;
+    private TextView x1;
     private TextView y1;
     private TextView x2;
     private TextView y2;
@@ -27,18 +32,22 @@ public class LinesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lines);
 
-        textView20 = (TextView) findByViewId(R.id.textView20);
-        textView21 = (TextView) findbyViewId(R.id.textView21);
+        textView20 = (TextView) findViewById(R.id.textView20);
+        textView21 = (TextView) findViewById(R.id.textView21);
         editTextTextPersonName2 = (EditText) findViewById(R.id.editTextTextPersonName2);
         editTextTextPersonName3 = (EditText) findViewById(R.id.editTextTextPersonName3);
-        button = findViewById(R.id.button);
+        button = (Button) findViewById(R.id.button);
     }
 
     button.setOnClickListener( new View.OnClickListener() {
 
         public void onClick(View view) {
 
+            if (!(editTextTextPersonName2.equals("") || editTextTextPersonName2.equals("Place 1") ||
+                    editTextTextPersonName3.equals("") || editTextTextPersonName3.equals("Place 2"))) {
 
+                //TO-DO
+            }
             if(editTextTextPersonName2.equals("") || editTextTextPersonName2.equals("Place 1")) {
 
                 editTextTextPersonName2.setError("Invalid Input");
@@ -47,12 +56,8 @@ public class LinesActivity extends AppCompatActivity {
 
                 editTextTextPersonName3.setError("Invalid Input");
             }
-
-            if (!(editTextTextPersonName2.equals("") || editTextTextPersonName2.equals("Place 1") || editTextTextPersonName3.equals("") || editTextTextPersonName3.equals("Place 2"))) {
-
-                //TO-DO
-            }
         }
     });
+
 
 }
