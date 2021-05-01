@@ -8,11 +8,12 @@
     <color name="orange700">#F57C00</color>
     <color name="yellow600">#FDD835</color>
     <color name="black">#FF000000</color>
-    <color name="blackAlpha">#70000000</color>
+    <color name="blackAlpha">#55000000</color>
     <color name="white">#FAFAFA</color>
 
     <color name="gray600">#757575</color>
     <color name="gray800A">#424242</color>
+    <color name="gray300">#E0E0E0</color>
     <color name="gray010">#EEEEEE</color>
 
     <color name="red900">#B71C1C</color>

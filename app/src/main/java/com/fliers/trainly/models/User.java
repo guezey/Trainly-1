@@ -42,6 +42,7 @@ public abstract class User {
     protected String id;
     protected boolean isLoggedIn;
     protected boolean isNewAccount;
+    protected boolean isOffline;
     private Context context;
 
     // Constructors
@@ -55,6 +56,7 @@ public abstract class User {
         isLoggedIn = false;
         isNewAccount = true;
         setName( DEFAULT_NAME);
+        isOffline = true;
 
         preferences = context.getSharedPreferences( String.valueOf( R.string.app_name), Context.MODE_PRIVATE);
     }
@@ -220,11 +222,13 @@ public abstract class User {
                 getFromServer( new ServerSyncListener() {
                     @Override
                     public void onSync( boolean isSynced) {
+                        isOffline = !isSynced;
                         listener.onSync( isSynced);
                     }
                 });
             }
             else {
+                isOffline = true;
                 name = preferences.getString( NAME, DEFAULT_NAME);
                 listener.onSync( true);
             }
@@ -444,7 +448,7 @@ public abstract class User {
      * Checks connection status
      * @return whether device is connected to internet or not
      */
-    protected boolean isConnectedToInternet() {
+    public boolean isConnectedToInternet() {
         // Variables
         ConnectivityManager connectivityManager;
 

@@ -32,6 +32,13 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="Theme.Trainly.NoActionBar.FullScreenActivity" parent="Theme.Trainly.NoActionBar">
+        <item name="android:windowLightStatusBar" tools:ignore="NewApi">false</item>
+
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
+
     <style name="Theme.Trainly.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.Trainly.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
