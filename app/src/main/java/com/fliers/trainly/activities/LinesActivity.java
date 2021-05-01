@@ -38,21 +38,17 @@ public class LinesActivity extends AppCompatActivity {
 
         public void onClick(View view) {
 
-            if( editTextTextPersonName2.equals("") || editTextTextPersonName2.equals("Place 1") || editTextTextPersonName3.equals("") || editTextTextPersonName3.equals("Place 2")) {
 
-                editTextTextPersonName2.setError("Invalid Input");
-                editTextTextPersonName3.setError("Invalid Input");
-            }
-            else if(editTextTextPersonName2.equals("") || editTextTextPersonName2.equals("Place 1")) {
+            if(editTextTextPersonName2.equals("") || editTextTextPersonName2.equals("Place 1")) {
 
                 editTextTextPersonName2.setError("Invalid Input");
             }
-            else if( editTextTextPersonName3.equals("") || editTextTextPersonName3.equals("Place 2")) {
+            if( editTextTextPersonName3.equals("") || editTextTextPersonName3.equals("Place 2")) {
 
                 editTextTextPersonName3.setError("Invalid Input");
             }
 
-            else{
+            if (!(editTextTextPersonName2.equals("") || editTextTextPersonName2.equals("Place 1") || editTextTextPersonName3.equals("") || editTextTextPersonName3.equals("Place 2"))) {
 
                 //TO-DO
             }
