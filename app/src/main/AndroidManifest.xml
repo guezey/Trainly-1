@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Trainly.NoActionBar">
-        <activity android:name=".activities.SplashActivity">
+        <activity android:name=".activities.SplashActivity"
+            android:theme="@style/Theme.Trainly.whiteBg">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -54,7 +55,7 @@
         <activity android:name=".activities.MainActivity" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="MAPS_API_KEY" />
+            android:value="AIzaSyCUVyksVvyWTWKIWo1QuhSwpZnjtWql2eE" />
     </application>
 
 </manifest>

@@ -7,10 +7,10 @@
         <item name="colorOnPrimary">@color/white</item>
 
         <!-- Status bar color -->
-        <item name="android:statusBarColor" tools:targetApi="l">@color/white</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/gray010</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <!-- Navigation bar color -->
-        <item name="android:navigationBarColor" tools:ignore="NewApi">@color/white</item>
+        <item name="android:navigationBarColor" tools:ignore="NewApi">@color/gray010</item>
         <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>
         <!-- Light background and dark text -->
         <item name="android:colorBackground">@color/white</item>
@@ -21,7 +21,12 @@
     </style>
 
     <style name="Theme.Trainly.whiteBg" parent="Theme.Trainly">
-
+        <!-- Status bar color -->
+        <item name="android:statusBarColor" tools:targetApi="l">@color/white</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <!-- Navigation bar color -->
+        <item name="android:navigationBarColor" tools:ignore="NewApi">@color/white</item>
+        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>
         <!-- Light background and dark text -->
         <item name="android:colorBackground">@color/white</item>
         <item name="android:textColor">@color/black</item>

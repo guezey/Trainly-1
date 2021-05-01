@@ -8,7 +8,7 @@
     tools:context=".activities.WelcomeActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layoutFilter"
+        android:id="@+id/layoutFilterW"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/blackAlpha"
@@ -18,20 +18,20 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/imgAboutW"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="6dp"
-            android:tint="@color/white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_baseline_help_outline_48" />
+            app:srcCompat="@drawable/ic_baseline_help_outline_48"
+            app:tint="@color/white" />
 
         <ImageView
-            android:id="@+id/imageView20"
+            android:id="@+id/imgLogoTextW"
             android:layout_width="wrap_content"
             android:layout_height="80dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -42,7 +42,7 @@
             app:srcCompat="@drawable/logo_text" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/tvMottoW"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text='"Manage your travels!"'
@@ -51,10 +51,10 @@
             android:textStyle="italic"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView20" />
+            app:layout_constraintTop_toBottomOf="@+id/imgLogoTextW" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/btCustomerW"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -69,12 +69,12 @@
             android:textSize="18dp"
             android:textStyle="bold"
             app:backgroundTint="@color/white"
-            app:layout_constraintBottom_toTopOf="@+id/button2"
+            app:layout_constraintBottom_toTopOf="@+id/btCompanyW"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/btCompanyW"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
