@@ -10,7 +10,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -486,15 +486,15 @@ public class Company extends User {
         preferences.edit().putInt( BALANCE, balance).apply();
 
         // Save trains
-        trainIds = new HashSet<String>();
+        trainIds = new LinkedHashSet<String>();
         for ( int count = 0; count < trains.size(); count++) {
             trainIds.add( trains.get( count).getId());
         }
         preferences.edit().putStringSet( TRAINS, trainIds).apply();
 
         // Save employees
-        employeeLinkIds = new HashSet<String>();
-        employeeNames = new HashSet<String>();
+        employeeLinkIds = new LinkedHashSet<String>();
+        employeeNames = new LinkedHashSet<String>();
         for ( int count = 0; count < employees.size(); count++) {
             employeeLinkIds.add( String.valueOf( employees.get( count).getAssignedTrain()));
             employeeNames.add( employees.get( count).getName());
@@ -503,8 +503,8 @@ public class Company extends User {
         preferences.edit().putStringSet( EMPLOYEE_NAMES, employeeNames).apply();
 
         // Save feedback
-        feedbackStars = new HashSet<String>();
-        feedbackComments = new HashSet<String>();
+        feedbackStars = new LinkedHashSet<String>();
+        feedbackComments = new LinkedHashSet<String>();
         for ( int count = 0; count < anonymousFeedback.size(); count++) {
             feedbackStars.add( String.valueOf( anonymousFeedback.get( count).getStarRating()));
             feedbackComments.add( anonymousFeedback.get( count).getComment());
@@ -513,8 +513,8 @@ public class Company extends User {
         preferences.edit().putStringSet( FEEDBACK_COMMENTS, feedbackComments).apply();
 
         // Save lines
-        lineDepartures = new HashSet<String>();
-        lineArrivals = new HashSet<String>();
+        lineDepartures = new LinkedHashSet<String>();
+        lineArrivals = new LinkedHashSet<String>();
         for ( int count = 0; count < lines.size(); count++) {
             lineDepartures.add( lines.get( count).getDeparture().getName());
             lineArrivals.add( lines.get( count).getArrival().getName());

@@ -46,7 +46,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 // Variables
-                int loginType;;
+                int loginType;
                 Intent welcomeIntent;
                 User currentUser;
                 boolean update;
