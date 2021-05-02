@@ -28,7 +28,7 @@ import java.util.HashMap;
 public abstract class User {
     // Properties
     protected static final String SERVER_KEY = "KEY_Tr21iwuS3obrslfL4";
-    protected final String NAME = "name";
+    protected static final String NAME = "name";
     private final String EMAIL = "email";
     private final String TEMP_EMAIL = "tempEmail";
     private final String TEMP_NAME = "tempName";
@@ -199,6 +199,20 @@ public abstract class User {
      */
     public static void setCurrentUserInstance( User user) {
         User.currentUserInstance = user;
+    }
+
+    /**
+     * Gets name of current user directly from SharedPreferences
+     * @param context application context
+     * @return name of current user
+     */
+    public static String getCurrentUserName( Context context) {
+        // Variables
+        SharedPreferences preferences;
+
+        // Code
+        preferences = context.getSharedPreferences( String.valueOf( R.string.app_name), Context.MODE_PRIVATE);
+        return preferences.getString( NAME, "");
     }
 
     /**

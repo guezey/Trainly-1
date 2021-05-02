@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.TextView;
 
 import com.fliers.trainly.R;
 import com.fliers.trainly.models.Company;
@@ -37,9 +38,11 @@ public class SplashActivity extends AppCompatActivity {
         Handler handler;
         SharedPreferences preferences;
         CardView cardWelcome;
+        TextView tvWelcomeTitle;
 
         // Code
         cardWelcome = findViewById( R.id.cardWelcome);
+        tvWelcomeTitle = findViewById( R.id.tvWelcomeTitle);
         preferences = getSharedPreferences( String.valueOf( R.string.app_name), Context.MODE_PRIVATE);
 
         // Wait for 250 milliseconds to load graphics
@@ -53,6 +56,7 @@ public class SplashActivity extends AppCompatActivity {
                 User currentUser;
                 boolean update;
                 Places places;
+                String name;
 
                 // Code
                 loginType = preferences.getInt( LOGGED_IN_USER_TYPE, NO_LOGIN);
@@ -79,8 +83,15 @@ public class SplashActivity extends AppCompatActivity {
                         update = false;
                     }
 
-                    cardWelcome.animate().alpha( 1).setDuration( 250).setInterpolator( new DecelerateInterpolator()).start();
                     places = new Places( getApplicationContext());
+                    name = User.getCurrentUserName( getApplicationContext());
+
+                    // Get only first name
+                    if ( name.contains( " ")) {
+                        name = name.split( " ")[0];
+                    }
+                    tvWelcomeTitle.setText( "Welcome " + name + "!");
+                    cardWelcome.animate().alpha( 1).setDuration( 250).setInterpolator( new DecelerateInterpolator()).start();
 
                     // Update places with server data
                     places.update( new Places.ServerSyncListener() {

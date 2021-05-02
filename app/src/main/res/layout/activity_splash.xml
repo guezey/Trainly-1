@@ -10,13 +10,13 @@
         android:id="@+id/imgLogo"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:tint="@color/gray300"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.3"
-        app:srcCompat="@drawable/logo_foreground" />
+        app:srcCompat="@drawable/logo_foreground"
+        app:tint="@color/gray300" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardWelcome"
@@ -46,7 +46,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="24dp"
                 android:fontFamily="@font/nunito_bold"
-                android:text="Welcome Again!"
+                android:text="Welcome Name!"
                 android:textAlignment="center"
                 android:textSize="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
