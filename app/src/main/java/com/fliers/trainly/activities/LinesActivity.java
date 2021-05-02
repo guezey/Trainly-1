@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.AlertDialog;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Button;
 import android.view.View;
@@ -41,6 +42,7 @@ public class LinesActivity extends AppCompatActivity implements LinesCoordinates
     private Button button;
     private SharedPreferences preferences;
     private int loginType;
+    private ImageView back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,14 @@ public class LinesActivity extends AppCompatActivity implements LinesCoordinates
         editTextTextPersonName2 = (EditText) findViewById(R.id.editTextTextPersonName2);
         editTextTextPersonName3 = (EditText) findViewById(R.id.editTextTextPersonName3);
         button = (Button) findViewById(R.id.button);
+        back = (ImageView) findViewById(R.id.imageView2);
+
+        back.setOnClickListener( new View.OnClickListener() {
+
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         button.setOnClickListener( new View.OnClickListener() {
 
