@@ -3,7 +3,7 @@ package com.fliers.trainly.models;
 /**
  * Class that represents train lines.
  * @author Ali Emir Güzey
- * @version 22.04.2021
+ * @version 02.05.2021
  */
 public class Line {
 
@@ -43,10 +43,27 @@ public class Line {
         return departure;
     }
 
+    /**
+     * Returns line's distance.
+     * @return distance
+     */
     public int getDistance() {
         return distance;
     }
 
+    /**
+     * Returns String representation of the line.
+     * @return String representation
+     */
+    @Override
+    public String toString() {
+        return departure.getName() + " - " + arrival.getName();
+    }
+
+    /**
+     * Calculates line's distance.
+     * @return line's distance
+     */
     private int calculateDistance() {
         final int earthRadiusKm = 6371;
         double depLat;
