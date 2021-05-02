@@ -3,7 +3,6 @@ package com.fliers.trainly.models;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
-import android.widget.Toast;
 
 import com.fliers.trainly.R;
 import com.google.firebase.database.DataSnapshot;
@@ -13,11 +12,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 /**
  * Class to store all places in a list.
@@ -30,6 +26,7 @@ public class Places {
     private final String PLACE_NAMES = "placeNames";
     private final String PLACE_XS = "placeXs";
     private final String PLACE_YS = "placeYs";
+    private final String SEPARATOR = "<S>";
 
     private static Places instance = null;
     private ArrayList<Place> places;
@@ -82,9 +79,9 @@ public class Places {
         // Variables
         FirebaseDatabase database;
         DatabaseReference reference;
-        Set<String> placeNames;
-        Set<String> placeXs;
-        Set<String> placeYs;
+        ArrayList<String> placeNames;
+        ArrayList<String> placeXs;
+        ArrayList<String> placeYs;
 
         // Code
         // Only add if device is connected to the internet and
@@ -101,17 +98,17 @@ public class Places {
             places.add( p);
 
             // Save to local storage
-            placeNames = preferences.getStringSet( PLACE_NAMES, new LinkedHashSet<String>());
-            placeXs = preferences.getStringSet( PLACE_XS, new LinkedHashSet<String>());
-            placeYs = preferences.getStringSet( PLACE_YS, new LinkedHashSet<String>());
+            placeNames = stringToArrayList( preferences.getString( PLACE_NAMES, ""));
+            placeXs = stringToArrayList( preferences.getString( PLACE_XS, ""));
+            placeYs = stringToArrayList( preferences.getString( PLACE_YS, ""));
 
             placeNames.add( p.getName());
             placeXs.add( String.valueOf( p.getLongitude()));
             placeYs.add( String.valueOf( p.getLatitude()));
 
-            preferences.edit().putStringSet( PLACE_NAMES, placeNames).apply();
-            preferences.edit().putStringSet( PLACE_XS, placeXs).apply();
-            preferences.edit().putStringSet( PLACE_YS, placeYs).apply();
+            preferences.edit().putString( PLACE_NAMES, arrayListToString( placeNames)).apply();
+            preferences.edit().putString( PLACE_XS, arrayListToString( placeXs)).apply();
+            preferences.edit().putString( PLACE_YS, arrayListToString( placeYs)).apply();
 
             listener.onSync( true);
         }
@@ -129,9 +126,9 @@ public class Places {
         // Variables
         FirebaseDatabase database;
         DatabaseReference reference;
-        Set<String> placeNames;
-        Set<String> placeXs;
-        Set<String> placeYs;
+        ArrayList<String> placeNames;
+        ArrayList<String> placeXs;
+        ArrayList<String> placeYs;
 
         // Code
         // Only remove if device is connected to the internet and
@@ -143,13 +140,28 @@ public class Places {
             // Remove from server
             reference.child( p.getName()).removeValue();
 
-            // Update local storage and memory list data with updated server data
-            update( new ServerSyncListener() {
-                @Override
-                public void onSync( boolean isSynced) {
-                    listener.onSync( isSynced);
+            // Remove from list in memory
+            places.add( p);
+
+            // Remove from local storage
+            placeNames = stringToArrayList( preferences.getString( PLACE_NAMES, ""));
+            placeXs = stringToArrayList( preferences.getString( PLACE_XS, ""));
+            placeYs = stringToArrayList( preferences.getString( PLACE_YS, ""));
+
+            for ( int count = 0; count < placeNames.size(); count++) {
+                if ( p.getName().equals( placeNames.get( count))) {
+                    placeNames.remove( count);
+                    placeXs.remove( count);
+                    placeYs.remove( count);
+                    break;
                 }
-            });
+            }
+
+            preferences.edit().putString( PLACE_NAMES, arrayListToString( placeNames)).apply();
+            preferences.edit().putString( PLACE_XS, arrayListToString( placeXs)).apply();
+            preferences.edit().putString( PLACE_YS, arrayListToString( placeYs)).apply();
+
+            listener.onSync( true);
         }
         else {
             listener.onSync( false);
@@ -167,12 +179,9 @@ public class Places {
         // Variables
         FirebaseDatabase database;
         DatabaseReference reference;
-        Set<String> placeNames;
-        Set<String> placeXs;
-        Set<String> placeYs;
-        String[] placeNamesArray;
-        String[] placeXsArray;
-        String[] placeYsArray;
+        ArrayList<String> placeNames;
+        ArrayList<String> placeXs;
+        ArrayList<String> placeYs;
         Place place;
 
         // Code
@@ -186,9 +195,9 @@ public class Places {
                     // Variables
                     HashMap<String, String> coordinates;
                     String placeName;
-                    Set<String> retrievedPlaceNames;
-                    Set<String> retrievedPlaceXs;
-                    Set<String> retrievedPlaceYs;
+                    ArrayList<String> retrievedPlaceNames;
+                    ArrayList<String> retrievedPlaceXs;
+                    ArrayList<String> retrievedPlaceYs;
                     Place retrievedPlace;
 
                     // Code
@@ -196,9 +205,9 @@ public class Places {
 
                     // Check if username entry exists on server or not
                     places = new ArrayList<>();
-                    retrievedPlaceNames = new HashSet<String>();
-                    retrievedPlaceXs = new HashSet<String>();
-                    retrievedPlaceYs = new HashSet<String>();
+                    retrievedPlaceNames = new ArrayList<>();
+                    retrievedPlaceXs = new ArrayList<>();
+                    retrievedPlaceYs = new ArrayList<>();
                     if ( dataSnapshot.exists()) {
                         // Get all places from server one by one
                         for ( DataSnapshot placeInfo : dataSnapshot.getChildren()) {
@@ -215,9 +224,9 @@ public class Places {
                             retrievedPlaceYs.add( coordinates.get( "y"));
                         }
                     }
-                    preferences.edit().putStringSet( PLACE_NAMES, retrievedPlaceNames).apply();
-                    preferences.edit().putStringSet( PLACE_XS, retrievedPlaceXs).apply();
-                    preferences.edit().putStringSet( PLACE_YS, retrievedPlaceYs).apply();
+                    preferences.edit().putString( PLACE_NAMES, arrayListToString( retrievedPlaceNames)).apply();
+                    preferences.edit().putString( PLACE_XS, arrayListToString( retrievedPlaceXs)).apply();
+                    preferences.edit().putString( PLACE_YS, arrayListToString( retrievedPlaceYs)).apply();
 
                     listener.onSync( true);
                 }
@@ -234,19 +243,14 @@ public class Places {
         else {
             places = new ArrayList<>();
 
-            placeNames = preferences.getStringSet( PLACE_NAMES, null);
-            placeXs = preferences.getStringSet( PLACE_XS, null);
-            placeYs = preferences.getStringSet( PLACE_YS, null);
-            if ( placeNames != null) {
-                placeNamesArray = placeNames.toArray( new String[placeNames.size()]);
-                placeXsArray = placeXs.toArray( new String[placeXs.size()]);
-                placeYsArray = placeYs.toArray( new String[placeYs.size()]);
-
-                for ( int count = 0; count < placeNamesArray.length; count++) {
-                    place = new Place( placeNamesArray[count], Double.parseDouble( placeYsArray[count]), Double.parseDouble( placeXsArray[count]));
-                    places.add( place);
-                }
+            placeNames = stringToArrayList( preferences.getString( PLACE_NAMES, ""));
+            placeXs = stringToArrayList( preferences.getString( PLACE_XS, ""));
+            placeYs = stringToArrayList( preferences.getString( PLACE_YS, ""));
+            for ( int count = 0; count < placeNames.size(); count++) {
+                place = new Place( placeNames.get( count), Double.parseDouble( placeYs.get( count)), Double.parseDouble( placeXs.get( count)));
+                places.add( place);
             }
+
             listener.onSync( true);
         }
     }
@@ -282,6 +286,55 @@ public class Places {
         // Code
         connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         return connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected();
+    }
+
+    /**
+     * Converts array list of strings to string to be able to store the
+     * array list in SharedPreferences
+     * @param arrayList array list to be converted
+     * @return converted string
+     * @author Alp Afyonluoğlu
+     */
+    private String arrayListToString( ArrayList<String> arrayList) {
+        //  Variables
+        StringBuilder stringBuilder;
+
+        // Code
+        stringBuilder = new StringBuilder();
+        for ( int count = 0; count < arrayList.size(); count++) {
+            stringBuilder.append( arrayList.get( count));
+
+            if ( count != arrayList.size() - 1) {
+                stringBuilder.append( SEPARATOR);
+            }
+        }
+        return stringBuilder.toString();
+    }
+
+    /**
+     * Converts string to array list of strings to restore array list from
+     * stored SharedPreferences string
+     * @param string string to be converted
+     * @return converted array list of strings
+     * @author Alp Afyonluoğlu
+     */
+    private ArrayList<String> stringToArrayList( String string) {
+        // Variables
+        String[] array;
+        ArrayList<String> arrayList;
+
+        // Code
+        arrayList = new ArrayList<>();
+        if ( string.contains( SEPARATOR)) {
+            array = string.split( SEPARATOR);
+            return new ArrayList<>( Arrays.asList( array));
+        }
+        else {
+            if ( !string.equals( "")) {
+                arrayList.add( string);
+            }
+            return arrayList;
+        }
     }
 
     public interface ServerSyncListener {

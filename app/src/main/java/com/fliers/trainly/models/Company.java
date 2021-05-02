@@ -9,9 +9,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 /**
  * Class that represents company users.
@@ -41,6 +40,7 @@ public class Company extends User {
     private final String LINE_ARRIVALS = "lineArrivals";
     private final String DEPARTURE = "departure";
     private final String ARRIVAL = "arrival";
+    private final String SEPARATOR = "<S>";
 
     private String companyId;
     private int balance;
@@ -354,31 +354,27 @@ public class Company extends User {
             @Override
             public void onSync( boolean isSynced) {
                 // Variables
-                Set<String> trainIds;
-                Set<String> employeeNames;
-                Set<String> employeeLinkedIds;
-                Set<String> feedbackStars;
-                Set<String> feedbackComments;
-                Set<String> lineDepartures;
-                Set<String> lineArrivals;
-                String[] trainIdsArray;
-                String[] employeeNamesArray;
-                String[] employeeLinkedIdsArray;
-                String[] feedbackStarsArray;
-                String[] feedbackCommentsArray;
-                String[] lineDeparturesArray;
-                String[] lineArrivalsArray;
+                ArrayList<String> trainIds;
+                ArrayList<String> employeeNames;
+                ArrayList<String> employeeLinkedIds;
+                ArrayList<String> feedbackStars;
+                ArrayList<String> feedbackComments;
+                ArrayList<String> lineDepartures;
+                ArrayList<String> lineArrivals;
                 Train train;
                 Place defaultPlace;
                 Employee employee;
                 boolean islinkedTrainFound;
                 Ticket ticket;
                 Line line;
+                Places places;
                 Place departure;
                 Place arrival;
 
                 // Code
                 if ( isSynced && !update) {
+                    places = Places.getInstance();
+
                     companyId = preferences.getString( COMPANY_ID, "000");
                     balance = preferences.getInt( BALANCE, 0);
 
@@ -386,77 +382,58 @@ public class Company extends User {
                     defaultPlace = new Place( "Unknown", 0, 0);
 
                     // Create trains
-                    trainIds = preferences.getStringSet( TRAINS, null);
+                    trainIds = stringToArrayList( preferences.getString( TRAINS, ""));
                     trains = new ArrayList<>();
-                    if ( trainIds != null) {
-                         trainIdsArray = trainIds.toArray( new String[trainIds.size()]);
-
-                         for ( String trainId : trainIdsArray) {
-                             train = new Train( THIS_COMPANY, defaultPlace, 0, 0, 0, 0, trainId);
-                             trains.add( train);
-                         }
+                    for ( String trainId : trainIds) {
+                        train = new Train( THIS_COMPANY, defaultPlace, 0, 0, 0, 0, trainId);
+                        trains.add( train);
                     }
 
                     // Create employees
-                    employeeNames = preferences.getStringSet( EMPLOYEE_NAMES, null);
-                    employeeLinkedIds = preferences.getStringSet( EMPLOYEE_LINKED_TRAIN_IDS, null);
+                    employeeNames = stringToArrayList( preferences.getString( EMPLOYEE_NAMES, ""));
+                    employeeLinkedIds = stringToArrayList( preferences.getString( EMPLOYEE_LINKED_TRAIN_IDS, ""));
                     employees = new ArrayList<>();
-                    if ( employeeNames != null) {
-                        employeeNamesArray = employeeNames.toArray( new String[employeeNames.size()]);
-                        employeeLinkedIdsArray = employeeLinkedIds.toArray( new String[employeeLinkedIds.size()]);
-
-                        for ( int count = 0; count < employeeLinkedIdsArray.length; count++) {
-                            // Find linked train of the employee
-                            islinkedTrainFound = false;
-                            for ( Train linkedTrain : trains) {
-                                if ( linkedTrain.getId().equals( employeeLinkedIdsArray[count])) {
-                                    employee = new Employee( employeeNamesArray[count], linkedTrain);
-                                    employees.add( employee);
-
-                                    islinkedTrainFound = true;
-                                    break;
-                                }
-                            }
-
-                            if ( !islinkedTrainFound) {
-                                employee = new Employee( employeeNamesArray[count], null);
+                    for ( int count = 0; count < employeeLinkedIds.size(); count++) {
+                        // Find linked train of the employee
+                        islinkedTrainFound = false;
+                        for ( Train linkedTrain : trains) {
+                            if ( linkedTrain.getId().equals( employeeLinkedIds.get( count))) {
+                                employee = new Employee( employeeNames.get( count), linkedTrain);
                                 employees.add( employee);
+
+                                islinkedTrainFound = true;
+                                break;
                             }
+                        }
+
+                        if ( !islinkedTrainFound) {
+                            employee = new Employee( employeeNames.get( count), null);
+                            employees.add( employee);
                         }
                     }
 
                     // Create anonymous feedback tickets
-                    feedbackStars = preferences.getStringSet( FEEDBACK_STARS, null);
-                    feedbackComments = preferences.getStringSet( FEEDBACK_COMMENTS, null);
+                    feedbackStars = stringToArrayList( preferences.getString( FEEDBACK_STARS, ""));
+                    feedbackComments = stringToArrayList( preferences.getString( FEEDBACK_COMMENTS, ""));
                     anonymousFeedback = new ArrayList<>();
-                    if ( feedbackStars != null) {
-                        feedbackStarsArray = feedbackStars.toArray( new String[feedbackStars.size()]);
-                        feedbackCommentsArray = feedbackComments.toArray( new String[feedbackComments.size()]);
-
-                        for ( int count = 0; count < feedbackStarsArray.length; count++) {
-                            ticket = new Ticket( null, null);
-                            ticket.setStarRating( Integer.parseInt( feedbackStarsArray[count]));
-                            ticket.setComment( feedbackCommentsArray[count]);
-                            anonymousFeedback.add( ticket);
-                        }
+                    for ( int count = 0; count < feedbackStars.size(); count++) {
+                        ticket = new Ticket( null, null);
+                        ticket.setStarRating( Integer.parseInt( feedbackStars.get( count)));
+                        ticket.setComment( feedbackComments.get( count));
+                        anonymousFeedback.add( ticket);
                     }
                     calculateAveragePoint();
 
                     // Create lines
-                    lineDepartures = preferences.getStringSet( LINE_DEPARTURES, null);
-                    lineArrivals = preferences.getStringSet( LINE_ARRIVALS, null);
+                    lineDepartures = stringToArrayList( preferences.getString( LINE_DEPARTURES, ""));
+                    lineArrivals = stringToArrayList( preferences.getString( LINE_ARRIVALS, ""));
                     lines = new ArrayList<>();
-                    if ( lineDepartures != null) {
-                        lineDeparturesArray = lineDepartures.toArray( new String[lineDepartures.size()]);
-                        lineArrivalsArray = lineArrivals.toArray( new String[lineArrivals.size()]);
+                    for ( int count = 0; count < lineDepartures.size(); count++) {
+                        arrival = places.findByName( lineArrivals.get( count));
+                        departure = places.findByName( lineDepartures.get( count));
 
-                        for ( int count = 0; count < lineDeparturesArray.length; count++) {
-                            arrival = new Place( lineArrivalsArray[count], 0, 0); // TODO: Get coordinates
-                            departure = new Place( lineDeparturesArray[count], 0, 0); // TODO: Get coordinates
-
-                            line = new Line( departure, arrival);
-                            lines.add( line);
-                        }
+                        line = new Line( departure, arrival);
+                        lines.add( line);
                     }
                 }
 
@@ -467,17 +444,18 @@ public class Company extends User {
 
     /**
      * Saves user data to local storage
+     * @author Alp Afyonluoğlu
      */
     @Override
     protected void saveToLocalStorage() {
         // Variables
-        Set<String> trainIds;
-        Set<String> employeeLinkIds;
-        Set<String> employeeNames;
-        Set<String> feedbackStars;
-        Set<String> feedbackComments;
-        Set<String> lineDepartures;
-        Set<String> lineArrivals;
+        ArrayList<String> trainIds;
+        ArrayList<String> employeeLinkIds;
+        ArrayList<String> employeeNames;
+        ArrayList<String> feedbackStars;
+        ArrayList<String> feedbackComments;
+        ArrayList<String> lineDepartures;
+        ArrayList<String> lineArrivals;
 
         // Code
         super.saveToLocalStorage();
@@ -486,41 +464,41 @@ public class Company extends User {
         preferences.edit().putInt( BALANCE, balance).apply();
 
         // Save trains
-        trainIds = new LinkedHashSet<String>();
+        trainIds = new ArrayList<>();
         for ( int count = 0; count < trains.size(); count++) {
             trainIds.add( trains.get( count).getId());
         }
-        preferences.edit().putStringSet( TRAINS, trainIds).apply();
+        preferences.edit().putString( TRAINS, arrayListToString( trainIds)).apply();
 
         // Save employees
-        employeeLinkIds = new LinkedHashSet<String>();
-        employeeNames = new LinkedHashSet<String>();
+        employeeLinkIds = new ArrayList<>();
+        employeeNames = new ArrayList<>();
         for ( int count = 0; count < employees.size(); count++) {
             employeeLinkIds.add( String.valueOf( employees.get( count).getAssignedTrain()));
             employeeNames.add( employees.get( count).getName());
         }
-        preferences.edit().putStringSet( EMPLOYEE_LINKED_TRAIN_IDS, employeeLinkIds).apply();
-        preferences.edit().putStringSet( EMPLOYEE_NAMES, employeeNames).apply();
+        preferences.edit().putString( EMPLOYEE_LINKED_TRAIN_IDS, arrayListToString( employeeLinkIds)).apply();
+        preferences.edit().putString( EMPLOYEE_NAMES, arrayListToString( employeeNames)).apply();
 
         // Save feedback
-        feedbackStars = new LinkedHashSet<String>();
-        feedbackComments = new LinkedHashSet<String>();
+        feedbackStars = new ArrayList<>();
+        feedbackComments = new ArrayList<>();
         for ( int count = 0; count < anonymousFeedback.size(); count++) {
             feedbackStars.add( String.valueOf( anonymousFeedback.get( count).getStarRating()));
             feedbackComments.add( anonymousFeedback.get( count).getComment());
         }
-        preferences.edit().putStringSet( FEEDBACK_STARS, feedbackStars).apply();
-        preferences.edit().putStringSet( FEEDBACK_COMMENTS, feedbackComments).apply();
+        preferences.edit().putString( FEEDBACK_STARS, arrayListToString( feedbackStars)).apply();
+        preferences.edit().putString( FEEDBACK_COMMENTS, arrayListToString( feedbackComments)).apply();
 
         // Save lines
-        lineDepartures = new LinkedHashSet<String>();
-        lineArrivals = new LinkedHashSet<String>();
+        lineDepartures = new ArrayList<>();
+        lineArrivals = new ArrayList<>();
         for ( int count = 0; count < lines.size(); count++) {
             lineDepartures.add( lines.get( count).getDeparture().getName());
             lineArrivals.add( lines.get( count).getArrival().getName());
         }
-        preferences.edit().putStringSet( LINE_DEPARTURES, lineDepartures).apply();
-        preferences.edit().putStringSet( LINE_ARRIVALS, lineArrivals).apply();
+        preferences.edit().putString( LINE_DEPARTURES, arrayListToString( lineDepartures)).apply();
+        preferences.edit().putString( LINE_ARRIVALS, arrayListToString( lineArrivals)).apply();
     }
 
     /**
@@ -681,6 +659,7 @@ public class Company extends User {
                                         String arrivalId;
                                         String from;
                                         String to;
+                                        Places places;
                                         Place departure;
                                         Place arrival;
                                         Line line;
@@ -697,6 +676,7 @@ public class Company extends User {
                                         // Code
                                         referenceCompany.removeEventListener( this);
                                         if ( dataSnapshot.exists()) {
+                                            places = Places.getInstance();
                                             companyData = (HashMap<String, Object>) dataSnapshot.getValue();
                                             balance = Integer.parseInt( (String) companyData.get( COMPANY_ID));
 
@@ -720,8 +700,8 @@ public class Company extends User {
                                                     from = trainData.child( FROM).getValue( String.class);
                                                     to = trainData.child( TO).getValue( String.class);
 
-                                                    departure = new Place( from, 0, 0); // TODO: Get coordinates from place list
-                                                    arrival = new Place( to, 0, 0); // TODO: Get coordinates from place list
+                                                    departure = places.findByName( from);
+                                                    arrival = places.findByName( to);
                                                     line = new Line( departure, arrival);
 
                                                     schedule = new Schedule( departureId, arrivalId, line, businessWagonNo, economyWagonNo, train);
@@ -774,8 +754,8 @@ public class Company extends User {
                                                 lineDeparture = ticketData.child( DEPARTURE).getValue( String.class);
                                                 lineArrival = ticketData.child( ARRIVAL).getValue( String.class);
 
-                                                arrival = new Place( lineArrival, 0, 0); // TODO: Get coordinates
-                                                departure = new Place( lineDeparture, 0, 0); // TODO: Get coordinates
+                                                arrival = places.findByName( lineArrival);
+                                                departure = places.findByName( lineDeparture);
 
                                                 line = new Line( departure, arrival);
                                                 lines.add( line);
@@ -810,6 +790,55 @@ public class Company extends User {
                 }
             }
         });
+    }
+
+    /**
+     * Converts array list of strings to string to be able to store the
+     * array list in SharedPreferences
+     * @param arrayList array list to be converted
+     * @return converted string
+     * @author Alp Afyonluoğlu
+     */
+    private String arrayListToString( ArrayList<String> arrayList) {
+        //  Variables
+        StringBuilder stringBuilder;
+
+        // Code
+        stringBuilder = new StringBuilder();
+        for ( int count = 0; count < arrayList.size(); count++) {
+            stringBuilder.append( arrayList.get( count));
+
+            if ( count != arrayList.size() - 1) {
+                stringBuilder.append( SEPARATOR);
+            }
+        }
+        return stringBuilder.toString();
+    }
+
+    /**
+     * Converts string to array list of strings to restore array list from
+     * stored SharedPreferences string
+     * @param string string to be converted
+     * @return converted array list of strings
+     * @author Alp Afyonluoğlu
+     */
+    private ArrayList<String> stringToArrayList( String string) {
+        // Variables
+        String[] array;
+        ArrayList<String> arrayList;
+
+        // Code
+        arrayList = new ArrayList<>();
+        if ( string.contains( SEPARATOR)) {
+            array = string.split( SEPARATOR);
+            return new ArrayList<>( Arrays.asList( array));
+        }
+        else {
+            if ( !string.equals( "")) {
+                arrayList.add( string);
+            }
+            return arrayList;
+        }
     }
 
     private interface IdCreateListener {

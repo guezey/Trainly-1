@@ -52,6 +52,7 @@ public class SplashActivity extends AppCompatActivity {
                 Intent welcomeIntent;
                 User currentUser;
                 boolean update;
+                Places places;
 
                 // Code
                 loginType = preferences.getInt( LOGGED_IN_USER_TYPE, NO_LOGIN);
@@ -78,21 +79,18 @@ public class SplashActivity extends AppCompatActivity {
                         update = false;
                     }
 
-                    // Update current user's data with server data
                     cardWelcome.animate().alpha( 1).setDuration( 250).setInterpolator( new DecelerateInterpolator()).start();
-                    currentUser.getCurrentUser( update, new User.ServerSyncListener() {
+                    places = new Places( getApplicationContext());
+
+                    // Update places with server data
+                    places.update( new Places.ServerSyncListener() {
                         @Override
                         public void onSync( boolean isSynced) {
-                            // Variables
-                            Places places;
-
-                            // Code
                             if ( isSynced) {
-                                User.setCurrentUserInstance( currentUser);
-                                places = new Places( getApplicationContext());
+                                Places.setInstance( places);
 
-                                // Update places with server data
-                                places.update( new Places.ServerSyncListener() {
+                                // Update current user's data with server data
+                                currentUser.getCurrentUser( update, new User.ServerSyncListener() {
                                     @Override
                                     public void onSync( boolean isSynced) {
                                         // Variables
@@ -100,7 +98,7 @@ public class SplashActivity extends AppCompatActivity {
 
                                         // Code
                                         if ( isSynced) {
-                                            Places.setInstance( places);
+                                            User.setCurrentUserInstance( currentUser);
                                             tickets = new Tickets( getApplicationContext());
 
                                             // Update tickets with server data

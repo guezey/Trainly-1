@@ -16,7 +16,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 
 /**
  * Tickets class managing multiple instances of the Ticket class
@@ -587,6 +586,7 @@ s     * @param db SQL Database
         Place defaultPlace;
         Schedule schedule;
         Line line;
+        Places places;
         Place departurePlace;
         Place arrivalPlace;
         Wagon wagon;
@@ -595,6 +595,7 @@ s     * @param db SQL Database
         Ticket ticket;
 
         // Code
+        places = Places.getInstance();
         tickets = new ArrayList<>();
         if ( data.getCount() != 0) {
             data.moveToFirst();
@@ -620,8 +621,8 @@ s     * @param db SQL Database
                 defaultPlace = new Place( "Train" + trainId, 0, 0);
                 train = new Train( company, defaultPlace, businessWagonNo, economyWagonNo, businessPrice, economyPrice, trainId);
 
-                departurePlace = new Place( departurePlaceName, 0, 0); // TODO: Get coordinates
-                arrivalPlace = new Place( arrivalPlaceName, 0, 0); // TODO: Get coordinates
+                departurePlace = places.findByName( departurePlaceName);
+                arrivalPlace = places.findByName( arrivalPlaceName);
                 line = new Line( departurePlace, arrivalPlace);
                 schedule = new Schedule( departureTime, "", line, businessWagonNo, economyWagonNo, train);
                 train.addSchedule( schedule);
