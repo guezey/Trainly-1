@@ -444,7 +444,7 @@ public abstract class User {
      * Checks connection status
      * @return whether device is connected to internet or not
      */
-    protected boolean isConnectedToInternet() {
+    public boolean isConnectedToInternet() {
         // Variables
         ConnectivityManager connectivityManager;
 
