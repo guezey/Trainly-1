@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.app.AlertDialog;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Button;
@@ -81,9 +82,8 @@ public class LinesActivity extends AppCompatActivity {
                         Place departurePlace;
                         Place arrivalPlace;
                         Line newLine;
-                        departurePlace = new Place(editTextTextPersonName2String, 7, 8); // Subject to change
-                        arrivalPlace = new Place(editTextTextPersonName3String, 5, 6); // Subject to change
-                        newLine = new Line(departurePlace, arrivalPlace);
+
+                        openDialog();
                     }
                     if (editTextTextPersonName2String.trim().equalsIgnoreCase("")) {
 
@@ -96,5 +96,11 @@ public class LinesActivity extends AppCompatActivity {
                 }
             //}
         });
+    }
+
+    public void openDialog() {
+
+        LinesCoordinatesActivity coordinatesActivity = new LinesCoordinatesActivity();
+        coordinatesActivity.show(getSupportFragmentManager(), "Enter Coordinates");
     }
 }
