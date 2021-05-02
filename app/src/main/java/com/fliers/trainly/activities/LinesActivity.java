@@ -81,12 +81,14 @@ public class LinesActivity extends AppCompatActivity implements LinesCoordinates
 
                         Place departurePlace;
                         Place arrivalPlace;
-                        Line newLine;
+                        Line newNormalLine;
+                        Line newReverseLine;
 
                         openDialog();
                         departurePlace = new Place( editTextTextPersonName2String, x1, y1);
                         arrivalPlace = new Place( editTextTextPersonName3String, x2, y2);
-                        newLine = new Line( departurePlace, arrivalPlace);
+                        newNormalLine = new Line( departurePlace, arrivalPlace);
+                        newReverseLine = new Line( arrivalPlace, departurePlace);
                     }
                     if (editTextTextPersonName2String.trim().equalsIgnoreCase("")) {
 
