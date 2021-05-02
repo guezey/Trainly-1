@@ -32,8 +32,6 @@ public class LinesActivity extends AppCompatActivity implements LinesCoordinates
     private final int CUSTOMER_LOGIN = 2;
 
     User currentUser;
-    private TextView textView20;
-    private TextView textView21;
     private EditText editTextTextPersonName2;
     private EditText editTextTextPersonName3;
     private double x1;
@@ -59,8 +57,7 @@ public class LinesActivity extends AppCompatActivity implements LinesCoordinates
 //            currentUser = (Customer) User.getCurrentUserInstance();
 //        }
 
-        textView20 = (TextView) findViewById(R.id.textView20);
-        textView21 = (TextView) findViewById(R.id.textView21);
+
         editTextTextPersonName2 = (EditText) findViewById(R.id.editTextTextPersonName2);
         editTextTextPersonName3 = (EditText) findViewById(R.id.editTextTextPersonName3);
         button = (Button) findViewById(R.id.button);
