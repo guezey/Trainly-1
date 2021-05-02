@@ -252,6 +252,25 @@ public class Places {
     }
 
     /**
+     * Getter method for static places instance
+     * @return places instance
+     * @author Alp Afyonluoğlu
+     */
+    public static Places getInstance() {
+        return instance;
+
+    }
+
+    /**
+     * Setter method for static places instance
+     * @param places places instance to be set
+     * @author Alp Afyonluoğlu
+     */
+    public static void setInstance( Places places) {
+        Places.instance = places;
+    }
+
+    /**
      * Checks connection status
      * @return whether device is connected to internet or not
      * @author Alp Afyonluoğlu

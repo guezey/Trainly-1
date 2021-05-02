@@ -195,7 +195,7 @@ public abstract class User {
     }
 
     /**
-     * Getter method for static current user instance
+     * Setter method for static current user instance
      * @param user current user instance to be set
      */
     public static void setCurrentUserInstance( User user) {

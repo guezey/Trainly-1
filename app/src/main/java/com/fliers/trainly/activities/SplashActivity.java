@@ -16,6 +16,8 @@ import android.view.animation.DecelerateInterpolator;
 import com.fliers.trainly.R;
 import com.fliers.trainly.models.Company;
 import com.fliers.trainly.models.Customer;
+import com.fliers.trainly.models.Places;
+import com.fliers.trainly.models.Tickets;
 import com.fliers.trainly.models.User;
 
 public class SplashActivity extends AppCompatActivity {
@@ -76,44 +78,80 @@ public class SplashActivity extends AppCompatActivity {
                         update = false;
                     }
 
+                    // Update current user's data with server data
                     cardWelcome.animate().alpha( 1).setDuration( 250).setInterpolator( new DecelerateInterpolator()).start();
                     currentUser.getCurrentUser( update, new User.ServerSyncListener() {
                         @Override
                         public void onSync( boolean isSynced) {
                             // Variables
-                            Intent homeIntent;
+                            Places places;
 
                             // Code
                             if ( isSynced) {
                                 User.setCurrentUserInstance( currentUser);
+                                places = new Places( getApplicationContext());
 
-                                if ( loginType == COMPANY_LOGIN) {
-                                    homeIntent = new Intent( getApplicationContext(), CompanyHomeActivity.class);
-                                }
-                                else {
-                                    homeIntent = new Intent( getApplicationContext(), CustomerHomeActivity.class);
-                                }
+                                // Update places with server data
+                                places.update( new Places.ServerSyncListener() {
+                                    @Override
+                                    public void onSync( boolean isSynced) {
+                                        // Variables
+                                        Tickets tickets;
 
-                                startActivity( homeIntent);
-                                finish();
+                                        // Code
+                                        if ( isSynced) {
+                                            Places.setInstance( places);
+                                            tickets = new Tickets( getApplicationContext());
+
+                                            // Update tickets with server data
+                                            tickets.update( new Tickets.ServerSyncListener() {
+                                                @Override
+                                                public void onSync( boolean isSynced) {
+                                                    // Variables
+                                                    Intent homeIntent;
+
+                                                    // Code
+                                                    if ( loginType == COMPANY_LOGIN) {
+                                                        homeIntent = new Intent( getApplicationContext(), CompanyHomeActivity.class);
+                                                    }
+                                                    else {
+                                                        homeIntent = new Intent( getApplicationContext(), CustomerHomeActivity.class);
+                                                    }
+
+                                                    startActivity( homeIntent);
+                                                    finish();
+                                                }
+                                            });
+                                        }
+                                        else {
+                                            showAlertDialog();
+                                        }
+                                    }
+                                });
                             }
                             else {
-                                // Show alert dialog
-                                new AlertDialog.Builder( getApplicationContext())
-                                        .setTitle( "An error occurred!")
-                                        .setMessage( "Data of logged in user could not be loaded. Please check the network connection and try again.")
-                                        .setPositiveButton( "Close", new DialogInterface.OnClickListener() {
-                                            public void onClick( DialogInterface dialog, int which) {
-                                                finish();
-                                            }
-                                        })
-                                        .setCancelable( false)
-                                        .show();
+                                showAlertDialog();
                             }
                         }
                     });
                 }
             }
         }, 500);
+    }
+
+    /**
+     * Displays alert dialog with error message
+     */
+    private void showAlertDialog() {
+        new AlertDialog.Builder( getApplicationContext())
+                .setTitle( "An error occurred!")
+                .setMessage( "Data of logged in user could not be loaded. Please check the network connection and try again.")
+                .setPositiveButton( "Close", new DialogInterface.OnClickListener() {
+                    public void onClick( DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .setCancelable( false)
+                .show();
     }
 }
