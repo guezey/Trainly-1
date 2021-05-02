@@ -49,11 +49,11 @@ public class LinesActivity extends AppCompatActivity implements LinesCoordinates
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lines);
 
-//        preferences = getSharedPreferences( String.valueOf( R.string.app_name), Context.MODE_PRIVATE);
-//        loginType = preferences.getInt( LOGGED_IN_USER_TYPE, NO_LOGIN);
-//
+        preferences = getSharedPreferences( String.valueOf( R.string.app_name), Context.MODE_PRIVATE);
+        loginType = preferences.getInt( LOGGED_IN_USER_TYPE, NO_LOGIN);
+
 //        if ( loginType == COMPANY_LOGIN) {
-//            currentUser = (Company) User.getCurrentUserInstance();
+            currentUser = (Company) User.getCurrentUserInstance();
 //        }
 //        else if ( loginType == CUSTOMER_LOGIN) {
 //            currentUser = (Customer) User.getCurrentUserInstance();
@@ -89,6 +89,9 @@ public class LinesActivity extends AppCompatActivity implements LinesCoordinates
                         arrivalPlace = new Place( editTextTextPersonName3String, x2, y2);
                         newNormalLine = new Line( departurePlace, arrivalPlace);
                         newReverseLine = new Line( arrivalPlace, departurePlace);
+
+//                        ((Company)currentUser).addLine( newNormalLine);
+//                        ((Company)currentUser).addLine( newReverseLine);
                     }
                     if (editTextTextPersonName2String.trim().equalsIgnoreCase("")) {
 
