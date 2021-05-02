@@ -1,91 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:padding="50dp">
 
     <TextView
         android:id="@+id/departure_text"
-        android:layout_width="211dp"
-        android:layout_height="50dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="62dp"
-        android:layout_marginEnd="100dp"
-        android:layout_marginBottom="642dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="Departure Place"
+        android:fontFamily="@font/nunito_bold"
         android:textSize="20sp" />
 
     <EditText
         android:id="@+id/posX1"
-        android:layout_width="294dp"
-        android:layout_height="50dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="121dp"
-        android:layout_marginEnd="100dp"
-        android:layout_marginBottom="565dp"
-        android:hint="X-Of-Departure" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Latitude-Of-Departure"
+        android:fontFamily="@font/nunito_bold"
+        android:layout_below="@+id/departure_text"/>
 
     <EditText
         android:id="@+id/posY1"
-        android:layout_width="296dp"
-        android:layout_height="50dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="175dp"
-        android:layout_marginEnd="100dp"
-        android:layout_marginBottom="511dp"
-        android:hint="Y-Of-Departure" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Longitude-Of-Departure"
+        android:fontFamily="@font/nunito_bold"
+        android:layout_below="@+id/posX1"/>
 
     <TextView
         android:id="@+id/arrival_text"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="254dp"
-        android:layout_marginEnd="100dp"
-        android:layout_marginBottom="450dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="Arrival Place"
+        android:fontFamily="@font/nunito_bold"
+        android:layout_below="@id/posY1"
         android:textSize="20sp" />
 
     <EditText
         android:id="@+id/posX2"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="300dp"
-        android:layout_marginEnd="100dp"
-        android:layout_marginBottom="386dp"
-        android:hint="X-Of-Arrival" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/arrival_text"
+        android:fontFamily="@font/nunito_bold"
+        android:hint="Latitude-Of-Arrival" />
 
     <EditText
         android:id="@+id/posY2"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="377dp"
-        android:layout_marginEnd="100dp"
-        android:layout_marginBottom="309dp"
-        android:hint="Y-Of-Arrival" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/posX2"
+        android:fontFamily="@font/nunito_bold"
+        android:hint="Longitude-Of-Arrival" />
 
 </RelativeLayout>

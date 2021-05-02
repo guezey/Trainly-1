@@ -24,7 +24,7 @@ import com.fliers.trainly.models.User;
 
 //import javax.swing.text.View;
 
-public class LinesActivity extends AppCompatActivity {
+public class LinesActivity extends AppCompatActivity implements LinesCoordinatesActivity.CoordinatesActivityListener{
 
     private final String LOGGED_IN_USER_TYPE = "loggedInUserType";
     private final int NO_LOGIN = 0;
@@ -36,10 +36,10 @@ public class LinesActivity extends AppCompatActivity {
     private TextView textView21;
     private EditText editTextTextPersonName2;
     private EditText editTextTextPersonName3;
-    private TextView x1;
-    private TextView y1;
-    private TextView x2;
-    private TextView y2;
+    private double x1;
+    private double y1;
+    private double x2;
+    private double y2;
     private Button button;
     private SharedPreferences preferences;
     private int loginType;
@@ -84,6 +84,9 @@ public class LinesActivity extends AppCompatActivity {
                         Line newLine;
 
                         openDialog();
+                        departurePlace = new Place( editTextTextPersonName2String, x1, y1);
+                        arrivalPlace = new Place( editTextTextPersonName3String, x2, y2);
+                        newLine = new Line( departurePlace, arrivalPlace);
                     }
                     if (editTextTextPersonName2String.trim().equalsIgnoreCase("")) {
 
@@ -102,5 +105,16 @@ public class LinesActivity extends AppCompatActivity {
 
         LinesCoordinatesActivity coordinatesActivity = new LinesCoordinatesActivity();
         coordinatesActivity.show(getSupportFragmentManager(), "Enter Coordinates");
+        //coordinatesActivity.departureText.setText("" + editTextTextPersonName2.toString());
+        //coordinatesActivity.arrivalText.setText("" + editTextTextPersonName3.toString());
+    }
+
+    @Override
+    public void applyTexts(double posX1, double posY1, double posX2, double posY2) {
+
+        x1 = posX1;
+        y1 = posY1;
+        x2 = posX2;
+        y2 = posY2;
     }
 }
