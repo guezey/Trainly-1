@@ -10,6 +10,7 @@ public class Line {
     //properties
     private Place arrival;
     private Place departure;
+    private int distance;
 
     //constructor
 
@@ -21,6 +22,7 @@ public class Line {
     public Line( Place departure, Place arrival) {
         this.arrival = arrival;
         this.departure = departure;
+        distance = calculateDistance();
     }
 
     //methods
@@ -39,5 +41,26 @@ public class Line {
      */
     public Place getDeparture() {
         return departure;
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+
+    private int calculateDistance() {
+        final int earthRadiusKm = 6371;
+        double depLat;
+        double arrLat;
+
+        double diffLat = Math.toRadians(arrival.getLatitude() - departure.getLatitude());
+        double diffLon = Math.toRadians(arrival.getLongitude() - departure.getLongitude());
+
+        depLat = Math.toRadians(departure.getLatitude());
+        arrLat = Math.toRadians(arrival.getLatitude());
+
+        double a = Math.sin(diffLat/2) * Math.sin(diffLat/2) +
+                Math.sin(diffLon/2) * Math.sin(diffLon/2) * Math.cos(depLat) * Math.cos(arrLat);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return (int) (earthRadiusKm * c);
     }
 }
