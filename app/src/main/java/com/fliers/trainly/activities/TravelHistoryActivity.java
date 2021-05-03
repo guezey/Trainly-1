@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -122,6 +124,7 @@ public class TravelHistoryActivity extends AppCompatActivity {
             ImageView imgStar3 = view.findViewById(R.id.imgStar3);
             ImageView imgStar4 = view.findViewById(R.id.imgStar4);
             ImageView imgStar5 = view.findViewById(R.id.imgStar5);
+            EditText etFeedback = view.findViewById(R.id.etFeedback);
             ImageView[] stars = new ImageView[] {imgStar1,imgStar2,imgStar3,imgStar4,imgStar5};
 
             //Manipulate view
@@ -208,6 +211,23 @@ public class TravelHistoryActivity extends AppCompatActivity {
                     imgStar4.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_48));
                     imgStar5.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_48));
                     ticket.setStarRating(5);
+                }
+            });
+
+            etFeedback.addTextChangedListener( new TextWatcher() {
+                @Override
+                public void beforeTextChanged( CharSequence s, int start, int count, int after) {
+                    // Empty method
+                }
+
+                @Override
+                public void onTextChanged( CharSequence s, int start, int before, int count) {
+                    ticket.setComment(etFeedback.getText().toString());
+                }
+
+                @Override
+                public void afterTextChanged( Editable s) {
+                    // Empty method
                 }
             });
 
