@@ -368,6 +368,9 @@ public abstract class User {
                         saveToLocalStorage();
                         listener.onSync( true);
                     }
+                    else {
+                        listener.onSync( false);
+                    }
                 }
 
                 @Override

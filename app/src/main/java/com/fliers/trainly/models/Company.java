@@ -763,6 +763,9 @@ public class Company extends User {
 
                                             listener.onSync( true);
                                         }
+                                        else {
+                                            listener.onSync( false);
+                                        }
                                     }
 
                                     @Override
@@ -773,6 +776,9 @@ public class Company extends User {
                                         listener.onSync( false);
                                     }
                                 });
+                            }
+                            else {
+                                listener.onSync( false);
                             }
                         }
 

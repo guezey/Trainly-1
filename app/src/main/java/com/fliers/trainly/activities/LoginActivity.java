@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Variables
         int loginType;
+        ImageView imgBack;
         TextView tvTitle;
         TextView tvEmailWarning;
         ConstraintLayout layoutEnterEmail;
@@ -53,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
         preferences = getSharedPreferences( String.valueOf( R.string.app_name), Context.MODE_PRIVATE);
 
         // Code
+        imgBack = findViewById( R.id.imgBackL);
         tvTitle = findViewById( R.id.tvTitleL);
         tvEmailWarning = findViewById( R.id.tvEmailWarningL);
         layoutEnterEmail = findViewById( R.id.layoutEnterEmailL);
@@ -135,6 +138,13 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     });
                 }
+            }
+        });
+
+        imgBack.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick( View v) {
+                finish();
             }
         });
     }

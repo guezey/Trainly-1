@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
@@ -158,7 +159,7 @@ public class SplashActivity extends AppCompatActivity {
      * Displays alert dialog with error message
      */
     private void showAlertDialog() {
-        new AlertDialog.Builder( getApplicationContext())
+        new AlertDialog.Builder( SplashActivity.this)
                 .setTitle( "An error occurred!")
                 .setMessage( "Data of logged in user could not be loaded. Please check the network connection and try again.")
                 .setPositiveButton( "Close", new DialogInterface.OnClickListener() {
