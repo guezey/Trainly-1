@@ -3,6 +3,7 @@ package com.fliers.trainly.models;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -401,20 +402,20 @@ public abstract class User {
             temp = email.split( "@");
             username = temp[0];
 
-            if ( temp[1].contains( ".")) {
-                temp = temp[1].split( "\\.");
-                domainName = temp[0];
-                domain = temp[1];
+            if ( temp.length == 2) {
+                if ( temp[1].contains( ".")) {
+                    temp = temp[1].split( "\\.");
 
-                return 6 <= username.length() && username.length() <= 30 && 2 <= domainName.length() && 2 <= domain.length();
-            }
-            else {
-                return false;
+                    if ( temp.length == 2) {
+                        domainName = temp[0];
+                        domain = temp[1];
+
+                        return 6 <= username.length() && username.length() <= 30 && 2 <= domainName.length() && 2 <= domain.length();
+                    }
+                }
             }
         }
-        else {
-            return false;
-        }
+        return false;
     }
 
     /**
