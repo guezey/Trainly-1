@@ -81,14 +81,13 @@ public class Train {
     * @param d
     * @return the current schedule
     */
-    public Schedule getSchedule( Date d) {
+    public Schedule getSchedule( Calendar d) {
         for( int i = 0; i < schedules.size(); i++) {
 
-            // TODO: Modify for Calendar class
-            /* if( d.after( schedules.get(i).getDepartureDate()) && d.before( schedules.get(i).getArrivalDate())
+            if( d.after( schedules.get(i).getDepartureDate()) && d.before( schedules.get(i).getArrivalDate())
                     || d.compareTo( schedules.get(i).getDepartureDate()) == 0) {
                 return schedules.get(i);
-            } */
+            }
         }
         return null;
     }

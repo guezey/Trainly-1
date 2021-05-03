@@ -93,6 +93,7 @@ public class EditScheduleActivity extends AppCompatActivity {
                     }
                 }
 
+
                 // List all the schedules the train has
                 ListView listSchedules = findViewById( R.id.listSchedules );
                 schedules = currentTrain.getSchedules();
@@ -105,6 +106,7 @@ public class EditScheduleActivity extends AppCompatActivity {
                     CustomAdaptor customAdaptor = new CustomAdaptor();
                     listSchedules.setAdapter( customAdaptor );
                 }
+
             }
         });
 
@@ -211,6 +213,20 @@ public class EditScheduleActivity extends AppCompatActivity {
                 timePickerDialog.show();
             }
         });
+
+        // List all the schedules the train has
+        ListView listSchedules = findViewById( R.id.listSchedules );
+        schedules = currentTrain.getSchedule();
+
+        if ( schedules.size() == 0) {
+            idText.setText("No schedules were found for the train with the Id number " + currentTrain.getId() );
+            idText.setTextColor(Color.RED);
+        }
+        else {
+            CustomAdaptor customAdaptor = new CustomAdaptor();
+            listSchedules.setAdapter( customAdaptor );
+        }
+
     }
 
     // Arrange the schedule cards
@@ -229,7 +245,7 @@ public class EditScheduleActivity extends AppCompatActivity {
         @Override public View getView( final int position, View convertView, ViewGroup parent ) {
             View view = getLayoutInflater().inflate( R.layout.list_item_schedules, null );
             Schedule schedule = schedules.get( position );
-            // TODO: Edit this part
+
             // Get title text view
             TextView tvScheduleTitle = view.findViewById( R.id.tvScheduleTitle );
 
@@ -255,6 +271,5 @@ public class EditScheduleActivity extends AppCompatActivity {
 
             return view;
         }
-    }
 }
 

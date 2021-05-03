@@ -18,6 +18,12 @@ import com.fliers.trainly.models.Train;
 import com.fliers.trainly.models.User;
 
 import java.util.ArrayList;
+/**
+* Manage Employees Page
+* A page where Companies can view all of their Employees and continue with adding new ones or deleting existing ones
+* @author Erkin Aydın
+* @version 03.05.2021
+*/
 
 public class AddEmployeeActivity extends AppCompatActivity {
 
