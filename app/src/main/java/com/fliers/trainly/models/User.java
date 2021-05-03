@@ -126,6 +126,7 @@ public abstract class User {
                             if ( task.isSuccessful()) {
                                 // Email link verified
                                 preferences.edit().putString( EMAIL, email).apply();
+                                User.this.email = email;
                                 id = email.replace( "@", "_at_");
                                 id = id.replace( ".", "_dot_");
 
