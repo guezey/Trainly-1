@@ -13,34 +13,55 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Trainly.NoActionBar">
         <activity android:name=".activities.SplashActivity"
-            android:theme="@style/Theme.Trainly.whiteBg">
+            android:theme="@style/Theme.Trainly.whiteBg"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.TravelHistoryActivity" />
-        <activity android:name=".activities.TrainsActivity" />
-        <activity android:name=".activities.TicketsActivity" />
-        <activity android:name=".activities.TicketInfoActivity" />
+        <activity android:name=".activities.TravelHistoryActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.TrainsActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.TicketsActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.TicketInfoActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".activities.WelcomeActivity"
-            android:theme="@style/Theme.Trainly.NoActionBar.FullScreenActivity"/>
-        <activity android:name=".activities.LinesActivity" />
-        <activity android:name=".activities.HelpActivity" />
-        <activity android:name=".activities.GeneralInfoActivity" />
-        <activity android:name=".activities.EmployeesActivity" />
-        <activity android:name=".activities.EditScheduleActivity" />
-        <activity android:name=".activities.CustomerHomeActivity" />
-        <activity android:name=".activities.CustomerAccountActivity" />
-        <activity android:name=".activities.RegisterActivity" />
-        <activity android:name=".activities.LoginActivity" />
-        <activity android:name=".activities.CompanyHomeActivity" />
-        <activity android:name=".activities.CompanyAccountActivity" />
-        <activity android:name=".activities.BuyTicketActivity" />
-        <activity android:name=".activities.AddTrainActivity" />
-        <activity android:name=".activities.AddEmployeeActivity" />
-        <activity android:name=".activities.EmailVerificationActivity">
+            android:theme="@style/Theme.Trainly.NoActionBar.FullScreenActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.LinesActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.HelpActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.GeneralInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.EmployeesActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.EditScheduleActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.CustomerHomeActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.CustomerAccountActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.RegisterActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.CompanyHomeActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.CompanyAccountActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.BuyTicketActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.AddTrainActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.AddEmployeeActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.EmailVerificationActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -52,7 +73,8 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.MainActivity" />
+        <activity android:name=".activities.MainActivity"
+            android:screenOrientation="portrait" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCUVyksVvyWTWKIWo1QuhSwpZnjtWql2eE" />
