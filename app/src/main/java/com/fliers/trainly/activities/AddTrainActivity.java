@@ -1,60 +1,166 @@
-//package com.fliers.trainly.activities;
-//
-//import androidx.appcompat.app.AppCompatActivity;
-//
-//import com.fliers.trainly.R;
-//
-//import java.awt.Button;
-//
-//import javax.swing.text.View;
-//
-//public class AddTrainActivity extends AppCompatActivity {
-//
-//    private Spinner departurePlaceSpinner;
-//    private Spinner arrivalPlaceSpinner;
-//    private TextView txtBusinessWagonNum;
-//    private TextView txtEconomyWagonNum;
-//    Button goDetails;
-//    Button addTrain;
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_add_train);
-//
-//        departurePlaceSpinner = (Spinner) findViewById(R.id.departurePlaceSpinner);
-//        arrivalPlaceSpinner = (Spinner) findViewById(R.id.arrivalPlaceSpinner);
-//        goDetails = findViewById(R.id.buttonGoDetails);
-//    }
-//
-//    goDetails.setOnClickListener( new View.OnClickListener() {
-//
-//        public void onClick(View view) {
-//            switchToTrainDetails();
-//        }
-//    });
-//
-//    addTrain.setOnClickListener( new View.OnClickListener() {
-//
-//        public void onClick(View view) {
-//            goToManageTrains();
-//        }
-//    });
-//
-//    public void goToManageTrains() {
-//
-//        //TO-DO
-//
-//        Intent switchActivityIntent = new Intent(this, TrainsActivity.class);
-//        startActivity(switchActivityIntent);
-//    }
-//
-//    public void switchToTrainDetails() {
-//
-//        txtBusinessWagonNum = (TextView) findViewById(R.id.textView30);
-//        txtEconomyWagonNum = (TextView) findViewById(R.id.textView31);
-//        txtBusinessWagonNum.setText("0");
-//        txtEconomyWagonNum.setText("0");
-//        addTrain = findViewById(R.id.buttonAddTrain);
-//    }
-//}
+package com.fliers.trainly.activities;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.fliers.trainly.R;
+import com.fliers.trainly.models.Company;
+import com.fliers.trainly.models.Line;
+import com.fliers.trainly.models.Train;
+import com.fliers.trainly.models.User;
+
+import java.util.ArrayList;
+
+public class AddTrainActivity extends AppCompatActivity {
+
+    Company currentUser;
+    private ConstraintLayout minus1;
+    private ConstraintLayout plus1;
+    private ConstraintLayout minus2;
+    private ConstraintLayout plus2;
+    private TextView businessCounter;
+    private TextView economyCounter;
+    private EditText businessPrice;
+    private EditText economyPrice;
+    private ImageView back;
+    private Spinner lineChoice;
+    private Button add;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_train);
+
+        currentUser = (Company) User.getCurrentUserInstance();
+        minus1 = (ConstraintLayout) findViewById(R.id.idl321);
+        plus1 = (ConstraintLayout) findViewById(R.id.idl31);
+        minus2 = (ConstraintLayout) findViewById(R.id.idl322);
+        plus2 = (ConstraintLayout) findViewById(R.id.idl32);
+        businessCounter = (TextView) findViewById(R.id.textView412);
+        economyCounter = (TextView) findViewById(R.id.textView42);
+        businessPrice = (EditText) findViewById(R.id.editTextNumber);
+        economyPrice = (EditText) findViewById(R.id.editTextNumber2);
+        add = (Button) findViewById(R.id.button);
+        back = (ImageView) findViewById(R.id.imageView2);
+        lineChoice = (Spinner) findViewById(R.id.spinner);
+
+
+        minus1.setOnClickListener( new View.OnClickListener() {
+
+            public void onClick(View view) {
+
+                int i = Integer.parseInt(businessCounter.getText().toString());
+                if( i >= 1) {
+                    i-=1;
+                    businessCounter.setText( "" + i);
+                }
+            }
+        });
+
+        plus1.setOnClickListener( new View.OnClickListener() {
+
+            public void onClick(View view) {
+
+                int i = Integer.parseInt(businessCounter.getText().toString());
+                int j = Integer.parseInt(economyCounter.getText().toString());
+                if( i + j < 30) {
+                    i += 1;
+                    businessCounter.setText("" + i);
+                }
+            }
+        });
+
+        minus2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                int i = Integer.parseInt(economyCounter.getText().toString());
+                if( i > 0) {
+                     i -= 1;
+                    economyCounter.setText( "" + i);
+                }
+            }
+        });
+
+        plus2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                int i = Integer.parseInt(economyCounter.getText().toString());
+                int j = Integer.parseInt(businessCounter.getText().toString());
+                if( i + j < 30) {
+                    i += 1;
+                    economyCounter.setText("" + i);
+                }
+            }
+        });
+
+        businessPrice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!(businessPrice.getText().toString().trim().equalsIgnoreCase("")||
+                        economyPrice.getText().toString().trim().equalsIgnoreCase(""))) {
+                    if (Double.parseDouble(businessPrice.getText().toString()) <= Double.parseDouble(economyPrice.getText().toString())) {
+
+                        businessPrice.setError("Are You Sure About That?");
+                    }
+                }
+            }
+        });
+
+        economyPrice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!(businessPrice.getText().toString().trim().equalsIgnoreCase("")||
+                        economyPrice.getText().toString().trim().equalsIgnoreCase(""))) {
+                    if (Double.parseDouble(businessPrice.getText().toString()) <= Double.parseDouble(economyPrice.getText().toString())) {
+
+                        businessPrice.setError("Are You Sure About That?");
+                    }
+                }
+            }
+        });
+
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Line newLine = (Line) lineChoice.getSelectedItem();
+                int businessNum = Integer.parseInt( businessCounter.getText().toString());
+                int economyNum = Integer.parseInt( economyCounter.getText().toString());
+                double bPrice = Double.parseDouble( businessPrice.getText().toString());
+                double ePrice = Double.parseDouble( economyPrice.getText().toString());
+                ArrayList<Train> currentTrains = currentUser.getTrains();
+                int biggestId = 0;
+                for( Train a : currentTrains) {
+                    if( biggestId < Integer.parseInt(a.getId())) {
+                        biggestId = Integer.parseInt(a.getId());
+                    }
+                }
+                String idRoot = biggestId + "";
+                String addId = "";
+                for( int i = idRoot.length(); i < 3; i++) {
+                    addId += 0;
+                }
+                addId += idRoot;
+                Train newTrain = new Train( currentUser, newLine.getDeparture(), businessNum, economyNum, bPrice, ePrice, addId);
+                currentUser.addTrain( newTrain);
+            }
+        });
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+}

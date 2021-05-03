@@ -31,7 +31,8 @@ public class Train {
     * @param economyWagonNum
     * @param bPrice
     * @param ePrice
-    */
+    * @param id
+     */
     public Train( Company company, Place spawnPlace, int businessWagonNum,
                 int economyWagonNum, double bPrice, double ePrice, String id) {
         linkedCompany = company;
