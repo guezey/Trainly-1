@@ -4,8 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -41,7 +39,7 @@ public class AddEmployeeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_employee);
 
         currentUser = (Company) User.getCurrentUserInstance();
-        back = (ImageView) findViewById(R.id.imageView2);
+        back = (ImageView) findViewById(R.id.drawerButtonCustomer);
         add = (Button) findViewById(R.id.button);
         employeeName = (EditText) findViewById(R.id.editTextTextPersonName);
         trainId = (Spinner) findViewById(R.id.spinner);

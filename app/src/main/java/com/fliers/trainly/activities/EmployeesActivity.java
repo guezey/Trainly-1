@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.fliers.trainly.R;
@@ -21,7 +20,7 @@ public class EmployeesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employees);
 
-        back = (ImageView) findViewById(R.id.imageView2);
+        back = (ImageView) findViewById(R.id.drawerButtonCustomer);
         addEmployee = (FloatingActionButton) findViewById(R.id.fabAdd);
 
         back.setOnClickListener(new View.OnClickListener() {

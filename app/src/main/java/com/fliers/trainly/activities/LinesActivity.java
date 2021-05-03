@@ -5,17 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.app.AlertDialog;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Button;
 import android.view.View;
-import android.widget.Toast;
 
 import com.fliers.trainly.R;
 import com.fliers.trainly.models.Company;
-import com.fliers.trainly.models.Customer;
 import com.fliers.trainly.models.Line;
 import com.fliers.trainly.models.Place;
 import com.fliers.trainly.models.User;
@@ -63,7 +59,7 @@ public class LinesActivity extends AppCompatActivity implements LinesCoordinates
         editTextTextPersonName2 = (EditText) findViewById(R.id.editTextTextPersonName2);
         editTextTextPersonName3 = (EditText) findViewById(R.id.editTextTextPersonName3);
         button = (Button) findViewById(R.id.button);
-        back = (ImageView) findViewById(R.id.imageView2);
+        back = (ImageView) findViewById(R.id.drawerButtonCustomer);
 
         back.setOnClickListener( new View.OnClickListener() {
 

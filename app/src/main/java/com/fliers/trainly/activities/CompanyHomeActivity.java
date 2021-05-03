@@ -1,6 +1,8 @@
 package com.fliers.trainly.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +17,9 @@ import com.fliers.trainly.R;
 import com.fliers.trainly.models.Company;
 import com.fliers.trainly.models.Ticket;
 import com.fliers.trainly.models.Tickets;
+import com.fliers.trainly.models.Train;
+import com.fliers.trainly.models.User;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 
@@ -25,8 +30,8 @@ import java.util.ArrayList;
  * @version 03.05.2021
  */
 
-public class CompanyHomeActivity extends AppCompatActivity {
-
+public class CompanyHomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    // Properties
     Company company;
     ImageView menuButton;
     TextView trainNumber;
@@ -38,8 +43,9 @@ public class CompanyHomeActivity extends AppCompatActivity {
     TextView starPointText;
     ImageView[] starPoint;
     ArrayList<Ticket> tickets;
+    private DrawerLayout drawer;
 
-
+    // Methods
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +54,25 @@ public class CompanyHomeActivity extends AppCompatActivity {
         company = ( Company ) Company.getCurrentUserInstance();
         Tickets ticketManager = new Tickets( getApplicationContext() );
         tickets = ticketManager.getRecentlySoldTickets( company );
+
+        drawer = findViewById( R.id.drawerLayoutCompany);
+        NavigationView navView = findViewById( R.id.navViewCompany);
+        View headerView = navView.getHeaderView( 0);
+        TextView tvTextNavHeader = headerView.findViewById( R.id.tvTextNavHeader);
+        TextView tvSubTextNavHeader = headerView.findViewById( R.id.tvSubTextNavHeader);
+
+        tvTextNavHeader.setText( company.getName());
+        tvSubTextNavHeader.setText( "Company");
+        navView.setNavigationItemSelectedListener( this);
+        navView.getMenu().getItem( 0).setChecked( true);
+
+        ImageView drawerButton = findViewById( R.id.drawerButtonCompany);
+        drawerButton.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick( View v) {
+                drawer.openDrawer( Gravity.LEFT);
+            }
+        });
 
         // Generate the statistics on the screen
         trainNumber.setText( company.getTrains().size() + "" );
@@ -79,53 +104,39 @@ public class CompanyHomeActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu( Menu menu ) {
-        // Inflate the menu this adds items to the action bar if it is present.
-        getMenuInflater().inflate( R.menu.activity_main_drawer, menu );
-        return true;
-    }
-
     /**
-     * Determines what will happen after an item from the menu has been selected
-     * @param item menu item that has been selected by the company user
-     * @return false to allow normal menu processing to proceed, true to consume it here
+     * Starts intent on drawer item select
+     * @param item selected drawer item
+     * @return
+     * @author Alp Afyonluoğlu
      */
     @Override
-    public boolean onOptionsItemSelected( MenuItem item ) {
-        int id = item.getItemId();
-        Intent intent = new Intent( getApplicationContext(), CompanyHomeActivity.class);
+    public boolean onNavigationItemSelected( @NonNull MenuItem item) {
+        // Variables
+        Intent intent;
 
-        switch (id) {
-            case R.id.nav_home:
-                intent.setClass( getApplicationContext(), CompanyHomeActivity.class );
-                startActivity( intent);
-                break;
-            case R.id.nav_trains:
-                intent.setClass( getApplicationContext(), TrainsActivity.class );
-                startActivity( intent);
-                break;
-            case R.id.nav_lines:
-                intent.setClass( getApplicationContext(), LinesActivity.class );
-                startActivity( intent);
-                break;
-            case R.id.nav_employees:
-                intent.setClass( getApplicationContext(), EmployeesActivity.class );
-                startActivity( intent);
-                break;
-            case R.id.nav_account_settings:
-                intent.setClass( getApplicationContext(), CustomerAccountActivity.class );
-                startActivity( intent);
-                break;
-            case R.id.nav_general_information:
-                intent.setClass( getApplicationContext(), GeneralInfoActivity.class );
-                startActivity( intent);
-                break;
-            case R.id.nav_log_out:
-                intent.setClass( getApplicationContext(), WelcomeActivity.class );
-                startActivity( intent);
-                break;
+        // Code
+        if ( item.getItemId() == R.id.navTrains) {
+            intent = new Intent( getApplicationContext(), TrainsActivity.class);
+            startActivity( intent);
         }
-        return super.onOptionsItemSelected(item);
+        else if ( item.getItemId() == R.id.navLines) {
+            intent = new Intent( getApplicationContext(), LinesActivity.class);
+            startActivity( intent);
+        }
+        else if ( item.getItemId() == R.id.navEmployees) {
+            intent = new Intent( getApplicationContext(), LinesActivity.class);
+            startActivity( intent);
+        }
+        else if ( item.getItemId() == R.id.navAccountCompany) {
+            intent = new Intent( getApplicationContext(), CompanyAccountActivity.class);
+            startActivity( intent);
+        }
+        else if ( item.getItemId() == R.id.navLogOutCompany) {
+            // TODO: Logout company
+        }
+
+        drawer.closeDrawer(Gravity.LEFT);
+        return true;
     }
 }

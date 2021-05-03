@@ -3,24 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group android:id="@+id/firstGroupCustomer" android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_home"
+            android:id="@+id/navHomeCustomer"
             android:icon="@drawable/ic_baseline_home_24"
             android:title="Home" />
         
     </group>
-    <group android:id="@+id/asddsaa" android:checkableBehavior="single">
+    <group android:id="@+id/secondGroupCustomer" android:checkableBehavior="none">
         <item
-            android:id="@+id/nav_slidessadssaadsadfdsfdsw"
+            android:id="@+id/navAccountCustomer"
             android:icon="@drawable/ic_baseline_settings_24"
             android:title="Account" />
         <item
-            android:id="@+id/nav_slidessadssaadsadw"
-            android:icon="@drawable/ic_baseline_info_24"
-            android:title="General Information" />
-        <item
-            android:id="@+id/nav_slfdsfdidessadssaadsadw"
+            android:id="@+id/navLogOutCustomer"
             android:icon="@drawable/ic_baseline_power_settings_new_24"
             android:title="Log out" />
     </group>

@@ -1,7 +1,6 @@
 package com.fliers.trainly.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
 
@@ -10,7 +9,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -18,11 +16,8 @@ import android.widget.TextView;
 import com.fliers.trainly.R;
 import com.fliers.trainly.models.Company;
 
-import com.fliers.trainly.models.Ticket;
 import com.fliers.trainly.models.Train;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import org.w3c.dom.Text;
-import java.util.ArrayList;
 
 public class TrainsActivity extends AppCompatActivity {
 
@@ -35,7 +30,7 @@ public class TrainsActivity extends AppCompatActivity {
 
         TextView tvTitle = findViewById(R.id.tvTitle);
         ListView lvTrains = findViewById(R.id.lvTrains);
-        ImageView btBack = findViewById(R.id.imageView2);
+        ImageView btBack = findViewById(R.id.drawerButtonCustomer);
         FloatingActionButton fabAdd = findViewById(R.id.fabAdd);
 
         btBack.setOnClickListener(new View.OnClickListener() {
