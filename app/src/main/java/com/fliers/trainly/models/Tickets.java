@@ -315,7 +315,38 @@ s     * @param db SQL Database
             saveToServer( dbId, new ServerSyncListener() {
                 @Override
                 public void onSync( boolean isSynced) {
-                    listener.onSync( isSynced);
+                    if ( isSynced) {
+                        // Variables
+                        Company company;
+                        Schedule schedule;
+                        Wagon wagon;
+                        double price;
+
+                        // Code
+                        // Pay to company
+                        wagon = ticket.getSeat().getLinkedWagon();
+                        schedule = wagon.getLinkedSchedule();
+                        company = schedule.getLinkedTrain().getLinkedCompany();
+
+                        if ( wagon.isBusiness()) {
+                            price = schedule.getBusinessPrice();
+                        }
+                        else {
+                            price = schedule.getEconomyPrice();
+                        }
+                        company.setBalance( company.getBalance() + price);
+
+                        // Save company balance to server
+                        company.saveToServer( new User.ServerSyncListener() {
+                            @Override
+                            public void onSync( boolean isSynced) {
+                                listener.onSync( isSynced);
+                            }
+                        });
+                    }
+                    else {
+                        listener.onSync( false);
+                    }
                 }
             });
         }

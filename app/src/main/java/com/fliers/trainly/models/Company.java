@@ -43,7 +43,7 @@ public class Company extends User {
     private final String SEPARATOR = "<S>";
 
     private String companyId;
-    private int balance;
+    private double balance;
     private ArrayList<Train> trains;
     private ArrayList<Line> lines;
     private ArrayList<Employee> employees;
@@ -89,7 +89,7 @@ public class Company extends User {
      * Sets the balance.
      * @param newBalance new balance value
      */
-    public void setBalance( int newBalance) {
+    public void setBalance( double newBalance) {
         balance = newBalance;
     }
 
@@ -97,7 +97,7 @@ public class Company extends User {
      * Returns balance.
      * @return balance
      */
-    public int getBalance() {
+    public double getBalance() {
         return balance;
     }
 
@@ -372,7 +372,7 @@ public class Company extends User {
                     places = Places.getInstance();
 
                     companyId = preferences.getString( COMPANY_ID, "000");
-                    balance = preferences.getInt( BALANCE, 0);
+                    balance = Double.parseDouble( preferences.getString( BALANCE, "0"));
 
                     // Create default place
                     defaultPlace = new Place( "Unknown", 0, 0);
@@ -448,7 +448,7 @@ public class Company extends User {
         super.saveToLocalStorage();
         preferences.edit().putString( COMPANY_ID, companyId).apply();
         preferences.edit().putString( COMPANY_ID, companyId).apply();
-        preferences.edit().putInt( BALANCE, balance).apply();
+        preferences.edit().putString( BALANCE, String.valueOf( balance)).apply();
 
         // Save trains
         trainIds = new ArrayList<>();
@@ -648,7 +648,7 @@ public class Company extends User {
                                         if ( dataSnapshot.exists()) {
                                             places = Places.getInstance();
                                             companyData = (HashMap<String, Object>) dataSnapshot.getValue();
-                                            balance = Integer.parseInt( (String) companyData.get( COMPANY_ID));
+                                            balance = Double.parseDouble( (String) companyData.get( COMPANY_ID));
 
                                             // Create trains with server data
                                             trains = new ArrayList<>();
