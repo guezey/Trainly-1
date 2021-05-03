@@ -157,6 +157,9 @@ public class Customer extends User {
 
                                 listener.onSync( true);
                             }
+                            else {
+                                listener.onSync( false);
+                            }
                         }
 
                         @Override

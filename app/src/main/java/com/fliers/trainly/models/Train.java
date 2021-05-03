@@ -2,6 +2,7 @@ package com.fliers.trainly.models;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
 * A class for trains. It will contain everything necessary for a Train, from its position to ticket prices;
@@ -129,5 +130,20 @@ public class Train {
      */
     public int getEconomyWagonNum() {
         return economyWagonNum;
+    }
+
+    /**
+     * Returns whether the train is on trip.
+     * @return true if train is on trip, false otherwise
+     * @author Ali Emir Güzey
+     */
+    public boolean isOnTrip() {
+        Calendar c;
+        c = Calendar.getInstance();
+        if (schedules.size() != 0)
+            return (schedules.get(0).getArrivalDate().compareTo(c) > 0
+                && schedules.get(0).getDepartureDate().compareTo(c) <= 0);
+        else
+            return false;
     }
 }

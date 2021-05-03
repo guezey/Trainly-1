@@ -29,7 +29,7 @@ import java.util.HashMap;
 public abstract class User {
     // Properties
     protected static final String SERVER_KEY = "KEY_Tr21iwuS3obrslfL4";
-    protected final String NAME = "name";
+    protected static final String NAME = "name";
     private final String EMAIL = "email";
     private final String TEMP_EMAIL = "tempEmail";
     private final String TEMP_NAME = "tempName";
@@ -42,6 +42,7 @@ public abstract class User {
     protected String id;
     protected boolean isLoggedIn;
     protected boolean isNewAccount;
+    protected boolean isOffline;
     private Context context;
 
     // Constructors
@@ -55,6 +56,7 @@ public abstract class User {
         isLoggedIn = false;
         isNewAccount = true;
         setName( DEFAULT_NAME);
+        isOffline = true;
 
         preferences = context.getSharedPreferences( String.valueOf( R.string.app_name), Context.MODE_PRIVATE);
     }
@@ -193,11 +195,25 @@ public abstract class User {
     }
 
     /**
-     * Getter method for static current user instance
+     * Setter method for static current user instance
      * @param user current user instance to be set
      */
     public static void setCurrentUserInstance( User user) {
         User.currentUserInstance = user;
+    }
+
+    /**
+     * Gets name of current user directly from SharedPreferences
+     * @param context application context
+     * @return name of current user
+     */
+    public static String getCurrentUserName( Context context) {
+        // Variables
+        SharedPreferences preferences;
+
+        // Code
+        preferences = context.getSharedPreferences( String.valueOf( R.string.app_name), Context.MODE_PRIVATE);
+        return preferences.getString( NAME, "");
     }
 
     /**
@@ -220,11 +236,13 @@ public abstract class User {
                 getFromServer( new ServerSyncListener() {
                     @Override
                     public void onSync( boolean isSynced) {
+                        isOffline = !isSynced;
                         listener.onSync( isSynced);
                     }
                 });
             }
             else {
+                isOffline = true;
                 name = preferences.getString( NAME, DEFAULT_NAME);
                 listener.onSync( true);
             }
@@ -350,6 +368,9 @@ public abstract class User {
                         saveToLocalStorage();
                         listener.onSync( true);
                     }
+                    else {
+                        listener.onSync( false);
+                    }
                 }
 
                 @Override
@@ -384,20 +405,20 @@ public abstract class User {
             temp = email.split( "@");
             username = temp[0];
 
-            if ( temp[1].contains( ".")) {
-                temp = temp[1].split( "\\.");
-                domainName = temp[0];
-                domain = temp[1];
+            if ( temp.length == 2) {
+                if ( temp[1].contains( ".")) {
+                    temp = temp[1].split( "\\.");
 
-                return 6 <= username.length() && username.length() <= 30 && 2 <= domainName.length() && 2 <= domain.length();
-            }
-            else {
-                return false;
+                    if ( temp.length == 2) {
+                        domainName = temp[0];
+                        domain = temp[1];
+
+                        return 6 <= username.length() && username.length() <= 30 && 2 <= domainName.length() && 2 <= domain.length();
+                    }
+                }
             }
         }
-        else {
-            return false;
-        }
+        return false;
     }
 
     /**

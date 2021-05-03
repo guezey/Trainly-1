@@ -2,15 +2,16 @@
     <!-- Base application theme. -->
     <style name="Theme.Trainly" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/gray600</item>
-        <item name="colorPrimaryVariant">@color/gray800A</item>
+        <item name="colorPrimary">@color/orange700</item>
+        <item name="colorPrimaryVariant">@color/orange800</item>
         <item name="colorOnPrimary">@color/white</item>
+        <item name="colorAccent">@color/orange700</item>
 
         <!-- Status bar color -->
-        <item name="android:statusBarColor" tools:targetApi="l">@color/white</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/gray010</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <!-- Navigation bar color -->
-        <item name="android:navigationBarColor" tools:ignore="NewApi">@color/white</item>
+        <item name="android:navigationBarColor" tools:ignore="NewApi">@color/gray010</item>
         <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>
         <!-- Light background and dark text -->
         <item name="android:colorBackground">@color/white</item>
@@ -21,7 +22,12 @@
     </style>
 
     <style name="Theme.Trainly.whiteBg" parent="Theme.Trainly">
-
+        <!-- Status bar color -->
+        <item name="android:statusBarColor" tools:targetApi="l">@color/white</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <!-- Navigation bar color -->
+        <item name="android:navigationBarColor" tools:ignore="NewApi">@color/white</item>
+        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>
         <!-- Light background and dark text -->
         <item name="android:colorBackground">@color/white</item>
         <item name="android:textColor">@color/black</item>
@@ -30,6 +36,13 @@
     <style name="Theme.Trainly.NoActionBar" parent="Theme.Trainly">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Trainly.NoActionBar.FullScreenActivity" parent="Theme.Trainly.NoActionBar">
+        <item name="android:windowLightStatusBar" tools:ignore="NewApi">false</item>
+
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
     <style name="Theme.Trainly.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

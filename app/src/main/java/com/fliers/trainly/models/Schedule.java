@@ -1,5 +1,7 @@
 package com.fliers.trainly.models;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.ArrayList;
@@ -17,6 +19,8 @@ public class Schedule {
     private ArrayList<Wagon> wagons;
     private Train linkedTrain;
     private Line line;
+    private double businessPrice;
+    private double economyPrice;
 
     // Constructors
     public Schedule( Calendar departureDate, Calendar arrivalDate, Line line, int business, int economy, Train linkedTrain) {
@@ -24,6 +28,8 @@ public class Schedule {
         this.arrivalDate = arrivalDate;
         this.line = line;
         this.linkedTrain = linkedTrain;
+        businessPrice = calculateBusinessPrice();
+        economyPrice = calculateEconomyPrice();
         wagons = new ArrayList<>();
         createWagons( business, economy );
     }
@@ -80,19 +86,28 @@ public class Schedule {
         line = a;
     }
 
+    /**
+     * Returns schedule's line.
+     * @return line
+     */
+    public Line getLine() {
+        return line;
+    }
+
     private void createWagons( int business, int economy ) {
         Wagon currentWagon;
 
-        for ( int i = 0; i < business; i++ ) {
-            currentWagon = new Wagon( this, true, i + 1);
-            this.getWagons().add( currentWagon );
+        for (int i = 0; i < business; i++) {
+            currentWagon = new Wagon(this, true, i + 1);
+            this.getWagons().add(currentWagon);
         }
 
-        for ( int j = 0; j < economy; j++ ) {
-            currentWagon = new Wagon( this, false, business + j + 1);
-            this.getWagons().add( currentWagon );
+        for (int j = 0; j < economy; j++) {
+            currentWagon = new Wagon(this, false, business + j + 1);
+            this.getWagons().add(currentWagon);
         }
     }
+
 
     /**
      * Calculates String version of given date to be used in ids
@@ -156,5 +171,45 @@ public class Schedule {
         date.set( year, month - 1, day, hour, minute);
 
         return date;
+    }
+
+    /**
+     * Calculates and returns schedule's business ticket price.
+     * @return business price
+     * @author Ali Emir Güzey
+     */
+    private double calculateBusinessPrice() {
+        BigDecimal bd = BigDecimal.valueOf(linkedTrain.getBusinessPrice() * line.getDistance() / 10);
+        bd = bd.setScale(2, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
+    /**
+     * Calculates and returns schedule's economy ticket price.
+     * @return economy price
+     * @author Ali Emir Güzey
+     */
+    private double calculateEconomyPrice() {
+        BigDecimal bd = BigDecimal.valueOf(linkedTrain.getEconomyPrice() * line.getDistance() / 10);
+        bd = bd.setScale(2, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
+    /**
+     * Returns schedule's business ticket price.
+     * @return business price
+     * @author Ali Emir Güzey
+     */
+    public double getBusinessPrice() {
+        return businessPrice;
+    }
+
+    /**
+     * Returns schedule's economy ticket price.
+     * @return economy price
+     * @author Ali Emir Güzey
+     */
+    public double getEconomyPrice() {
+        return economyPrice;
     }
 }
