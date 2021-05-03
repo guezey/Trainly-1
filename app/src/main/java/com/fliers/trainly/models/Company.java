@@ -46,9 +46,9 @@ public class Company extends User {
     private int balance;
     private ArrayList<Train> trains;
     private ArrayList<Line> lines;
-    private ArrayList<Ticket> anonymousFeedback;
     private ArrayList<Employee> employees;
     private double averagePoint;
+    private Context context;
 
     // Constructor
     /**
@@ -57,11 +57,11 @@ public class Company extends User {
      */
     public Company( Context context) {
         super( context);
+        this.context = context;
         companyId = "000";
         balance = 0;
         trains = new ArrayList<>();
         lines = new ArrayList<>();
-        anonymousFeedback = new ArrayList<>();
         employees = new ArrayList<>();
         averagePoint = 0;
     }
@@ -74,12 +74,12 @@ public class Company extends User {
      */
     public Company( String name, String companyId, Context context) {
         super( context);
+        this.context = context;
         this.name = name;
         this.companyId = companyId;
         balance = 0;
         trains = new ArrayList<>();
         lines = new ArrayList<>();
-        anonymousFeedback = new ArrayList<>();
         employees = new ArrayList<>();
         averagePoint = 0;
     }
@@ -201,15 +201,6 @@ public class Company extends User {
     }
 
     /**
-     * Getter method for tickets with anonymous feedback
-     * @return list of tickets
-     * @author Alp Afyonluoğlu
-     */
-    public ArrayList<Ticket> getAnonymousFeedback() {
-        return anonymousFeedback;
-    }
-
-    /**
      * Getter method for average point
      * @return average point
      * @author Alp Afyonluoğlu
@@ -224,21 +215,26 @@ public class Company extends User {
      */
     private void calculateAveragePoint() {
         // Variables
+        Tickets ticketManager;
+        ArrayList<Ticket> tickets;
         FirebaseDatabase database;
         DatabaseReference reference;
         int sum;
 
         // Code
+        ticketManager = new Tickets( context);
+        tickets = ticketManager.getRecentlySoldTickets( this);
+
         sum = 0;
-        for ( int count = 0; count < anonymousFeedback.size(); count++) {
-            sum = sum + anonymousFeedback.get( count).getStarRating();
+        for ( int count = 0; count < tickets.size(); count++) {
+            sum = sum + tickets.get( count).getStarRating();
         }
 
-        if ( anonymousFeedback.size() == 0) {
+        if ( tickets.size() == 0) {
             averagePoint = 0;
         }
         else {
-            averagePoint = (double) sum / anonymousFeedback.size();
+            averagePoint = (double) sum / tickets.size();
         }
 
         // Save to server
@@ -412,16 +408,7 @@ public class Company extends User {
                         }
                     }
 
-                    // Create anonymous feedback tickets
-                    feedbackStars = stringToArrayList( preferences.getString( FEEDBACK_STARS, ""));
-                    feedbackComments = stringToArrayList( preferences.getString( FEEDBACK_COMMENTS, ""));
-                    anonymousFeedback = new ArrayList<>();
-                    for ( int count = 0; count < feedbackStars.size(); count++) {
-                        ticket = new Ticket( null, null);
-                        ticket.setStarRating( Integer.parseInt( feedbackStars.get( count)));
-                        ticket.setComment( feedbackComments.get( count));
-                        anonymousFeedback.add( ticket);
-                    }
+                    // Update average point
                     calculateAveragePoint();
 
                     // Create lines
@@ -479,16 +466,6 @@ public class Company extends User {
         }
         preferences.edit().putString( EMPLOYEE_LINKED_TRAIN_IDS, arrayListToString( employeeLinkIds)).apply();
         preferences.edit().putString( EMPLOYEE_NAMES, arrayListToString( employeeNames)).apply();
-
-        // Save feedback
-        feedbackStars = new ArrayList<>();
-        feedbackComments = new ArrayList<>();
-        for ( int count = 0; count < anonymousFeedback.size(); count++) {
-            feedbackStars.add( String.valueOf( anonymousFeedback.get( count).getStarRating()));
-            feedbackComments.add( anonymousFeedback.get( count).getComment());
-        }
-        preferences.edit().putString( FEEDBACK_STARS, arrayListToString( feedbackStars)).apply();
-        preferences.edit().putString( FEEDBACK_COMMENTS, arrayListToString( feedbackComments)).apply();
 
         // Save lines
         lineDepartures = new ArrayList<>();
@@ -572,10 +549,6 @@ public class Company extends User {
                         data.put( employee.getName(), employee.getAssignedTrain().getId());
                     }
                     reference.setValue( data);
-
-                    // Save average point data to server
-                    reference = database.getReference( SERVER_KEY + "/Companies/" + companyId);
-                    reference.child( AVERAGE_POINT).setValue( String.valueOf( averagePoint));
 
                     // Save lines data to server
                     reference = database.getReference( SERVER_KEY + "/Companies/" + companyId + "/lines");
@@ -667,9 +640,6 @@ public class Company extends User {
                                         String employeeName;
                                         boolean islinkedTrainFound;
                                         Employee employee;
-                                        int feedbackStar;
-                                        String feedbackComment;
-                                        Ticket ticket;
                                         String lineDeparture;
                                         String lineArrival;
 
@@ -735,17 +705,6 @@ public class Company extends User {
                                                 }
                                             }
 
-                                            // Create anonymous feedback tickets with server data
-                                            anonymousFeedback = new ArrayList<>();
-                                            for ( DataSnapshot ticketData : dataSnapshot.child( "employees").getChildren()) {
-                                                feedbackStar = Integer.parseInt( ticketData.child( FEEDBACK_STARS).getValue( String.class));
-                                                feedbackComment = ticketData.child( FEEDBACK_COMMENTS).getValue( String.class);
-
-                                                ticket = new Ticket( null, null);
-                                                ticket.setComment( feedbackComment);
-                                                ticket.setStarRating( feedbackStar);
-                                                anonymousFeedback.add( ticket);
-                                            }
                                             calculateAveragePoint();
 
                                             // Create lines  with server data
