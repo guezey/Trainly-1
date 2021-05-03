@@ -113,8 +113,6 @@ public class TrainsActivity extends AppCompatActivity {
                 tvStatusValue.setTextColor(Color.GREEN);
             }
 
-
-
             view.setOnClickListener( new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

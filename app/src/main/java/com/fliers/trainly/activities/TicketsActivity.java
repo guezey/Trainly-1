@@ -109,8 +109,8 @@ public class TicketsActivity extends AppCompatActivity {
             // Get title text view
             TextView tvTicketTitle = view.findViewById( R.id.tvTicketTitle);
             TextView tvDirection = view.findViewById( R.id.tvDirection);
-            TextView tvDepTime = view.findViewById(R.id.cap1);
-            TextView tvArrTime = view.findViewById(R.id.lin1);
+            TextView tvDepTime = view.findViewById(R.id.tvEmployeePerformance);
+            TextView tvArrTime = view.findViewById(R.id.tvEmployeeLinkedTrain);
 
             tvTicketTitle.setText( ticket.getSeat().getLinkedWagon().getLinkedSchedule().
                     getLinkedTrain().getLinkedCompany().getName());

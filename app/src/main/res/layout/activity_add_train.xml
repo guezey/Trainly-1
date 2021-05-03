@@ -116,7 +116,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/cap1"
+                    android:id="@+id/tvEmployeePerformance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
@@ -131,10 +131,10 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/cap1"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvEmployeePerformance"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/cap1"
-                    app:layout_constraintTop_toTopOf="@+id/cap1">
+                    app:layout_constraintStart_toEndOf="@+id/tvEmployeePerformance"
+                    app:layout_constraintTop_toTopOf="@+id/tvEmployeePerformance">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/idl321"
@@ -202,7 +202,7 @@
                     android:fontFamily="@font/nunito"
                     android:text="Economy wagons:"
                     app:layout_constraintStart_toStartOf="@+id/title1"
-                    app:layout_constraintTop_toBottomOf="@+id/cap1" />
+                    app:layout_constraintTop_toBottomOf="@+id/tvEmployeePerformance" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="0dp"
@@ -211,7 +211,7 @@
                     android:layout_marginEnd="16dp"
                     app:layout_constraintBottom_toBottomOf="@+id/cap"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/cap1"
+                    app:layout_constraintStart_toEndOf="@+id/tvEmployeePerformance"
                     app:layout_constraintTop_toTopOf="@+id/cap">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -326,7 +326,7 @@
                     app:layout_constraintVertical_bias="0.538" />
 
                 <TextView
-                    android:id="@+id/lin1"
+                    android:id="@+id/tvEmployeeLinkedTrain"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
@@ -345,11 +345,11 @@
                     android:drawSelectorOnTop="true"
                     android:entries="@array/lines"
                     android:popupBackground="@color/white"
-                    app:layout_constraintBottom_toBottomOf="@+id/lin1"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvEmployeeLinkedTrain"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toEndOf="@+id/lin1"
-                    app:layout_constraintTop_toTopOf="@+id/lin1"
+                    app:layout_constraintStart_toEndOf="@+id/tvEmployeeLinkedTrain"
+                    app:layout_constraintTop_toTopOf="@+id/tvEmployeeLinkedTrain"
                     app:layout_constraintVertical_bias="0.0" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
