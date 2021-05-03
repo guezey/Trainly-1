@@ -313,6 +313,7 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
     public boolean onNavigationItemSelected( @NonNull MenuItem item) {
         // Variables
         Intent intent;
+        User currentUser;
 
         // Code
         if ( item.getItemId() == R.id.navAccountCustomer) {
@@ -320,7 +321,12 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
             startActivity( intent);
         }
         else if ( item.getItemId() == R.id.navLogOutCustomer) {
-            // TODO: Logout customer
+            currentUser = User.getCurrentUserInstance();
+            currentUser.logout();
+
+            intent = new Intent( getApplicationContext(), SplashActivity.class);
+            startActivity( intent);
+            finish();
         }
 
         drawer.closeDrawer(Gravity.LEFT);

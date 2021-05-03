@@ -114,6 +114,7 @@ public class CompanyHomeActivity extends AppCompatActivity implements Navigation
     public boolean onNavigationItemSelected( @NonNull MenuItem item) {
         // Variables
         Intent intent;
+        User currentUser;
 
         // Code
         if ( item.getItemId() == R.id.navTrains) {
@@ -133,7 +134,12 @@ public class CompanyHomeActivity extends AppCompatActivity implements Navigation
             startActivity( intent);
         }
         else if ( item.getItemId() == R.id.navLogOutCompany) {
-            // TODO: Logout company
+            currentUser = User.getCurrentUserInstance();
+            currentUser.logout();
+
+            intent = new Intent( getApplicationContext(), SplashActivity.class);
+            startActivity( intent);
+            finish();
         }
 
         drawer.closeDrawer(Gravity.LEFT);
