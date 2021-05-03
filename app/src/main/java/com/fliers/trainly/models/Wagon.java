@@ -11,8 +11,8 @@ import java.util.ArrayList;
 
 public class Wagon {
     private final String[] seatLetters = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"};
-    private final int BUSINESS_SEAT_NUM = 36;
-    private final int ECONOMY_SEAT_NUM = 64;
+    private final int BUSINESS_SEAT_NUM = 30;
+    private final int ECONOMY_SEAT_NUM = 48;
 
     private ArrayList<Seat> seats;
     private boolean business;
