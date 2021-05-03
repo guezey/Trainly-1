@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -39,28 +41,28 @@ public class AddEmployeeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_employee);
 
         currentUser = (Company) User.getCurrentUserInstance();
-        back = (ImageView) findViewById(R.id.drawerButtonCustomer);
+        back = (ImageView) findViewById(R.id.imageView2);
         add = (Button) findViewById(R.id.button);
         employeeName = (EditText) findViewById(R.id.editTextTextPersonName);
         trainId = (Spinner) findViewById(R.id.spinner);
-//        ids = new ArrayList<>(0);
-//        currentTrains = currentUser.getTrains();
-//
-//        for(Train train : currentTrains) {
-//            ids.add(train.getId());
-//        }
-//
-//        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, R.layout.activity_employee_spinner, ids){
-//            @Override
-//            public View getDropDownView(int position, View convertView,
-//                                        ViewGroup parent) {
-//
-//                return super.getDropDownView(position, convertView, parent);
-//            }
-//        };
-//
-//        spinnerArrayAdapter.setDropDownViewResource(R.layout.activity_employee_spinner);
-//        trainId.setAdapter(spinnerArrayAdapter);
+        ids = new ArrayList<>(0);
+        currentTrains = currentUser.getTrains();
+
+        for(Train train : currentTrains) {
+            ids.add(train.getId());
+        }
+
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, R.layout.activity_employee_spinner, ids){
+            @Override
+            public View getDropDownView(int position, View convertView,
+                                        ViewGroup parent) {
+
+                return super.getDropDownView(position, convertView, parent);
+            }
+        };
+
+        spinnerArrayAdapter.setDropDownViewResource(R.layout.activity_employee_spinner);
+        trainId.setAdapter(spinnerArrayAdapter);
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override

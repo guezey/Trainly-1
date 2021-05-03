@@ -4,9 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.app.AlertDialog;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
@@ -15,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Button;
 import android.view.View;
+import android.widget.Toast;
 
 import com.fliers.trainly.R;
 import com.fliers.trainly.models.Company;
@@ -68,7 +67,7 @@ public class LinesActivity extends AppCompatActivity implements LinesCoordinates
         editTextTextPersonName2 = (EditText) findViewById(R.id.editTextTextPersonName2);
         editTextTextPersonName3 = (EditText) findViewById(R.id.editTextTextPersonName3);
         button = (Button) findViewById(R.id.button);
-        back = (ImageView) findViewById(R.id.drawerButtonCustomer);
+        back = (ImageView) findViewById(R.id.imageView2);
 
         back.setOnClickListener( new View.OnClickListener() {
 
@@ -160,7 +159,8 @@ public class LinesActivity extends AppCompatActivity implements LinesCoordinates
             return 0;
         }
         @Override public View getView( final int position, View convertView, ViewGroup parent) {
-            View view = getLayoutInflater().inflate( R.layout.list_item_lines, null);
+            // View view = getLayoutInflater().inflate( R.layout.list_item_lines, null);
+            View view = null;
 
             // Get title text view
             TextView tvLineTitle = view.findViewById( R.id.tvLine );

@@ -70,7 +70,6 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
         arrivalSpinner = (Spinner)findViewById(R.id.arrivalSpinner);
         txtDate = (TextView) findViewById(R.id.textView28);
         Button search = findViewById(R.id.buttonSearch);
-        ImageView menuButton = findViewById(R.id.drawerButtonCustomer);
 
         User currentUser = User.getCurrentUserInstance();
         drawer = findViewById( R.id.drawerLayoutCustomer);
@@ -122,17 +121,6 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
 
         departureSpinner.setOnItemSelectedListener(this);
         arrivalSpinner.setOnItemSelectedListener(this);
-
-        menuButton.setOnClickListener(new View.OnClickListener() {
-            /**
-             * Opens drawer menu on click.
-             * @param view view
-             */
-            @Override
-            public void onClick(View view) {
-            //TODO: drawer menu
-            }
-        });
 
         search.setOnClickListener(new View.OnClickListener() {
             /**

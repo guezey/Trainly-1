@@ -49,7 +49,7 @@ public class AddTrainActivity extends AppCompatActivity {
         businessPrice = (EditText) findViewById(R.id.editTextNumber);
         economyPrice = (EditText) findViewById(R.id.editTextNumber2);
         add = (Button) findViewById(R.id.button);
-        back = (ImageView) findViewById(R.id.drawerButtonCustomer);
+        back = (ImageView) findViewById(R.id.imageView2);
         lineChoice = (Spinner) findViewById(R.id.spinner);
 
 

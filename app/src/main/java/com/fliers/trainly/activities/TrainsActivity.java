@@ -7,9 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -34,7 +32,7 @@ public class TrainsActivity extends AppCompatActivity {
 
         TextView tvTitle = findViewById(R.id.tvTitle);
         ListView lvTrains = findViewById(R.id.lvTrains);
-        ImageView btBack = findViewById(R.id.drawerButtonCustomer);
+        ImageView btBack = findViewById(R.id.imageView2);
         FloatingActionButton fabAdd = findViewById(R.id.fabAdd);
 
         btBack.setOnClickListener(new View.OnClickListener() {

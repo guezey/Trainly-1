@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -34,7 +33,7 @@ public class EmployeesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employees);
 
-        back = (ImageView) findViewById(R.id.drawerButtonCustomer);
+        back = (ImageView) findViewById(R.id.imageView2);
         addEmployee = (FloatingActionButton) findViewById(R.id.fabAdd);
 
         back.setOnClickListener(new View.OnClickListener() {
@@ -78,8 +77,9 @@ public class EmployeesActivity extends AppCompatActivity {
             return 0;
         }
         @Override public View getView( final int position, View convertView, ViewGroup parent) {
-            View view = getLayoutInflater().inflate( R.layout.list_item_employees, null);
-            
+            // View view = getLayoutInflater().inflate( R.layout.list_item_employees, null);
+            View view = null;
+
             // Get title text view
             TextView tvEmployeeName = view.findViewById( R.id.tvEmployeeName );
             tvEmployeeName.setText( "Name: " + employees.get( position).getName() );
@@ -98,5 +98,5 @@ public class EmployeesActivity extends AppCompatActivity {
 
             return view;
         }
-    }◘
+    }
 }

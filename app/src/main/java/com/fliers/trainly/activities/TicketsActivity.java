@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -19,7 +18,6 @@ import com.fliers.trainly.models.Places;
 import com.fliers.trainly.models.Ticket;
 import com.fliers.trainly.models.Tickets;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -46,7 +44,7 @@ public class TicketsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tickets);
 
         TextView title = (TextView) findViewById(R.id.tvTicketFilter);
-        ImageView back = (ImageView) findViewById(R.id.drawerButtonCustomer);
+        ImageView back = (ImageView) findViewById(R.id.imageView2);
         ListView listTickets = findViewById( R.id.listTickets);
         departure = getIntent().getStringExtra("departure");
         arrival = getIntent().getStringExtra("arrival");

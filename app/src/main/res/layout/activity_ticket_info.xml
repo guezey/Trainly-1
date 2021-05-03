@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/drawerButtonCustomer"
+            android:id="@+id/imageView2"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_marginStart="8dp"
@@ -226,7 +226,7 @@
                     android:layout_width="0dp"
                     android:layout_height="700dp"
                     android:layout_marginTop="8dp"
-                    android:visibility=""
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/constraintLayout8" />
@@ -442,8 +442,9 @@
                         android:id="@+id/constraintLayout4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:layout_constraintTop_toBottomOf="@+id/textView31"
-                        tools:layout_editor_absoluteX="66dp">
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView31">
 
                         <ImageView
                             android:id="@+id/imageView3"
