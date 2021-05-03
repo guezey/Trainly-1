@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -18,6 +19,7 @@ import com.fliers.trainly.models.Places;
 import com.fliers.trainly.models.Ticket;
 import com.fliers.trainly.models.Tickets;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -32,6 +34,7 @@ public class TicketsActivity extends AppCompatActivity {
     String departure;
     String arrival;
     String date;
+    Intent switchActivityIntent;
 
     /**
      * Manipulates the activity once created.
@@ -86,14 +89,6 @@ public class TicketsActivity extends AppCompatActivity {
     }
 
     /**
-     * Creates an intent to go to Ticket Info page.
-     */
-    public void goToTicketInfo() {
-        Intent switchActivityIntent = new Intent( this, TicketInfoActivity.class);
-        startActivity( switchActivityIntent);
-    }
-
-    /**
      * Controls list items.
      */
     class CustomAdaptor extends BaseAdapter {
@@ -145,10 +140,16 @@ public class TicketsActivity extends AppCompatActivity {
                  */
                 public void onClick(View view) {
                     goToTicketInfo();
+                    switchActivityIntent.putExtra("schedule", ticket.getSeat().getLinkedWagon().getLinkedSchedule());
+                    startActivity( switchActivityIntent);;
                 }
             });
 
             return view;
         }
+    }
+
+    public void goToTicketInfo() {
+        switchActivityIntent = new Intent( this, TicketInfoActivity.class );
     }
 }
