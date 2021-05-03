@@ -117,7 +117,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
-                            android:id="@+id/id1"
+                            android:id="@+id/tvEmployeeName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
@@ -127,24 +127,24 @@
                             app:layout_constraintTop_toBottomOf="@+id/title1" />
 
                         <TextView
-                            android:id="@+id/cap1"
+                            android:id="@+id/tvEmployeePerformance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:fontFamily="@font/nunito"
                             android:text="Departure: 24.03.2021   10:00"
                             app:layout_constraintStart_toStartOf="@+id/title1"
-                            app:layout_constraintTop_toBottomOf="@+id/id1" />
+                            app:layout_constraintTop_toBottomOf="@+id/tvEmployeeName" />
 
                         <TextView
-                            android:id="@+id/lin1"
+                            android:id="@+id/tvEmployeeLinkedTrain"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:fontFamily="@font/nunito"
                             android:text="Arrival:       24.03.2021   14:00"
                             app:layout_constraintStart_toStartOf="@+id/title1"
-                            app:layout_constraintTop_toBottomOf="@+id/cap1" />
+                            app:layout_constraintTop_toBottomOf="@+id/tvEmployeePerformance" />
 
                         <TextView
                             android:id="@+id/lin"
@@ -154,7 +154,7 @@
                             android:fontFamily="@font/nunito"
                             android:text="Wagon no: 3"
                             app:layout_constraintStart_toStartOf="@+id/title1"
-                            app:layout_constraintTop_toBottomOf="@+id/lin1" />
+                            app:layout_constraintTop_toBottomOf="@+id/tvEmployeeLinkedTrain" />
 
                         <TextView
                             android:id="@+id/s11"
@@ -180,7 +180,7 @@
                             app:layout_constraintVertical_bias="0.0" />
 
                         <TextView
-                            android:id="@+id/s12"
+                            android:id="@+id/tvEmployeeStatus"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="20dp"

@@ -4,10 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.app.AlertDialog;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Button;
 import android.view.View;
@@ -19,6 +23,8 @@ import com.fliers.trainly.models.Customer;
 import com.fliers.trainly.models.Line;
 import com.fliers.trainly.models.Place;
 import com.fliers.trainly.models.User;
+
+import java.util.ArrayList;
 
 //import java.awt.Button;
 //import java.awt.View;
@@ -32,7 +38,7 @@ public class LinesActivity extends AppCompatActivity implements LinesCoordinates
     private final int COMPANY_LOGIN = 1;
     private final int CUSTOMER_LOGIN = 2;
 
-    User currentUser;
+    Company currentUser;
     private EditText editTextTextPersonName2;
     private EditText editTextTextPersonName3;
     private double x1;
@@ -43,6 +49,7 @@ public class LinesActivity extends AppCompatActivity implements LinesCoordinates
     private SharedPreferences preferences;
     private int loginType;
     private ImageView back;
+    ArrayList<Line> lines;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +118,18 @@ public class LinesActivity extends AppCompatActivity implements LinesCoordinates
                 }
             //}
         });
+
+        ListView listLines = findViewById( R.id.listLines );
+        lines = currentUser.getLines();
+
+        if ( lines.size() == 0) {
+            Toast.makeText( getApplicationContext(), "No lines found", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            LinesActivity.CustomAdaptor customAdaptor = new LinesActivity.CustomAdaptor();
+            listLines.setAdapter( customAdaptor );
+        }
+
     }
 
     public void openDialog() {
@@ -128,5 +147,28 @@ public class LinesActivity extends AppCompatActivity implements LinesCoordinates
         y1 = posY1;
         x2 = posX2;
         y2 = posY2;
+    }
+
+    class CustomAdaptor extends BaseAdapter {
+        @Override public int getCount() {
+            return lines.size();
+        }
+
+        @Override public Object getItem( int position) {
+            return null;
+        }
+
+        @Override public long getItemId( int position) {
+            return 0;
+        }
+        @Override public View getView( final int position, View convertView, ViewGroup parent) {
+            View view = getLayoutInflater().inflate( R.layout.list_item_lines, null);
+
+            // Get title text view
+            TextView tvLineTitle = view.findViewById( R.id.tvLine );
+            tvLineTitle.setText( currentUser.getLines().get(position) + "" );
+
+            return view;
+        }
     }
 }

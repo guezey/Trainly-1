@@ -62,7 +62,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tvTicketTitle" />
 
             <TextView
-                android:id="@+id/cap1"
+                android:id="@+id/tvEmployeePerformance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
@@ -72,7 +72,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tvDirection" />
 
             <TextView
-                android:id="@+id/lin1"
+                android:id="@+id/tvEmployeeLinkedTrain"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
@@ -81,7 +81,7 @@
                 android:text="Arrival:       24.03.2021   14:00"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/tvTicketTitle"
-                app:layout_constraintTop_toBottomOf="@+id/cap1" />
+                app:layout_constraintTop_toBottomOf="@+id/tvEmployeePerformance" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
