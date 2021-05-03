@@ -569,7 +569,7 @@ public class Company extends User {
                     data = new HashMap<>();
                     for ( int count = 0; count < employees.size(); count++) {
                         employee = employees.get( count);
-                        data.put( employee.getAssignedTrain().getId(), employee.getName());
+                        data.put( employee.getName(), employee.getAssignedTrain().getId());
                     }
                     reference.setValue( data);
 
@@ -714,8 +714,8 @@ public class Company extends User {
                                             // Create employees with server data
                                             employees = new ArrayList<>();
                                             for ( DataSnapshot employeeData : dataSnapshot.child( "employees").getChildren()) {
-                                                employeeLinkedId = employeeData.getKey();
-                                                employeeName = employeeData.child( employeeLinkedId).getValue( String.class);
+                                                employeeName = employeeData.getKey();
+                                                employeeLinkedId = employeeData.getValue( String.class);
 
                                                 // Find linked train of the employee
                                                 islinkedTrainFound = false;
