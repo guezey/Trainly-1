@@ -9,29 +9,29 @@
             android:icon="@drawable/ic_baseline_home_24"
             android:title="Home" />
         <item
-            android:id="@+id/nav_galldassadery"
+            android:id="@+id/nav_trains"
             android:icon="@drawable/ic_baseline_train_24"
             android:title="Trains" />
         <item
-            android:id="@+id/nav_slsadasdideshow"
+            android:id="@+id/nav_lines"
             android:icon="@drawable/ic_baseline_edit_road_24"
             android:title="Lines" />
         <item
-            android:id="@+id/nav_slidessadssaadw"
+            android:id="@+id/nav_employees"
             android:icon="@drawable/ic_baseline_person_24"
             android:title="Employees" />
     </group>
     <group android:id="@+id/asddsaa" android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_slidessadssaadsadfdsfdsw"
+            android:id="@+id/nav_account_settings"
             android:icon="@drawable/ic_baseline_settings_24"
             android:title="Account Settings" />
         <item
-            android:id="@+id/nav_slidessadssaadsadw"
+            android:id="@+id/nav_general_information"
             android:icon="@drawable/ic_baseline_info_24"
             android:title="General Information" />
         <item
-            android:id="@+id/nav_slfdsfdidessadssaadsadw"
+            android:id="@+id/nav_log_out"
             android:icon="@drawable/ic_baseline_power_settings_new_24"
             android:title="Log out" />
     </group>
