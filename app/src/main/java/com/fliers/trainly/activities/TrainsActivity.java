@@ -1,8 +1,10 @@
 package com.fliers.trainly.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
+
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -15,12 +17,11 @@ import android.widget.TextView;
 
 import com.fliers.trainly.R;
 import com.fliers.trainly.models.Company;
+
 import com.fliers.trainly.models.Ticket;
 import com.fliers.trainly.models.Train;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 public class TrainsActivity extends AppCompatActivity {
@@ -124,5 +125,4 @@ public class TrainsActivity extends AppCompatActivity {
             return view;
         }
     }
-
 }

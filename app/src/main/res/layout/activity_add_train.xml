@@ -85,7 +85,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
 
                 <ImageView
                     android:id="@+id/imageView9"
@@ -135,7 +135,7 @@
                     app:layout_constraintTop_toTopOf="@+id/cap1">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/idl322"
+                        android:id="@+id/idl321"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:background="@drawable/gray_light_rounded_corner"
@@ -144,32 +144,30 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <TextView
-                            android:id="@+id/textView41"
+                            android:id="@+id/textView411"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
                             android:fontFamily="@font/maven_pro_bold"
                             android:includeFontPadding="false"
                             android:text="-"
                             android:textSize="20dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            tools:layout_editor_absoluteX="5dp"
+                            tools:layout_editor_absoluteY="1dp" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <TextView
-                        android:id="@+id/textView42"
+                        android:id="@+id/textView412"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/nunito"
                         android:text="1"
                         android:textSize="15dp"
-                        app:layout_constraintEnd_toStartOf="@+id/idl32"
-                        app:layout_constraintStart_toEndOf="@+id/idl322" />
+                        app:layout_constraintEnd_toStartOf="@+id/idl31"
+                        app:layout_constraintStart_toEndOf="@+id/idl321"
+                        tools:layout_editor_absoluteY="0dp" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/idl32"
+                        android:id="@+id/idl31"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:background="@drawable/gray_light_rounded_corner"
@@ -178,7 +176,7 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <TextView
-                            android:id="@+id/textView41"
+                            android:id="@+id/textView413"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
@@ -191,6 +189,7 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView
@@ -223,7 +222,7 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <TextView
-                            android:id="@+id/textView41"
+                            android:id="@+id/textView414"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
@@ -276,7 +275,8 @@
                     android:id="@+id/textView43"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="36dp"
                     android:fontFamily="@font/nunito"
                     android:text="Business price: "
                     app:layout_constraintStart_toStartOf="@+id/cap"
@@ -289,6 +289,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:ems="10"
+                    android:hint="$ /100km"
                     android:inputType="number"
                     app:layout_constraintBottom_toBottomOf="@+id/textView43"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -296,22 +297,11 @@
                     app:layout_constraintTop_toTopOf="@+id/textView43" />
 
                 <TextView
-                    android:id="@+id/textView44"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="4dp"
-                    android:fontFamily="@font/nunito"
-                    android:text="$ /100km"
-                    android:textSize="13dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/editTextNumber"
-                    app:layout_constraintEnd_toEndOf="@+id/editTextNumber"
-                    app:layout_constraintTop_toTopOf="@+id/editTextNumber" />
-
-                <TextView
                     android:id="@+id/textView45"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="56dp"
                     android:fontFamily="@font/nunito"
                     android:text="Economy price: "
                     app:layout_constraintStart_toStartOf="@+id/cap"
@@ -324,23 +314,14 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:ems="10"
+                    android:hint="$ /100km"
                     android:inputType="number"
                     app:layout_constraintBottom_toBottomOf="@+id/textView45"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toEndOf="@+id/textView43"
-                    app:layout_constraintTop_toTopOf="@+id/textView45" />
-
-                <TextView
-                    android:id="@+id/textView46"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="4dp"
-                    android:fontFamily="@font/nunito"
-                    android:text="$ /100km"
-                    android:textSize="13dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/editTextNumber2"
-                    app:layout_constraintEnd_toEndOf="@+id/editTextNumber"
-                    app:layout_constraintTop_toBottomOf="@+id/editTextNumber" />
+                    app:layout_constraintTop_toTopOf="@+id/textView45"
+                    app:layout_constraintVertical_bias="0.538" />
 
                 <TextView
                     android:id="@+id/lin1"
@@ -364,8 +345,10 @@
                     android:popupBackground="@color/white"
                     app:layout_constraintBottom_toBottomOf="@+id/lin1"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toEndOf="@+id/lin1"
-                    app:layout_constraintTop_toTopOf="@+id/lin1" />
+                    app:layout_constraintTop_toTopOf="@+id/lin1"
+                    app:layout_constraintVertical_bias="0.0" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
@@ -375,7 +358,7 @@
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="44dp"
             android:alpha="0.8"
             android:background="@drawable/button_orange"
             android:text="Add"
@@ -383,6 +366,7 @@
             android:textSize="18dp"
             app:backgroundTint="@color/orange700"
             app:layout_constraintEnd_toEndOf="@+id/card12"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/card12"
             app:layout_constraintTop_toBottomOf="@+id/card12" />
 
