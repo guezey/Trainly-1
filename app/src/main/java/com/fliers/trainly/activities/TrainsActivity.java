@@ -20,27 +20,21 @@ import java.util.ArrayList;
 
 public class TrainsActivity extends AppCompatActivity {
 
-    Company currentUser;
+    //Company currentUser;
     FloatingActionButton addTrainButton;
     ImageView back;
     ArrayList<Train> trains;
-
-    //ArrayList<Train> trains;
-    //ArrayList<CardView> trainViews;
+    ArrayList<CardView> trainViews;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trains);
 
-        currentUser = (Company) User.getCurrentUserInstance();
+        //currentUser = (Company) User.getCurrentUserInstance();
         addTrainButton = (FloatingActionButton) findViewById(R.id.fabAdd);
         back = (ImageView) findViewById(R.id.imageView2);
-
-//        train1 = (CardView) findViewById(R.id.card12);
-//        train2 = (CardView) findViewById(R.id.card2);
-//        trains = new ArrayList<>(((Company)currentUser).getTrains());
-//        trainViews = new ArrayList<>(trains.size());
+        //trains = currentUser.getTrains();
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,21 +51,5 @@ public class TrainsActivity extends AppCompatActivity {
                   startActivity( intent);
             }
         });
-
-//        train1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                //
-//            }
-//        });
-//
-//        train2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                //
-//            }
-//        });
     }
 }
