@@ -205,9 +205,4 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
                 " to " + arrivalSpinner.getSelectedItem().toString() + " having departure dates of " + txtDate.getText());
         startActivity(switchActivityIntent);
     }
-
-    private void switchToAdvanced() {
-        Intent switchActivityIntent = new Intent(this, AdvancedSearchActivity.class);
-        startActivity(switchActivityIntent);
-    }
 }
