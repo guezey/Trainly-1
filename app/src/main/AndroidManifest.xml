@@ -3,6 +3,7 @@
     package="com.fliers.trainly">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -11,14 +12,20 @@
         android:roundIcon="@mipmap/ic_logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Trainly.NoActionBar">
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="MAPS_API_KEY" />
-        <activity android:name=".activities.TravelHistoryActivity"></activity>
+        <activity android:name=".activities.SplashActivity"
+            android:theme="@style/Theme.Trainly.whiteBg">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activities.TravelHistoryActivity" />
         <activity android:name=".activities.TrainsActivity" />
         <activity android:name=".activities.TicketsActivity" />
         <activity android:name=".activities.TicketInfoActivity" />
-        <activity android:name=".activities.WelcomeActivity" />
+        <activity android:name=".activities.WelcomeActivity"
+            android:theme="@style/Theme.Trainly.NoActionBar.FullScreenActivity"/>
         <activity android:name=".activities.LinesActivity" />
         <activity android:name=".activities.HelpActivity" />
         <activity android:name=".activities.GeneralInfoActivity" />
@@ -45,13 +52,10 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".activities.MainActivity" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCUVyksVvyWTWKIWo1QuhSwpZnjtWql2eE" />
     </application>
 
 </manifest>

@@ -2,21 +2,28 @@ package com.fliers.trainly.activities;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.fliers.trainly.R;
 import com.fliers.trainly.models.Place;
 import com.fliers.trainly.models.Places;
+import com.fliers.trainly.models.Ticket;
+import com.fliers.trainly.models.Tickets;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -28,6 +35,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class CustomerHomeActivity extends AppCompatActivity implements OnMapReadyCallback, AdapterView.OnItemSelectedListener {
@@ -207,7 +215,7 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
     }
 
     private void switchToAdvanced() {
-        Intent switchActivityIntent = new Intent(this, AdvancedSearchActivity.class);
-        startActivity(switchActivityIntent);
+//        Intent switchActivityIntent = new Intent(this, AdvancedSearchActivity.class);
+//        startActivity(switchActivityIntent);
     }
 }
