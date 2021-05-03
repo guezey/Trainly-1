@@ -42,8 +42,8 @@ public class TicketInfoActivity extends AppCompatActivity implements AdapterView
         tvLine.setText(schedule.getLine().toString());
         tvDep.setText("Departure: " + schedule.getDepartureDate().toString());
         tvArr.setText("Arrival       " + schedule.getArrivalDate().toString());
-        tvPrices.setText("*Economy class wagon seats: " + String.valueOf(schedule.getEconomyPrice())
-                        + "$\n*Business class wagon seats: " + String.valueOf(schedule.getBusinessPrice()) + "$");
+        tvPrices.setText("*Economy class wagon seats: $" + String.valueOf(schedule.getEconomyPrice())
+                        + "\n*Business class wagon seats: $" + String.valueOf(schedule.getBusinessPrice()));
 
         ArrayList<Wagon> wagons = schedule.getWagons();
         ArrayList<String> spinnerItems = new ArrayList<>();
