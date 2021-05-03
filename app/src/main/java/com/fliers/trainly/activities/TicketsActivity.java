@@ -28,7 +28,7 @@ import java.util.Calendar;
  */
 public class TicketsActivity extends AppCompatActivity {
 
-    ArrayList<String> tickets;
+    ArrayList<Ticket> tickets;
     String departure;
     String arrival;
     String date;
@@ -63,17 +63,13 @@ public class TicketsActivity extends AppCompatActivity {
         int day = Integer.parseInt(date.substring(0,2));
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, day);
-        tickets = new ArrayList<>();
-        tickets.add("1");
-        tickets.add("1");
-        tickets.add("1");
-        tickets.add("1");
+        tickets = new ArrayList<>(0);
 
-//        Places places = Places.getInstance();
-//        Place departurePlace = places.findByName(departure);
-//        Place arrivalPlace = places.findByName(arrival);
-//        Tickets ticketManager = new Tickets( getApplicationContext());
-//        tickets = ticketManager.getQueriedTickets( departurePlace, arrivalPlace, calendar);
+        Places places = Places.getInstance();
+        Place departurePlace = places.findByName(departure);
+        Place arrivalPlace = places.findByName(arrival);
+        Tickets ticketManager = new Tickets( getApplicationContext());
+        tickets = ticketManager.getQueriedTickets( departurePlace, arrivalPlace, calendar);
 
         if ( tickets.size() == 0) {
             title.setText("No tickets were found for " + date + " from " + departure + " to " + arrival);
@@ -93,7 +89,6 @@ public class TicketsActivity extends AppCompatActivity {
     class CustomAdaptor extends BaseAdapter {
         @Override
         public int getCount() {
-            // TODO: Edit this part
             return tickets.size();
         }
 
@@ -109,21 +104,21 @@ public class TicketsActivity extends AppCompatActivity {
         @Override
         public View getView( final int position, View convertView, ViewGroup parent) {
             View view = getLayoutInflater().inflate( R.layout.list_item_tickets, null);
-//            Ticket ticket = tickets.get(position);
-//
-//            // Get title text view
-//            TextView tvTicketTitle = view.findViewById( R.id.tvTicketTitle);
-//            TextView tvDirection = view.findViewById( R.id.tvDirection);
-//            TextView tvDepTime = view.findViewById(R.id.cap1);
-//            TextView tvArrTime = view.findViewById(R.id.lin1);
-//
-//            tvTicketTitle.setText( ticket.getSeat().getLinkedWagon().getLinkedSchedule().
-//                    getLinkedTrain().getLinkedCompany().getName());
-//            tvDirection.setText( "From " + departure + " to " + arrival);
-//            tvDepTime.setText( "Departure: " + ticket.getSeat().getLinkedWagon().
-//                    getLinkedSchedule().getDepartureDate().toString());
-//            tvArrTime.setText( "Arrival:       " + ticket.getSeat().getLinkedWagon().
-//                    getLinkedSchedule().getArrivalDate().toString());
+            Ticket ticket = tickets.get(position);
+
+            // Get title text view
+            TextView tvTicketTitle = view.findViewById( R.id.tvTicketTitle);
+            TextView tvDirection = view.findViewById( R.id.tvDirection);
+            TextView tvDepTime = view.findViewById(R.id.cap1);
+            TextView tvArrTime = view.findViewById(R.id.lin1);
+
+            tvTicketTitle.setText( ticket.getSeat().getLinkedWagon().getLinkedSchedule().
+                    getLinkedTrain().getLinkedCompany().getName());
+            tvDirection.setText( "From " + departure + " to " + arrival);
+            tvDepTime.setText( "Departure: " + ticket.getSeat().getLinkedWagon().
+                    getLinkedSchedule().getDepartureDate().toString());
+            tvArrTime.setText( "Arrival:       " + ticket.getSeat().getLinkedWagon().
+                    getLinkedSchedule().getArrivalDate().toString());
 
             view.setOnClickListener( new View.OnClickListener() {
                 @Override
