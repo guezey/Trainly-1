@@ -483,6 +483,18 @@ public abstract class User {
         this.name = name;
     }
 
+    /**
+     * Logs out user by clearing all user data
+     */
+    public void logout() {
+        SharedPreferences.Editor editor;
+
+        // Program code
+        editor = preferences.edit();
+        editor.clear();
+        editor.apply();
+    }
+
     public interface EmailAvailabilityCheckListener {
         void onEmailAvailabilityCheck( String email, boolean isAvailable);
     }

@@ -46,7 +46,7 @@ public class TicketsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tickets);
 
         TextView title = (TextView) findViewById(R.id.tvTicketFilter);
-        ImageView back = (ImageView) findViewById(R.id.imageView2);
+        ImageView back = (ImageView) findViewById(R.id.drawerButtonCustomer);
         ListView listTickets = findViewById( R.id.listTickets);
         departure = getIntent().getStringExtra("departure");
         arrival = getIntent().getStringExtra("arrival");

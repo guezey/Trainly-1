@@ -4,6 +4,8 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -14,11 +16,14 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.fliers.trainly.R;
 import com.fliers.trainly.models.Place;
 import com.fliers.trainly.models.Places;
+import com.fliers.trainly.models.User;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -27,6 +32,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,7 +42,7 @@ import java.util.Calendar;
  * @author Ali Emir Güzey
  * @version 03.05.2021
  */
-public class CustomerHomeActivity extends AppCompatActivity implements OnMapReadyCallback, AdapterView.OnItemSelectedListener {
+public class CustomerHomeActivity extends AppCompatActivity implements OnMapReadyCallback, AdapterView.OnItemSelectedListener, NavigationView.OnNavigationItemSelectedListener {
 
     private static final LatLng NORTHEASTERN_BOUND = new LatLng( 42.632028, 45.675553);
     private static final LatLng SOUTHWESTERN_BOUND = new LatLng( 34.879173, 24.824881);
@@ -49,6 +55,7 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
     private int mYear, mMonth, mDay;
     private Places places;
     private TextView txtDate;
+    private DrawerLayout drawer;
 
     /**
      * Manipulates the activity once created.
@@ -63,7 +70,27 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
         arrivalSpinner = (Spinner)findViewById(R.id.arrivalSpinner);
         txtDate = (TextView) findViewById(R.id.textView28);
         Button search = findViewById(R.id.buttonSearch);
-        ImageView menuButton = findViewById(R.id.imageView2);
+        ImageView menuButton = findViewById(R.id.drawerButtonCustomer);
+
+        User currentUser = User.getCurrentUserInstance();
+        drawer = findViewById( R.id.drawerLayoutCustomer);
+        NavigationView navView = findViewById( R.id.navViewCustomer);
+        View headerView = navView.getHeaderView( 0);
+        TextView tvTextNavHeader = headerView.findViewById( R.id.tvTextNavHeader);
+        TextView tvSubTextNavHeader = headerView.findViewById( R.id.tvSubTextNavHeader);
+
+        tvTextNavHeader.setText( currentUser.getName());
+        tvSubTextNavHeader.setText( "Customer");
+        navView.setNavigationItemSelectedListener( this);
+        navView.getMenu().getItem( 0).setChecked( true);
+
+        ImageView drawerButton = findViewById( R.id.drawerButtonCustomer);
+        drawerButton.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick( View v) {
+                drawer.openDrawer( Gravity.LEFT);
+            }
+        });
 
         places = Places.getInstance();
 
@@ -303,4 +330,33 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
         startActivity(switchActivityIntent);
     }
 
+    /**
+     * Starts intent on drawer item select
+     * @param item selected drawer item
+     * @return
+     * @author Alp Afyonluoğlu
+     */
+    @Override
+    public boolean onNavigationItemSelected( @NonNull MenuItem item) {
+        // Variables
+        Intent intent;
+        User currentUser;
+
+        // Code
+        if ( item.getItemId() == R.id.navAccountCustomer) {
+            intent = new Intent( getApplicationContext(), CustomerAccountActivity.class);
+            startActivity( intent);
+        }
+        else if ( item.getItemId() == R.id.navLogOutCustomer) {
+            currentUser = User.getCurrentUserInstance();
+            currentUser.logout();
+
+            intent = new Intent( getApplicationContext(), SplashActivity.class);
+            startActivity( intent);
+            finish();
+        }
+
+        drawer.closeDrawer(Gravity.LEFT);
+        return true;
+    }
 }

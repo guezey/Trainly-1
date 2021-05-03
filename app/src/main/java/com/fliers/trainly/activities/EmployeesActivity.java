@@ -34,7 +34,7 @@ public class EmployeesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employees);
 
-        back = (ImageView) findViewById(R.id.imageView2);
+        back = (ImageView) findViewById(R.id.drawerButtonCustomer);
         addEmployee = (FloatingActionButton) findViewById(R.id.fabAdd);
 
         back.setOnClickListener(new View.OnClickListener() {

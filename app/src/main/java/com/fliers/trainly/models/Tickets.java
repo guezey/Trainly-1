@@ -39,6 +39,8 @@ public class Tickets extends SQLiteOpenHelper {
     private final String ECONOMY_WAGON_NO = "economy_wagon_no";
     private final String BUSINESS_PRICE = "business_price";
     private final String ECONOMY_PRICE = "economy_price";
+    private final String COMMENT = "comment";
+    private final String STARS = "stars";
     private final String OWNER = "owner";
     private final String NULL = "null";
     private final String UNKNOWN = "unk";
@@ -86,6 +88,8 @@ s     * @param db SQL Database
                 ECONOMY_WAGON_NO + " INTEGER, " +
                 BUSINESS_PRICE + " DOUBLE, " +
                 ECONOMY_PRICE + " DOUBLE, " +
+                COMMENT + " TEXT, " +
+                STARS + " INTEGER, " +
                 OWNER + " TEXT)");
     }
 
@@ -144,6 +148,8 @@ s     * @param db SQL Database
         double businessPrice;
         double economyPrice;
         String seatNo;
+        String comment;
+        int stars;
 
         // Code
         db = this.getWritableDatabase();
@@ -190,6 +196,8 @@ s     * @param db SQL Database
         to = toPlace.getName();
         wagonNo = wagon.getWagonNumber();
         seatNo = seat.getSeatNumber();
+        comment = ticket.getComment();
+        stars = ticket.getStarRating();
 
         if ( customer == null || customer.getEmail().equals( "")) {
             customerId = NULL;
@@ -198,7 +206,7 @@ s     * @param db SQL Database
             customerId = customer.getId();
         }
 
-        add( companyName, companyId, trainId, departureTime, from, to, wagonNo, seatNo, businessWagonNo, economyWagonNo, businessPrice, economyPrice, customerId);
+        add( companyName, companyId, trainId, departureTime, from, to, wagonNo, seatNo, businessWagonNo, economyWagonNo, businessPrice, economyPrice, comment, stars, customerId);
     }
 
     /**
@@ -215,9 +223,11 @@ s     * @param db SQL Database
      * @param economyWagonNo economy wagon no
      * @param businessPrice business price
      * @param economyPrice economy price
+     * @param comment comment feedback
+     * @param stars star rating feedback
      * @param customerId customer id of the owner
      */
-    private void add( String companyName, String companyId, String trainId, long departureTime, String from, String to, int wagonNo, String seatNo, int businessWagonNo, int economyWagonNo, double businessPrice, double economyPrice, String customerId) {
+    private void add( String companyName, String companyId, String trainId, long departureTime, String from, String to, int wagonNo, String seatNo, int businessWagonNo, int economyWagonNo, double businessPrice, double economyPrice, String comment, int stars, String customerId) {
         // Variables
         SQLiteDatabase db;
         ContentValues values;
@@ -238,6 +248,8 @@ s     * @param db SQL Database
         values.put( ECONOMY_WAGON_NO, economyWagonNo);
         values.put( BUSINESS_PRICE, businessPrice);
         values.put( ECONOMY_PRICE, economyPrice);
+        values.put( COMMENT, comment);
+        values.put( STARS, stars);
         values.put( OWNER, customerId);
 
         db.insert( TABLE_NAME, null, values);
@@ -249,6 +261,8 @@ s     * @param db SQL Database
      */
     public void createTickets( Schedule schedule, ServerSyncListener listener) {
         // Variables
+        SQLiteDatabase db;
+        Cursor data;
         ArrayList<Wagon> wagons;
         ArrayList<Seat> seats;
         Ticket ticket;
@@ -267,7 +281,10 @@ s     * @param db SQL Database
                 }
             }
 
-            saveToServer( new ServerSyncListener() {
+            // Create cursor specifying added tickets of new schedule
+            data = getScheduleCursor( schedule);
+
+            saveToServer( data, new ServerSyncListener() {
                 @Override
                 public void onSync( boolean isSynced) {
                     listener.onSync( isSynced);
@@ -296,6 +313,78 @@ s     * @param db SQL Database
             db.close();
 
             saveToServer( dbId, new ServerSyncListener() {
+                @Override
+                public void onSync( boolean isSynced) {
+                    if ( isSynced) {
+                        // Variables
+                        Company company;
+                        Schedule schedule;
+                        Wagon wagon;
+                        double price;
+
+                        // Code
+                        // Pay to company
+                        wagon = ticket.getSeat().getLinkedWagon();
+                        schedule = wagon.getLinkedSchedule();
+                        company = schedule.getLinkedTrain().getLinkedCompany();
+
+                        if ( wagon.isBusiness()) {
+                            price = schedule.getBusinessPrice();
+                        }
+                        else {
+                            price = schedule.getEconomyPrice();
+                        }
+                        company.setBalance( company.getBalance() + price);
+
+                        // Save company balance to server
+                        company.saveToServer( new User.ServerSyncListener() {
+                            @Override
+                            public void onSync( boolean isSynced) {
+                                listener.onSync( isSynced);
+                            }
+                        });
+                    }
+                    else {
+                        listener.onSync( false);
+                    }
+                }
+            });
+        }
+        else {
+            listener.onSync( false);
+        }
+    }
+
+    /**
+     * Updates star ratings and comments of given tickets
+     * @param tickets tickets to be saved
+     * @param owner owner customer of the tickets
+     * @param listener ServerSyncListener interface that is called
+     *                 when data is sent to server
+     */
+    public void saveFeedback( ArrayList<Ticket> tickets, Customer owner, ServerSyncListener listener) {
+        // Variables
+        SQLiteDatabase db;
+        Cursor data;
+        int dbId;
+
+        // Code
+        if ( isConnectedToInternet()) {
+            // Save to database
+            db = this.getWritableDatabase();
+            for ( Ticket ticket : tickets) {
+                dbId = getDbId( ticket.getSeat());
+
+                db.execSQL( "UPDATE " + TABLE_NAME + " SET " + COMMENT + " = '" + ticket.getComment() + "' WHERE " + ID + " = " + dbId + ";");
+                db.execSQL( "UPDATE " + TABLE_NAME + " SET " + STARS + " = " + ticket.getStarRating() + " WHERE " + ID + " = " + dbId + ";");
+            }
+            db.close();
+
+            // Save to server
+            db = this.getWritableDatabase();
+            data = db.rawQuery( "SELECT * FROM " + TABLE_NAME + " WHERE " + OWNER + " = '" + owner.getId() + "';", null);
+
+            saveToServer( data, new ServerSyncListener() {
                 @Override
                 public void onSync( boolean isSynced) {
                     listener.onSync( isSynced);
@@ -463,7 +552,7 @@ s     * @param db SQL Database
 
         // Code
         db = this.getWritableDatabase();
-        data = db.rawQuery( "SELECT * FROM " + TABLE_NAME + " WHERE " + OWNER + " = '" + customer.getId() + "';", null);
+        data = db.rawQuery( "SELECT * FROM " + TABLE_NAME + " WHERE " + OWNER + " = '" + customer.getId() + "' ORDER BY " + DEPARTURE_TIME + " DESC;", null);
         return dataToArrayList( data);
     }
 
@@ -491,7 +580,7 @@ s     * @param db SQL Database
         departureTimeStart = getLongFromCalendar( calendarStart);
 
         db = this.getWritableDatabase();
-        data = db.rawQuery( "SELECT * FROM " + TABLE_NAME + " WHERE " + COMPANY_ID + " = '" + company.getCompanyId() + "' AND " + DEPARTURE_TIME + " >= " + departureTimeStart + " AND " + DEPARTURE_TIME + " <= " + departureTimeEnd + ";", null);
+        data = db.rawQuery( "SELECT * FROM " + TABLE_NAME + " WHERE " + COMPANY_ID + " = '" + company.getCompanyId() + "' AND " + DEPARTURE_TIME + " >= " + departureTimeStart + " AND " + DEPARTURE_TIME + " <= " + departureTimeEnd + " ORDER BY " + DEPARTURE_TIME + " DESC;", null);
         return dataToArrayList( data);
     }
 
@@ -520,8 +609,71 @@ s     * @param db SQL Database
         departureTimeStart = getLongFromCalendar( calendarStart);
 
         db = this.getWritableDatabase();
-        data = db.rawQuery( "SELECT * FROM " + TABLE_NAME + " WHERE " + DEPARTURE + " = '" + departure.getName() + "' AND " + ARRIVAL + " = '" + arrival.getName() + "' AND " + DEPARTURE_TIME + " >= " + departureTimeStart + " AND " + DEPARTURE_TIME + " <= " + departureTimeEnd + " AND " + OWNER + " = ''" + NULL +"'';", null);
+        data = db.rawQuery( "SELECT * FROM " + TABLE_NAME + " WHERE " + DEPARTURE + " = '" + departure.getName() + "' AND " + ARRIVAL + " = '" + arrival.getName() + "' AND " + DEPARTURE_TIME + " >= " + departureTimeStart + " AND " + DEPARTURE_TIME + " <= " + departureTimeEnd + " AND " + OWNER + " = '" + NULL +"' ORDER BY " + DEPARTURE_TIME + " ASC;", null);
         return dataToArrayList( data);
+    }
+
+    /**
+     * Sends query to get a list of tickets available to buy for different schedules
+     * @param departure departure place
+     * @param arrival arrival place
+     * @param departureTime departure time
+     * @return list of tickets
+     */
+    public ArrayList<Ticket> getOneTicketPerSchedule( Place departure, Place arrival, Calendar departureTime) {
+        // Variables
+        SQLiteDatabase db;
+        Cursor data;
+        long departureTimeStart;
+        long departureTimeEnd;
+        Calendar calendarStart;
+        Calendar calendarEnd;
+
+        // Code
+        calendarEnd = departureTime;
+        departureTimeEnd = getLongFromCalendar( calendarEnd);
+
+        calendarStart = calendarEnd;
+        calendarStart.add( Calendar.DAY_OF_MONTH, 1);
+        departureTimeStart = getLongFromCalendar( calendarStart);
+
+        db = this.getWritableDatabase();
+        data = db.rawQuery( "SELECT DISTINCT ON " + COMPANY_ID + ", " + TRAIN_ID + ", " + DEPARTURE_TIME + " * FROM " + TABLE_NAME + " WHERE " + DEPARTURE + " = '" + departure.getName() + "' AND " + ARRIVAL + " = '" + arrival.getName() + "' AND " + DEPARTURE_TIME + " >= " + departureTimeStart + " AND " + DEPARTURE_TIME + " <= " + departureTimeEnd + " AND " + OWNER + " = '" + NULL +"' ORDER BY " + DEPARTURE_TIME + " ASC;", null);
+        return dataToArrayList( data);
+    }
+
+    /**
+     * Sends query to get a list of tickets of the given schedule
+     * @param schedule schedule having tickets
+     * @return list of tickets
+     */
+    public ArrayList<Ticket> getScheduleTickets( Schedule schedule) {
+        return dataToArrayList( getScheduleCursor( schedule));
+    }
+
+    /**
+     * Gets cursor specifying list of tickets of the given schedule
+     * @param schedule schedule having tickets
+     * @return cursor specifying list of tickets
+     */
+    public Cursor getScheduleCursor( Schedule schedule) {
+        // Variables
+        SQLiteDatabase db;
+        String companyId;
+        String trainId;
+        long departureTime;
+        String departurePlace;
+        String arrivalPlace;
+
+        // Code
+        companyId = schedule.getLinkedTrain().getLinkedCompany().getCompanyId();
+        trainId = schedule.getLinkedTrain().getId();
+        departureTime = getLongFromCalendar( schedule.getDepartureDate());
+        departurePlace = schedule.getDeparturePlace().getName();
+        arrivalPlace = schedule.getArrivalPlace().getName();
+
+        db = this.getWritableDatabase();
+        return db.rawQuery( "SELECT * FROM " + TABLE_NAME + " WHERE " + COMPANY_ID + " = '" + companyId + "' AND " + TRAIN_ID + " = '" + trainId + "' AND " + DEPARTURE_TIME + " = " + departureTime + " AND " + DEPARTURE + " = '" + departurePlace + "' AND " + ARRIVAL + " = '" + arrivalPlace +"' ORDER BY " + DEPARTURE_TIME + " ASC;", null);
     }
 
     /**
@@ -580,6 +732,8 @@ s     * @param db SQL Database
         int economyWagonNo;
         double businessPrice;
         double economyPrice;
+        String comment;
+        int stars;
         String customerId;
         Company company;
         Train train;
@@ -613,6 +767,8 @@ s     * @param db SQL Database
                 economyWagonNo = data.getInt( data.getColumnIndex( ECONOMY_WAGON_NO));
                 businessPrice = data.getLong( data.getColumnIndex( BUSINESS_PRICE));
                 economyPrice = data.getLong( data.getColumnIndex( ECONOMY_PRICE));
+                comment = data.getString( data.getColumnIndex( COMMENT));
+                stars = data.getInt( data.getColumnIndex( STARS));
                 customerId = data.getString( data.getColumnIndex( OWNER));
 
                 // Create ticket
@@ -633,6 +789,8 @@ s     * @param db SQL Database
                 customer = new Customer( customerId, context);
 
                 ticket = new Ticket( seat, customer);
+                ticket.setComment( comment);
+                ticket.setStarRating( stars);
                 tickets.add( ticket);
             } while ( data.moveToNext());
         }
@@ -732,29 +890,27 @@ s     * @param db SQL Database
 
     /**
      * Saves ticket data on local database to server
+     * @param data cursor specifying which entries to save to server
      * @param listener ServerSyncListener interface that is called
      *                 when data is sent to server
      */
-    private void saveToServer( ServerSyncListener listener) {
+    private void saveToServer( Cursor data, ServerSyncListener listener) {
         // Variables
         FirebaseDatabase database;
         DatabaseReference reference;
-        SQLiteDatabase db;
-        Cursor data;
         String companyId;
         String trainId;
         String departureTime;
         String wagonNo;
         String seatNo;
+        String comment;
+        String stars;
         String customerId;
 
         // Code
         if ( isConnectedToInternet()) {
             database = FirebaseDatabase.getInstance();
             reference = database.getReference( SERVER_KEY + "/Companies/");
-
-            db = this.getWritableDatabase();
-            data = db.rawQuery( "SELECT * FROM " + TABLE_NAME + ";", null);
 
             if ( !isEmpty()) {
                 data.moveToFirst();
@@ -764,9 +920,13 @@ s     * @param db SQL Database
                     departureTime = String.valueOf( data.getLong( data.getColumnIndex( DEPARTURE_TIME)));
                     wagonNo = String.valueOf( data.getInt( data.getColumnIndex( WAGON_NO)));
                     seatNo = data.getString( data.getColumnIndex( SEAT_NO));
+                    comment = data.getString( data.getColumnIndex( COMMENT));
+                    stars = String.valueOf( data.getInt( data.getColumnIndex( STARS)));
                     customerId = data.getString( data.getColumnIndex( OWNER));
 
-                    reference.child( companyId).child( TRAINS).child( trainId).child( SCHEDULES).child( departureTime).child( WAGONS).child( wagonNo).child( seatNo).setValue( customerId);
+                    reference.child( companyId).child( TRAINS).child( trainId).child( SCHEDULES).child( departureTime).child( WAGONS).child( wagonNo).child( seatNo).child( OWNER).setValue( customerId);
+                    reference.child( companyId).child( TRAINS).child( trainId).child( SCHEDULES).child( departureTime).child( WAGONS).child( wagonNo).child( seatNo).child( COMMENT).setValue( comment);
+                    reference.child( companyId).child( TRAINS).child( trainId).child( SCHEDULES).child( departureTime).child( WAGONS).child( wagonNo).child( seatNo).child( STARS).setValue( stars);
                 } while ( data.moveToNext());
             }
 
@@ -794,6 +954,8 @@ s     * @param db SQL Database
         String departureTime;
         String wagonNo;
         String seatNo;
+        String comment;
+        String stars;
         String customerId;
 
         // Code
@@ -803,15 +965,20 @@ s     * @param db SQL Database
 
             db = this.getWritableDatabase();
             data = db.rawQuery( "SELECT * FROM " + TABLE_NAME + " WHERE " + ID + " = " + dbId + ";", null);
+            data.moveToFirst();
 
             companyId = data.getString( data.getColumnIndex( COMPANY_ID));
             trainId = data.getString( data.getColumnIndex( TRAIN_ID));
             departureTime = String.valueOf( data.getLong( data.getColumnIndex( DEPARTURE_TIME)));
             wagonNo = String.valueOf( data.getInt( data.getColumnIndex( WAGON_NO)));
             seatNo = data.getString( data.getColumnIndex( SEAT_NO));
+            comment = data.getString( data.getColumnIndex( COMMENT));
+            stars = String.valueOf( data.getInt( data.getColumnIndex( STARS)));
             customerId = data.getString( data.getColumnIndex( OWNER));
 
-            reference.child( companyId).child( TRAINS).child( trainId).child( SCHEDULES).child( departureTime).child( WAGONS).child( wagonNo).child( seatNo).setValue( customerId);
+            reference.child( companyId).child( TRAINS).child( trainId).child( SCHEDULES).child( departureTime).child( WAGONS).child( wagonNo).child( seatNo).child( OWNER).setValue( customerId);
+            reference.child( companyId).child( TRAINS).child( trainId).child( SCHEDULES).child( departureTime).child( WAGONS).child( wagonNo).child( seatNo).child( COMMENT).setValue( comment);
+            reference.child( companyId).child( TRAINS).child( trainId).child( SCHEDULES).child( departureTime).child( WAGONS).child( wagonNo).child( seatNo).child( STARS).setValue( stars);
 
             listener.onSync( true);
         }
@@ -854,6 +1021,8 @@ s     * @param db SQL Database
                     int economyWagonNo;
                     double businessPrice;
                     double economyPrice;
+                    String comment;
+                    int stars;
                     String customerId;
 
                     // Code
@@ -884,9 +1053,11 @@ s     * @param db SQL Database
 
                                         for ( DataSnapshot seat : wagon.getChildren()) {
                                             seatNo = seat.getKey();
-                                            customerId = seat.getValue( String.class);
+                                            customerId = seat.child( OWNER).getValue( String.class);
+                                            comment = seat.child( COMMENT).getValue( String.class);
+                                            stars = Integer.parseInt( seat.child( STARS).getValue( String.class));
 
-                                            add( companyName, companyId, trainId, departureTime, from, to, wagonNo, seatNo, businessWagonNo, economyWagonNo, businessPrice, economyPrice, customerId);
+                                            add( companyName, companyId, trainId, departureTime, from, to, wagonNo, seatNo, businessWagonNo, economyWagonNo, businessPrice, economyPrice, comment, stars, customerId);
                                         }
                                     }
                                 }
