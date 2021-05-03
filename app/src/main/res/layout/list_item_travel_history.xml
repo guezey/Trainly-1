@@ -75,10 +75,11 @@
                 android:id="@+id/tvArrTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:fontFamily="@font/nunito"
                 android:text="Arrival:       24.03.2018   14:00"
-                app:layout_constraintTop_toBottomOf="@+id/tvDepTime"
-                tools:layout_editor_absoluteX="92dp" />
+                app:layout_constraintStart_toStartOf="@+id/tvTicketTitle"
+                app:layout_constraintTop_toBottomOf="@+id/tvDepTime" />
 
             <TextView
                 android:id="@+id/tvWagonNo"
@@ -169,7 +170,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tvFeedback">
 
                 <ImageView
-                    android:id="@+id/imageView3"
+                    android:id="@+id/imgStar1"
                     android:layout_width="25dp"
                     android:layout_height="30dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -179,44 +180,44 @@
                     app:tint="@color/yellow600" />
 
                 <ImageView
-                    android:id="@+id/imageView4"
+                    android:id="@+id/imgStar2"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginStart="4dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/imageView3"
+                    app:layout_constraintStart_toEndOf="@+id/imgStar1"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_baseline_star_48"
                     app:tint="@color/yellow600" />
 
                 <ImageView
-                    android:id="@+id/imageView5"
+                    android:id="@+id/imgStar3"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginStart="4dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/imageView4"
+                    app:layout_constraintStart_toEndOf="@+id/imgStar2"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_baseline_star_48"
                     app:tint="@color/yellow600" />
 
                 <ImageView
-                    android:id="@+id/imageView6"
+                    android:id="@+id/imgStar4"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginStart="4dp"
-                    app:layout_constraintStart_toEndOf="@+id/imageView5"
+                    app:layout_constraintStart_toEndOf="@+id/imgStar3"
                     app:srcCompat="@drawable/ic_baseline_star_48"
                     app:tint="@color/yellow600" />
 
                 <ImageView
-                    android:id="@+id/imageView7"
+                    android:id="@+id/imgStar5"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginStart="4dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toEndOf="@+id/imageView6"
+                    app:layout_constraintStart_toEndOf="@+id/imgStar4"
                     app:srcCompat="@drawable/ic_baseline_star_outline_48"
                     app:tint="@color/yellow600"
                     tools:layout_editor_absoluteY="0dp" />
@@ -231,9 +232,9 @@
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/gray_light_rounded_corner_s"
                 android:ems="10"
+                android:hint="Your feedback here"
                 android:inputType="textPersonName"
                 android:padding="8dp"
-                android:text="Great service!!!"
                 android:textStyle="italic"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

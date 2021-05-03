@@ -91,6 +91,12 @@ public class TravelHistoryActivity extends AppCompatActivity {
             TextView tvWagonNo = view.findViewById(R.id.tvWagonNo);
             TextView tvSeatNoValue = view.findViewById(R.id.tvSeatNoValue);
             TextView tvPriceValue = view.findViewById(R.id.tvPriceValue);
+            ImageView imgStar1 = view.findViewById(R.id.imgStar1);
+            ImageView imgStar2 = view.findViewById(R.id.imgStar2);
+            ImageView imgStar3 = view.findViewById(R.id.imgStar3);
+            ImageView imgStar4 = view.findViewById(R.id.imgStar4);
+            ImageView imgStar5 = view.findViewById(R.id.imgStar5);
+            ImageView[] stars = new ImageView[] {imgStar1,imgStar2,imgStar3,imgStar4,imgStar5};
 
             //Manipulate view
             tvTicketTitle.setText( schedule.getLinkedTrain().getLinkedCompany().getName());
@@ -112,7 +118,75 @@ public class TravelHistoryActivity extends AppCompatActivity {
             else
                 tvPriceValue.setText( String.valueOf(schedule.getEconomyPrice()));
 
+            for ( int i = 0; i < ticket.getStarRating(); i++) {
+                stars[i].setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_48));
+            }
+            for ( int i = ticket.getStarRating(); i < 5; i++) {
+                stars[i].setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_outline_48));
+            }
+
+            imgStar1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    imgStar1.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_48));
+                    imgStar2.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_outline_48));
+                    imgStar3.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_outline_48));
+                    imgStar4.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_outline_48));
+                    imgStar5.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_outline_48));
+                    ticket.setStarRating(1);
+                }
+            });
+
+            imgStar2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    imgStar1.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_48));
+                    imgStar2.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_48));
+                    imgStar3.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_outline_48));
+                    imgStar4.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_outline_48));
+                    imgStar5.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_outline_48));
+                    ticket.setStarRating(2);
+                }
+            });
+
+            imgStar3.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    imgStar1.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_48));
+                    imgStar2.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_48));
+                    imgStar3.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_48));
+                    imgStar4.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_outline_48));
+                    imgStar5.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_outline_48));
+                    ticket.setStarRating(3);
+                }
+            });
+
+            imgStar4.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    imgStar1.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_48));
+                    imgStar2.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_48));
+                    imgStar3.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_48));
+                    imgStar4.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_48));
+                    imgStar5.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_outline_48));
+                    ticket.setStarRating(4);
+                }
+            });
+
+            imgStar5.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    imgStar1.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_48));
+                    imgStar2.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_48));
+                    imgStar3.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_48));
+                    imgStar4.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_48));
+                    imgStar5.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_48));
+                    ticket.setStarRating(5);
+                }
+            });
+
             return view;
         }
+
     }
 }
