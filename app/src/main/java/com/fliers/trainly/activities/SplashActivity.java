@@ -21,6 +21,12 @@ import com.fliers.trainly.models.Places;
 import com.fliers.trainly.models.Tickets;
 import com.fliers.trainly.models.User;
 
+/**
+ * Activity class directing user to home activity or welcome activity
+ * depending on login info, and synchronizing necessary classes with server
+ * @version 03.05.2021
+ * @author Alp Afyonluoğlu
+ */
 public class SplashActivity extends AppCompatActivity {
     // Properties
     private final String LOGGED_IN_USER_TYPE = "loggedInUserType";

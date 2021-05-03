@@ -21,6 +21,11 @@ import com.fliers.trainly.models.Company;
 import com.fliers.trainly.models.Customer;
 import com.fliers.trainly.models.User;
 
+/**
+ * Activity class sending verification email to user-provided email address
+ * @version 03.05.2021
+ * @author Alp Afyonluoğlu
+ */
 public class LoginActivity extends AppCompatActivity {
     // Properties
     private final String TEMP_LOGGED_IN_USER_TYPE = "tempLoggedInUserType";

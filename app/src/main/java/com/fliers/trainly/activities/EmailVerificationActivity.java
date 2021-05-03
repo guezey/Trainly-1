@@ -7,6 +7,11 @@ import android.os.Bundle;
 
 import com.fliers.trainly.R;
 
+/**
+ * Activity class verifying email link and logging user in
+ * @version 03.05.2021
+ * @author Alp Afyonluoğlu
+ */
 public class EmailVerificationActivity extends AppCompatActivity {
 
     @Override
@@ -15,12 +20,10 @@ public class EmailVerificationActivity extends AppCompatActivity {
         setContentView( R.layout.activity_email_verification);
 
         // Variables
-        Intent intent;
         String emailLink;
 
         // Code
-        intent = getIntent();
-        emailLink = intent.getData().toString();
+        emailLink = getIntent().getData().toString();
 
         // TODO: user.completeLogin( emailLink, new User.LoginListener() { ... });
     }

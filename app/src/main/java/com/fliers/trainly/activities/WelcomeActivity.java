@@ -10,6 +10,11 @@ import android.widget.ImageView;
 
 import com.fliers.trainly.R;
 
+/**
+ * Activity class directing user to company or customer login page
+ * @version 03.05.2021
+ * @author Alp Afyonluoğlu
+ */
 public class WelcomeActivity extends AppCompatActivity {
     // Properties
     private final int COMPANY_LOGIN = 1;

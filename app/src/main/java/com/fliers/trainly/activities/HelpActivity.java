@@ -10,6 +10,11 @@ import android.widget.TextView;
 import com.fliers.trainly.BuildConfig;
 import com.fliers.trainly.R;
 
+/**
+ * Activity class showing app related info
+ * @version 03.05.2021
+ * @author Alp Afyonluoğlu
+ */
 public class HelpActivity extends AppCompatActivity {
 
     @Override
