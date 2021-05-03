@@ -34,7 +34,7 @@ import java.util.Calendar;
 /**
  * Controls customer homepage.
  * @author Ali Emir Güzey
- * @version 01.05.2021
+ * @version 03.05.2021
  */
 public class CustomerHomeActivity extends AppCompatActivity implements OnMapReadyCallback, AdapterView.OnItemSelectedListener {
 
@@ -68,11 +68,19 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
         places = Places.getInstance();
 
         ArrayList<String> names = new ArrayList<>();
+        names.add("Select");
         for (Place p : places.getAll()) {
             names.add(p.getName());
         }
 
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item_places, names){
+            /**
+             * Shows spinner items.
+             * @param position
+             * @param convertView
+             * @param parent
+             * @return
+             */
             @Override
             public View getDropDownView(int position, View convertView,
                                         ViewGroup parent) {
@@ -89,13 +97,21 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
         arrivalSpinner.setOnItemSelectedListener(this);
 
         menuButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Opens drawer menu on click.
+             * @param view view
+             */
             @Override
             public void onClick(View view) {
-
+            //TODO: drawer menu
             }
         });
 
         search.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Shows error if necessary, navigates to Tickets Activity otherwise.
+             * @param view view
+             */
             @Override
             public void onClick(View view) {
                 if ( !departureSpinner.getSelectedItem().equals("Select") && !arrivalSpinner.getSelectedItem().equals("Select")
@@ -106,15 +122,15 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
                     if (departureSpinner.getSelectedItem().equals("Select")) {
                         TextView errorText = (TextView) departureSpinner.getSelectedView();
                         errorText.setError("");
-                        errorText.setTextColor(Color.RED);//just to highlight that this is an error
+                        errorText.setTextColor(Color.RED);
                     }
                     if (arrivalSpinner.getSelectedItem().equals("Select")) {
                         TextView errorText = (TextView) arrivalSpinner.getSelectedView();
                         errorText.setError("");
-                        errorText.setTextColor(Color.RED);//just to highlight that this is an error
+                        errorText.setTextColor(Color.RED);
                     }
                     if (txtDate.getText().equals("Click to add date") || txtDate.getText().equals("You need to add date")) {
-                        txtDate.setTextColor(Color.RED);//just to highlight that this is an error
+                        txtDate.setTextColor(Color.RED);
                         txtDate.setText("You need to add date");
                     }
                 }
@@ -122,6 +138,10 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
         });
 
         txtDate.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Opens date selector on click.
+             * @param view view
+             */
             @Override
             public void onClick( View view) {
                 final Calendar c = Calendar.getInstance();
@@ -131,6 +151,13 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
 
                 DatePickerDialog datePickerDialog = new DatePickerDialog(CustomerHomeActivity.this,
                         new DatePickerDialog.OnDateSetListener() {
+                            /**
+                             * Changes date select text accordingly.
+                             * @param view view
+                             * @param year selected year
+                             * @param monthOfYear selected month
+                             * @param dayOfMonth selected day
+                             */
                             @Override
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {

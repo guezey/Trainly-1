@@ -13,8 +13,17 @@ import android.widget.TextView;
 import com.fliers.trainly.R;
 import com.fliers.trainly.models.Customer;
 
+/**
+ * Controls Customer Account page.
+ * @author Ali Emir Güzey
+ * @version 03.05.2021
+ */
 public class CustomerAccountActivity extends AppCompatActivity {
 
+    /**
+     * Manipulates view once available
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +39,10 @@ public class CustomerAccountActivity extends AppCompatActivity {
         Button btGoToHistory = findViewById(R.id.btGoToHistory);
 
         btBack.setOnClickListener( new View.OnClickListener() {
+            /**
+             * Returns to previous page on click.
+             * @param view view
+             */
             @Override
             public void onClick(View view) {
                 finish();
@@ -37,6 +50,10 @@ public class CustomerAccountActivity extends AppCompatActivity {
         });
 
         btChangeName.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Sets customer name to entered value on click.
+             * @param view view
+             */
             @Override
             public void onClick(View view) {
                 c.setName(etChangeName.getText().toString());
@@ -44,6 +61,10 @@ public class CustomerAccountActivity extends AppCompatActivity {
         });
 
         btGoToHistory.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Navigates to Travel History page on click.
+             * @param view view
+             */
             @Override
             public void onClick(View view) {
                 goToTravelHistory();
@@ -55,6 +76,9 @@ public class CustomerAccountActivity extends AppCompatActivity {
         tvAccountName.setText( c.getName());
     }
 
+    /**
+     * Creates intent to go to travel history page.
+     */
     public void goToTravelHistory() {
         Intent switchActivityIntent = new Intent(this, TravelHistoryActivity.class);
         startActivity(switchActivityIntent);

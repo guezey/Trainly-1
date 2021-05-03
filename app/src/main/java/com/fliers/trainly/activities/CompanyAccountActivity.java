@@ -12,8 +12,17 @@ import android.widget.TextView;
 import com.fliers.trainly.R;
 import com.fliers.trainly.models.Company;
 
+/**
+ * Controls Company Home page.
+ * @author Ali Emir Güzey
+ * @version 03.05.2021
+ */
 public class CompanyAccountActivity extends AppCompatActivity {
 
+    /**
+     * Manipulates view once available.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +37,10 @@ public class CompanyAccountActivity extends AppCompatActivity {
         Button btChangeName = findViewById(R.id.button);
 
         btBack.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Returns to previous page on click.
+             * @param view view
+             */
             @Override
             public void onClick(View view) {
                 finish();
@@ -35,6 +48,10 @@ public class CompanyAccountActivity extends AppCompatActivity {
         });
 
         btChangeName.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Sets company's name to entered value on click.
+             * @param view view
+             */
             @Override
             public void onClick(View view) {
                 c.setName( etChangeName.getText().toString());

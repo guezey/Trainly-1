@@ -22,11 +22,19 @@ import com.fliers.trainly.models.Tickets;
 
 import java.util.ArrayList;
 
+/**
+ * Controls Travel History page.
+ * @author Ali Emir Güzey
+ * @version 03.05.2021
+ */
 public class TravelHistoryActivity extends AppCompatActivity {
-
 
     ArrayList<Ticket> tickets;
 
+    /**
+     * Manipulates view once available.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +44,10 @@ public class TravelHistoryActivity extends AppCompatActivity {
         Button saveButton = findViewById(R.id.button);
 
         saveButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Saves all feedback to server.
+             * @param view view
+             */
             @Override
             public void onClick(View view) {
                 //TODO: save feedback
@@ -43,6 +55,10 @@ public class TravelHistoryActivity extends AppCompatActivity {
         });
 
         btBack.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Returns to previous page on click.
+             * @param view view
+             */
             @Override
             public void onClick(View view) {
                 finish();
@@ -61,7 +77,9 @@ public class TravelHistoryActivity extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * Controls list items.
+     */
     class CustomAdaptor extends BaseAdapter {
         @Override
         public int getCount() {
@@ -77,6 +95,14 @@ public class TravelHistoryActivity extends AppCompatActivity {
         public long getItemId( int position) {
             return 0;
         }
+
+        /**
+         * Manipulates list view.
+         * @param position position in list
+         * @param convertView convertView
+         * @param parent parent
+         * @return view
+         */
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             View view = getLayoutInflater().inflate( R.layout.list_item_travel_history, null);
