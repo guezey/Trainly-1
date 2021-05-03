@@ -1,11 +1,15 @@
 package com.fliers.trainly.activities;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -108,7 +112,23 @@ public class TrainsActivity extends AppCompatActivity {
                 tvStatusValue.setTextColor(Color.GREEN);
             }
 
-
+            view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(TrainsActivity.this);
+                    builder.setTitle("Remove Train");
+                    builder.setMessage("Are you sure you want to remove this train?");
+                    builder.setNegativeButton("No", null);
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            currentUser.removeTrain( train);
+                        }
+                    });
+                    builder.show();
+                    return true;
+                }
+            });
 
             view.setOnClickListener( new View.OnClickListener() {
                 @Override

@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -22,11 +24,19 @@ import com.fliers.trainly.models.Tickets;
 
 import java.util.ArrayList;
 
+/**
+ * Controls Travel History page.
+ * @author Ali Emir Güzey
+ * @version 03.05.2021
+ */
 public class TravelHistoryActivity extends AppCompatActivity {
-
 
     ArrayList<Ticket> tickets;
 
+    /**
+     * Manipulates view once available.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +46,10 @@ public class TravelHistoryActivity extends AppCompatActivity {
         Button saveButton = findViewById(R.id.button);
 
         saveButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Saves all feedback to server.
+             * @param view view
+             */
             @Override
             public void onClick(View view) {
                 //TODO: save feedback
@@ -43,6 +57,10 @@ public class TravelHistoryActivity extends AppCompatActivity {
         });
 
         btBack.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Returns to previous page on click.
+             * @param view view
+             */
             @Override
             public void onClick(View view) {
                 finish();
@@ -61,7 +79,9 @@ public class TravelHistoryActivity extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * Controls list items.
+     */
     class CustomAdaptor extends BaseAdapter {
         @Override
         public int getCount() {
@@ -77,6 +97,14 @@ public class TravelHistoryActivity extends AppCompatActivity {
         public long getItemId( int position) {
             return 0;
         }
+
+        /**
+         * Manipulates list view.
+         * @param position position in list
+         * @param convertView convertView
+         * @param parent parent
+         * @return view
+         */
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             View view = getLayoutInflater().inflate( R.layout.list_item_travel_history, null);
@@ -96,6 +124,7 @@ public class TravelHistoryActivity extends AppCompatActivity {
             ImageView imgStar3 = view.findViewById(R.id.imgStar3);
             ImageView imgStar4 = view.findViewById(R.id.imgStar4);
             ImageView imgStar5 = view.findViewById(R.id.imgStar5);
+            EditText etFeedback = view.findViewById(R.id.etFeedback);
             ImageView[] stars = new ImageView[] {imgStar1,imgStar2,imgStar3,imgStar4,imgStar5};
 
             //Manipulate view
@@ -182,6 +211,23 @@ public class TravelHistoryActivity extends AppCompatActivity {
                     imgStar4.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_48));
                     imgStar5.setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_48));
                     ticket.setStarRating(5);
+                }
+            });
+
+            etFeedback.addTextChangedListener( new TextWatcher() {
+                @Override
+                public void beforeTextChanged( CharSequence s, int start, int count, int after) {
+                    // Empty method
+                }
+
+                @Override
+                public void onTextChanged( CharSequence s, int start, int before, int count) {
+                    ticket.setComment(etFeedback.getText().toString());
+                }
+
+                @Override
+                public void afterTextChanged( Editable s) {
+                    // Empty method
                 }
             });
 

@@ -137,6 +137,7 @@ public class Train {
      * @author Ali Emir Güzey
      */
     public boolean isOnTrip() {
+        //TODO: update this
         Calendar c;
         c = Calendar.getInstance();
         if (schedules.size() != 0)
@@ -144,5 +145,14 @@ public class Train {
                 && schedules.get(0).getDepartureDate().compareTo(c) <= 0);
         else
             return false;
+    }
+
+    /**
+     * Returns schedules of the train
+     * @return schedules
+     * @author Ali Emir Güzey
+     */
+    public ArrayList<Schedule> getSchedules() {
+        return schedules;
     }
 }
