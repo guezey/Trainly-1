@@ -206,8 +206,8 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
         startActivity(switchActivityIntent);
     }
 
-//    private void switchToAdvanced() {
-//        Intent switchActivityIntent = new Intent(this, AdvancedSearchActivity.class);
-//        startActivity(switchActivityIntent);
-//    }
+    private void switchToAdvanced() {
+        Intent switchActivityIntent = new Intent(this, AdvancedSearchActivity.class);
+        startActivity(switchActivityIntent);
+    }
 }
