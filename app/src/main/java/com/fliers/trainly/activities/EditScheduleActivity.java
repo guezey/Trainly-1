@@ -216,9 +216,7 @@ public class EditScheduleActivity extends AppCompatActivity {
     // Arrange the schedule cards
     class CustomAdaptor extends BaseAdapter {
         @Override public int getCount() {
-            // TODO: Edit this part
-            return 0;
-            //return currentTrain.getSchedule().size();
+            return currentTrain.getSchedule().size();
         }
 
         @Override public Object getItem( int position) {
