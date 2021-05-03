@@ -92,6 +92,21 @@ public class EditScheduleActivity extends AppCompatActivity {
                         currentTrain.addSchedule( newSchedule );
                     }
                 }
+
+
+                // List all the schedules the train has
+                ListView listSchedules = findViewById( R.id.listSchedules );
+                schedules = currentTrain.getSchedules();
+
+                if ( schedules.size() == 0) {
+                    idText.setText("No schedules were found for the train with the Id number " + currentTrain.getId() );
+                    idText.setTextColor(Color.RED);
+                }
+                else {
+                    CustomAdaptor customAdaptor = new CustomAdaptor();
+                    listSchedules.setAdapter( customAdaptor );
+                }
+
             }
         });
 
@@ -217,7 +232,7 @@ public class EditScheduleActivity extends AppCompatActivity {
     // Arrange the schedule cards
     class CustomAdaptor extends BaseAdapter {
         @Override public int getCount() {
-            return currentTrain.getSchedule().size();
+            return currentTrain.getSchedules().size();
         }
 
         @Override public Object getItem( int position) {
@@ -249,7 +264,7 @@ public class EditScheduleActivity extends AppCompatActivity {
                     "/" + aDate.get( Calendar.MONTH ) + "/" + aDate.get( Calendar.YEAR ) );
 
             TextView aTimeSchedule = findViewById( R.id.tvArrivalTimeSchedule );
-            aTimeSchedule.setText( aDate.get( Calendar.HOUR_OF_DAY ) + ":" + aDate.get( Calendar.MINUTE );
+            aTimeSchedule.setText( aDate.get( Calendar.HOUR_OF_DAY ) + ":" + aDate.get( Calendar.MINUTE ));
 
             TextView lineSchedule = findViewById( R.id.tvLineSchedule );
             lineSchedule.setText( schedule.getLine() + "" );

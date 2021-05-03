@@ -73,7 +73,7 @@
 
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/card12"
+                    android:id="@+id/cardSchedule"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
@@ -102,7 +102,7 @@
                             app:srcCompat="@drawable/ic_baseline_picture_in_picture_96" />
 
                         <TextView
-                            android:id="@+id/title1"
+                            android:id="@+id/tvTitleSchedule"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
@@ -117,103 +117,116 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
-                            android:id="@+id/tvEmployeeName"
+
+                            android:id="@+id/tvLine"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:fontFamily="@font/nunito"
                             android:text="Ankara to Istanbul"
-                            app:layout_constraintStart_toStartOf="@+id/title1"
-                            app:layout_constraintTop_toBottomOf="@+id/title1" />
+                            app:layout_constraintStart_toStartOf="@+id/tvTitleSchedule"
+                            app:layout_constraintTop_toBottomOf="@+id/tvTitleSchedule" />
 
                         <TextView
-                            android:id="@+id/tvEmployeePerformance"
+
+                            android:id="@+id/tvDepSchedule"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:fontFamily="@font/nunito"
                             android:text="Departure: 24.03.2021   10:00"
-                            app:layout_constraintStart_toStartOf="@+id/title1"
-                            app:layout_constraintTop_toBottomOf="@+id/tvEmployeeName" />
+                            app:layout_constraintStart_toStartOf="@+id/tvTitleSchedule"
+                            app:layout_constraintTop_toBottomOf="@+id/tvLine" />
 
                         <TextView
-                            android:id="@+id/tvEmployeeLinkedTrain"
+                            android:id="@+id/tvArrSchedule"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:fontFamily="@font/nunito"
                             android:text="Arrival:       24.03.2021   14:00"
-                            app:layout_constraintStart_toStartOf="@+id/title1"
-                            app:layout_constraintTop_toBottomOf="@+id/tvEmployeePerformance" />
+                            app:layout_constraintStart_toStartOf="@+id/tvTitleSchedule"
+                            app:layout_constraintTop_toBottomOf="@+id/tvDepSchedule" />
 
                         <TextView
-                            android:id="@+id/lin"
+                            android:id="@+id/tvWagonOfSeat"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:fontFamily="@font/nunito"
                             android:text="Wagon no: 3"
-                            app:layout_constraintStart_toStartOf="@+id/title1"
-                            app:layout_constraintTop_toBottomOf="@+id/tvEmployeeLinkedTrain" />
+                            app:layout_constraintStart_toStartOf="@+id/tvTitleSchedule"
+                            app:layout_constraintTop_toBottomOf="@+id/tvArrSchedule" />
 
                         <TextView
-                            android:id="@+id/s11"
+                            android:id="@+id/tvSeatNoOfTicket"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:fontFamily="@font/nunito"
                             android:text="Seat no: "
-                            app:layout_constraintStart_toStartOf="@+id/title1"
-                            app:layout_constraintTop_toBottomOf="@+id/lin" />
+                            app:layout_constraintStart_toStartOf="@+id/tvTitleSchedule"
+                            app:layout_constraintTop_toBottomOf="@+id/tvWagonOfSeat" />
 
                         <TextView
-                            android:id="@+id/s"
+                            android:id="@+id/tvPriceOfTicket"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:layout_marginBottom="8dp"
                             android:fontFamily="@font/nunito"
-                            android:text="Total Price: "
+                            android:text="Price: "
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="@+id/title1"
-                            app:layout_constraintTop_toBottomOf="@+id/s11"
+                            app:layout_constraintStart_toStartOf="@+id/tvTitleSchedule"
+                            app:layout_constraintTop_toBottomOf="@+id/tvSeatNoOfTicket"
                             app:layout_constraintVertical_bias="0.0" />
 
                         <TextView
-                            android:id="@+id/tvEmployeeStatus"
+                            android:id="@+id/tvSeatNoOfTicketValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="20dp"
                             android:fontFamily="@font/nunito"
                             android:text="G-02"
                             android:textColor="@color/lightBlue900"
-                            app:layout_constraintBottom_toBottomOf="@+id/s11"
-                            app:layout_constraintStart_toEndOf="@+id/s11"
-                            app:layout_constraintTop_toTopOf="@+id/s11"
+                            app:layout_constraintBottom_toBottomOf="@+id/tvSeatNoOfTicket"
+                            app:layout_constraintStart_toEndOf="@+id/tvSeatNoOfTicket"
+                            app:layout_constraintTop_toTopOf="@+id/tvSeatNoOfTicket"
                             app:layout_constraintVertical_bias="0.0" />
 
                         <TextView
-                            android:id="@+id/s2"
+                            android:id="@+id/tvPriceOfTicketValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="20dp"
                             android:fontFamily="@font/nunito"
                             android:text="30$"
                             android:textColor="@color/teal800"
-                            app:layout_constraintBottom_toBottomOf="@+id/s"
-                            app:layout_constraintStart_toEndOf="@+id/s11"
-                            app:layout_constraintTop_toTopOf="@+id/s"
+                            app:layout_constraintBottom_toBottomOf="@+id/tvPriceOfTicket"
+                            app:layout_constraintStart_toEndOf="@+id/tvSeatNoOfTicket"
+                            app:layout_constraintTop_toTopOf="@+id/tvPriceOfTicket"
                             app:layout_constraintVertical_bias="0.0" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.cardview.widget.CardView>
 
                 <include
-                    android:id="@+id/include2"
+                    android:id="@+id/includeEconomy"
                     layout="@layout/wagon_economy"
                     android:layout_width="0dp"
                     android:layout_height="700dp"
                     android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout8" />
+
+                <include
+                    android:id="@+id/includeBusiness"
+                    layout="@layout/wagon_business"
+                    android:layout_width="0dp"
+                    android:layout_height="700dp"
+                    android:layout_marginTop="8dp"
+                    android:visibility=""
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/constraintLayout8" />
@@ -225,10 +238,10 @@
                     android:layout_marginTop="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/card12">
+                    app:layout_constraintTop_toBottomOf="@+id/cardSchedule">
 
                     <TextView
-                        android:id="@+id/textView37"
+                        android:id="@+id/tvPricesOfSchedule"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="24dp"
@@ -248,7 +261,7 @@
                         android:textSize="18dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView37" />
+                        app:layout_constraintTop_toBottomOf="@+id/tvPricesOfSchedule" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/constraintLayout9"
@@ -352,7 +365,7 @@
                         app:layout_constraintTop_toTopOf="@+id/constraintLayout923" />
 
                     <Spinner
-                        android:id="@+id/spinner3"
+                        android:id="@+id/spinnerWagon"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="32dp"
@@ -368,7 +381,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <Button
-                    android:id="@+id/button"
+                    android:id="@+id/btBuyTicket"
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -384,7 +397,7 @@
                     app:backgroundTint="@color/orange700"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/include2" />
+                    app:layout_constraintTop_toBottomOf="@+id/includeEconomy" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="0dp"
@@ -397,7 +410,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/button">
+                    app:layout_constraintTop_toBottomOf="@+id/btBuyTicket">
 
                     <TextView
                         android:id="@+id/textView30"

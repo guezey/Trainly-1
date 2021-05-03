@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -18,13 +19,14 @@ import com.fliers.trainly.models.Places;
 import com.fliers.trainly.models.Ticket;
 import com.fliers.trainly.models.Tickets;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
  * Controls Tickets List page.
  * @author Ali Emir Güzey
- * @version 01.05.2021
+ * @version 03.05.2021
  */
 public class TicketsActivity extends AppCompatActivity {
 
@@ -32,6 +34,7 @@ public class TicketsActivity extends AppCompatActivity {
     String departure;
     String arrival;
     String date;
+    Intent switchActivityIntent;
 
     /**
      * Manipulates the activity once created.
@@ -52,6 +55,10 @@ public class TicketsActivity extends AppCompatActivity {
                 " having departure dates of " + date);
 
         back.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Returns to previous page on click.
+             * @param view view
+             */
             @Override
             public void onClick(View view) {
                 finish();
@@ -81,11 +88,9 @@ public class TicketsActivity extends AppCompatActivity {
         }
     }
 
-    public void goToTicketInfo() {
-        Intent switchActivityIntent = new Intent( this, TicketInfoActivity.class);
-        startActivity( switchActivityIntent);
-    }
-
+    /**
+     * Controls list items.
+     */
     class CustomAdaptor extends BaseAdapter {
         @Override
         public int getCount() {
@@ -101,6 +106,14 @@ public class TicketsActivity extends AppCompatActivity {
         public long getItemId( int position) {
             return 0;
         }
+
+        /**
+         * Manipulates list view.
+         * @param position position in list.
+         * @param convertView convertView
+         * @param parent parent
+         * @return view
+         */
         @Override
         public View getView( final int position, View convertView, ViewGroup parent) {
             View view = getLayoutInflater().inflate( R.layout.list_item_tickets, null);
@@ -122,12 +135,21 @@ public class TicketsActivity extends AppCompatActivity {
 
             view.setOnClickListener( new View.OnClickListener() {
                 @Override
+                /**
+                 * Navigates to Ticket Info page.
+                 */
                 public void onClick(View view) {
                     goToTicketInfo();
+                    switchActivityIntent.putExtra("schedule", ticket.getSeat().getLinkedWagon().getLinkedSchedule());
+                    startActivity( switchActivityIntent);;
                 }
             });
 
             return view;
         }
+    }
+
+    public void goToTicketInfo() {
+        switchActivityIntent = new Intent( this, TicketInfoActivity.class );
     }
 }

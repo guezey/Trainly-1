@@ -1,5 +1,6 @@
 package com.fliers.trainly.models;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Calendar;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
  * @author Cengizhan Terzioğlu
  * @version 22.04.2021
 */
-public class Schedule {
+public class Schedule implements Serializable {
     
     // Properties
     private Calendar departureDate;
