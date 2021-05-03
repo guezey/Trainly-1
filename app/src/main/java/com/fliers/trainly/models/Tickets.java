@@ -525,6 +525,33 @@ s     * @param db SQL Database
     }
 
     /**
+     * Sends query to get a list of tickets of the given schedule
+     * @param schedule schedule having tickets
+     * @return list of tickets
+     */
+    public ArrayList<Ticket> getScheduleTickets( Schedule schedule) {
+        // Variables
+        SQLiteDatabase db;
+        Cursor data;
+        String companyId;
+        String trainId;
+        long departureTime;
+        String departurePlace;
+        String arrivalPlace;
+
+        // Code
+        companyId = schedule.getLinkedTrain().getLinkedCompany().getCompanyId();
+        trainId = schedule.getLinkedTrain().getId();
+        departureTime = getLongFromCalendar( schedule.getDepartureDate());
+        departurePlace = schedule.getDeparturePlace().getName();
+        arrivalPlace = schedule.getArrivalPlace().getName();
+
+        db = this.getWritableDatabase();
+        data = db.rawQuery( "SELECT * FROM " + TABLE_NAME + " WHERE " + COMPANY_ID + " = '" + companyId + "' AND " + TRAIN_ID + " = '" + trainId + "' AND " + DEPARTURE_TIME + " = " + departureTime + " AND " + DEPARTURE + " = '" + departurePlace + "' AND " + ARRIVAL + " = '" + arrivalPlace +"';", null);
+        return dataToArrayList( data);
+    }
+
+    /**
      * Creates long representation of the given calendar object
      * @param calendar calendar to be converted
      * @return long representation
