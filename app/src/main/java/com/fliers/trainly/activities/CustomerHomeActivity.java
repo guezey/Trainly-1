@@ -2,28 +2,23 @@ package com.fliers.trainly.activities;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.fliers.trainly.R;
 import com.fliers.trainly.models.Place;
 import com.fliers.trainly.models.Places;
-import com.fliers.trainly.models.Ticket;
-import com.fliers.trainly.models.Tickets;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -33,11 +28,14 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 
+/**
+ * Controls customer homepage.
+ * @author Ali Emir Güzey
+ * @version 01.05.2021
+ */
 public class CustomerHomeActivity extends AppCompatActivity implements OnMapReadyCallback, AdapterView.OnItemSelectedListener {
 
     private static final LatLng NORTHEASTERN_BOUND = new LatLng( 42.632028, 45.675553);
@@ -49,41 +47,81 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
     private Marker prevDepMarker;
     private Marker prevArrMarker;
     private int mYear, mMonth, mDay;
-    private TextView txtDate, txtAdvanced;
-    private ImageView menuButton;
+    private Places places;
+    private TextView txtDate;
 
+    /**
+     * Manipulates the activity once created.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_home);
+
         departureSpinner = (Spinner)findViewById(R.id.departureSpinner);
         arrivalSpinner = (Spinner)findViewById(R.id.arrivalSpinner);
+        txtDate = (TextView) findViewById(R.id.textView28);
+        Button search = findViewById(R.id.buttonSearch);
+        ImageView menuButton = findViewById(R.id.imageView2);
+
+        places = Places.getInstance();
+
+        ArrayList<String> names = new ArrayList<>();
+        for (Place p : places.getAll()) {
+            names.add(p.getName());
+        }
+
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item_places, names){
+            @Override
+            public View getDropDownView(int position, View convertView,
+                                        ViewGroup parent) {
+
+                return super.getDropDownView(position, convertView, parent);
+            }
+        };
+
+        spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item_places);
+        departureSpinner.setAdapter(spinnerArrayAdapter);
+        arrivalSpinner.setAdapter(spinnerArrayAdapter);
+
         departureSpinner.setOnItemSelectedListener(this);
         arrivalSpinner.setOnItemSelectedListener(this);
-        Button search = findViewById(R.id.buttonSearch);
-        menuButton = findViewById(R.id.imageView2);
+
         menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
             }
         });
-        txtDate = (TextView) findViewById(R.id.textView28);
-        txtAdvanced = (TextView) findViewById(R.id.textView29);
+
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switchActivitiesWithData();
+                if ( !departureSpinner.getSelectedItem().equals("Select") && !arrivalSpinner.getSelectedItem().equals("Select")
+                    && !txtDate.getText().equals("Click to add date")  && !txtDate.getText().equals("You need to add date")) {
+                    goToTicketsActivity();
+                }
+                else {
+                    if (departureSpinner.getSelectedItem().equals("Select")) {
+                        TextView errorText = (TextView) departureSpinner.getSelectedView();
+                        errorText.setError("");
+                        errorText.setTextColor(Color.RED);//just to highlight that this is an error
+                    }
+                    if (arrivalSpinner.getSelectedItem().equals("Select")) {
+                        TextView errorText = (TextView) arrivalSpinner.getSelectedView();
+                        errorText.setError("");
+                        errorText.setTextColor(Color.RED);//just to highlight that this is an error
+                    }
+                    if (txtDate.getText().equals("Click to add date") || txtDate.getText().equals("You need to add date")) {
+                        txtDate.setTextColor(Color.RED);//just to highlight that this is an error
+                        txtDate.setText("You need to add date");
+                    }
+                }
             }
         });
-        txtAdvanced.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //switchToAdvanced();
-            }
-        });
+
         txtDate.setOnClickListener(new View.OnClickListener() {
-            // Get Current Date
             @Override
             public void onClick( View view) {
                 final Calendar c = Calendar.getInstance();
@@ -91,16 +129,26 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
                 mMonth = c.get(Calendar.MONTH);
                 mDay = c.get(Calendar.DAY_OF_MONTH);
 
-
                 DatePickerDialog datePickerDialog = new DatePickerDialog(CustomerHomeActivity.this,
                         new DatePickerDialog.OnDateSetListener() {
-
                             @Override
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
-
-                                txtDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
-
+                                if ( dayOfMonth < 10 || monthOfYear < 9) {
+                                    if (dayOfMonth < 10 && monthOfYear < 9) {
+                                        txtDate.setText("0" + dayOfMonth + "/" + "0" + (monthOfYear + 1) + "/" + year);
+                                    }
+                                    else if (dayOfMonth >= 10) {
+                                        txtDate.setText(dayOfMonth + "/" + "0" + (monthOfYear + 1) + "/" + year);
+                                    }
+                                    else {
+                                        txtDate.setText("0" + dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                                    }
+                                }
+                                else {
+                                    txtDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                                }
+                                txtDate.setTextColor(Color.BLACK);
                             }
                         }, mYear, mMonth, mDay);
                 datePickerDialog.show();
@@ -114,12 +162,6 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
 
     /**
      * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Istanbul, Turkey.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -129,75 +171,91 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
         mMap.setMinZoomPreference( 4);
     }
 
-
+    /**
+     * Listens to and controls spinners.
+     * @param parent
+     * @param view
+     * @param pos
+     * @param id
+     */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         if ( parent == departureSpinner) {
-            if (parent.getItemAtPosition(pos).toString().equals("Istanbul")) {
-                if ( prevDepMarker != null)
+//            if (parent.getItemAtPosition(pos).toString().equals("Istanbul")) {
+//                if ( prevDepMarker != null)
+//                    prevDepMarker.remove();
+//                String text = parent.getItemAtPosition(pos).toString();
+//                // Add a marker in Istanbul and move the camera
+//                LatLng istanbul = new LatLng(41.02935, 28.99392 );
+//                prevDepMarker = mMap.addMarker(new MarkerOptions().position(istanbul).title("Departure: " + text));
+//                mMap.animateCamera(CameraUpdateFactory.newLatLng(istanbul));
+//            }
+//            else if (parent.getItemAtPosition(pos).toString().equals("Ankara")) {
+//                if ( prevDepMarker != null)
+//                    prevDepMarker.remove();
+//                String text = parent.getItemAtPosition(pos).toString();
+//                // Add a marker in Istanbul and move the camera
+//                LatLng ankara = new LatLng(39.93677, 32.84647 );
+//                prevDepMarker = mMap.addMarker(new MarkerOptions().position(ankara).title("Departure: " + text));
+//                mMap.animateCamera(CameraUpdateFactory.newLatLng(ankara));
+//            }
+//            else if (parent.getItemAtPosition(pos).toString().equals("Izmir")) {
+//                if ( prevDepMarker != null)
+//                    prevDepMarker.remove();
+//                String text = parent.getItemAtPosition(pos).toString();
+//                // Add a marker in Istanbul and move the camera
+//                LatLng izmir = new LatLng(38.43506, 27.14353 );
+//                prevDepMarker = mMap.addMarker(new MarkerOptions().position(izmir).title("Departure: " + text));
+//                mMap.animateCamera(CameraUpdateFactory.newLatLng(izmir));
+//            }
+            if (!parent.getItemAtPosition(pos).toString().equals("Select")) {
+                if (prevDepMarker != null)
                     prevDepMarker.remove();
-                String text = parent.getItemAtPosition(pos).toString();
-                // Add a marker in Istanbul and move the camera
-                LatLng istanbul = new LatLng(41.02935, 28.99392 );
-                prevDepMarker = mMap.addMarker(new MarkerOptions().position(istanbul).title("Departure: " + text));
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(istanbul));
+                Place place = places.findByName(parent.getItemAtPosition(pos).toString());
+                // Add a marker and move the camera
+                LatLng location = new LatLng(place.getLatitude(), place.getLongitude());
+                prevDepMarker = mMap.addMarker(
+                        new MarkerOptions().position(location).title("Departure: " + parent.getItemAtPosition(pos).toString()));
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(location));
             }
-            else if (parent.getItemAtPosition(pos).toString().equals("Ankara")) {
-                if ( prevDepMarker != null)
-                    prevDepMarker.remove();
-                String text = parent.getItemAtPosition(pos).toString();
-                // Add a marker in Istanbul and move the camera
-                LatLng ankara = new LatLng(39.93677, 32.84647 );
-                prevDepMarker = mMap.addMarker(new MarkerOptions().position(ankara).title("Departure: " + text));
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(ankara));
-            }
-            else if (parent.getItemAtPosition(pos).toString().equals("Izmir")) {
-                if ( prevDepMarker != null)
-                    prevDepMarker.remove();
-                String text = parent.getItemAtPosition(pos).toString();
-                // Add a marker in Istanbul and move the camera
-                LatLng izmir = new LatLng(38.43506, 27.14353 );
-                prevDepMarker = mMap.addMarker(new MarkerOptions().position(izmir).title("Departure: " + text));
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(izmir));
-            }
-//            Places places = new Places();
-//            places.getFromServer();
-//            if ( prevDepMarker != null)
-//                prevDepMarker.remove();
-//            Place place = places.findByName( parent.getItemAtPosition(pos).toString());
-//            // Add a marker and move the camera
-//            LatLng location = new LatLng( place.getLatitude(), place.getLongitude() );
-//            prevDepMarker = mMap.addMarker(
-//                    new MarkerOptions().position(location).title("Departure: " + parent.getItemAtPosition(pos).toString()));
-//            mMap.animateCamera(CameraUpdateFactory.newLatLng(location));
         }
         else if ( parent == arrivalSpinner) {
-            if (parent.getItemAtPosition(pos).toString().equals("Istanbul")) {
-                if ( prevArrMarker != null )
-                    prevArrMarker.remove();
-                String text = parent.getItemAtPosition(pos).toString();
-                // Add a marker in Istanbul and move the camera
-                LatLng istanbul = new LatLng(41.02935, 28.99392 );
-                prevArrMarker = mMap.addMarker(new MarkerOptions().position(istanbul).title("Arrival: " + text));
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(istanbul));
-            }
-            else if (parent.getItemAtPosition(pos).toString().equals("Ankara")) {
-                if ( prevArrMarker != null )
-                    prevArrMarker.remove();
-                String text = parent.getItemAtPosition(pos).toString();
-                // Add a marker in Istanbul and move the camera
-                LatLng ankara = new LatLng(39.93677, 32.84647 );
-                prevArrMarker = mMap.addMarker(new MarkerOptions().position(ankara).title("Arrival: " + text));
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(ankara));
-            }
-            else if (parent.getItemAtPosition(pos).toString().equals("Izmir")) {
+//            if (parent.getItemAtPosition(pos).toString().equals("Istanbul")) {
+//                if ( prevArrMarker != null )
+//                    prevArrMarker.remove();
+//                String text = parent.getItemAtPosition(pos).toString();
+//                // Add a marker in Istanbul and move the camera
+//                LatLng istanbul = new LatLng(41.02935, 28.99392 );
+//                prevArrMarker = mMap.addMarker(new MarkerOptions().position(istanbul).title("Arrival: " + text));
+//                mMap.animateCamera(CameraUpdateFactory.newLatLng(istanbul));
+//            }
+//            else if (parent.getItemAtPosition(pos).toString().equals("Ankara")) {
+//                if ( prevArrMarker != null )
+//                    prevArrMarker.remove();
+//                String text = parent.getItemAtPosition(pos).toString();
+//                // Add a marker in Istanbul and move the camera
+//                LatLng ankara = new LatLng(39.93677, 32.84647 );
+//                prevArrMarker = mMap.addMarker(new MarkerOptions().position(ankara).title("Arrival: " + text));
+//                mMap.animateCamera(CameraUpdateFactory.newLatLng(ankara));
+//            }
+//            else if (parent.getItemAtPosition(pos).toString().equals("Izmir")) {
+//                if (prevArrMarker != null)
+//                    prevArrMarker.remove();
+//                String text = parent.getItemAtPosition(pos).toString();
+//                // Add a marker in Istanbul and move the camera
+//                LatLng izmir = new LatLng(38.43506, 27.14353);
+//                prevArrMarker = mMap.addMarker(new MarkerOptions().position(izmir).title("Arrival: " + text));
+//                mMap.animateCamera(CameraUpdateFactory.newLatLng(izmir));
+//            }
+            if (!parent.getItemAtPosition(pos).toString().equals("Select")) {
                 if (prevArrMarker != null)
                     prevArrMarker.remove();
-                String text = parent.getItemAtPosition(pos).toString();
-                // Add a marker in Istanbul and move the camera
-                LatLng izmir = new LatLng(38.43506, 27.14353);
-                prevArrMarker = mMap.addMarker(new MarkerOptions().position(izmir).title("Arrival: " + text));
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(izmir));
+                Place place = places.findByName(parent.getItemAtPosition(pos).toString());
+                // Add a marker and move the camera
+                LatLng location = new LatLng(place.getLatitude(), place.getLongitude());
+                prevArrMarker = mMap.addMarker(
+                        new MarkerOptions().position(location).title("Arrival: " + parent.getItemAtPosition(pos).toString()));
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(location));
             }
         }
     }
@@ -207,10 +265,15 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
 
     }
 
-    private void switchActivitiesWithData() {
+    /**
+     * Navigates to Tickets activity when searched for tickets.
+     */
+    private void goToTicketsActivity() {
         Intent switchActivityIntent = new Intent(this, TicketsActivity.class);
-        switchActivityIntent.putExtra("message", "Tickets for trips from " + departureSpinner.getSelectedItem().toString() +
-                " to " + arrivalSpinner.getSelectedItem().toString() + " having departure dates of " + txtDate.getText());
+        switchActivityIntent.putExtra("departure", departureSpinner.getSelectedItem().toString());
+        switchActivityIntent.putExtra( "arrival", arrivalSpinner.getSelectedItem().toString());
+        switchActivityIntent.putExtra( "date", txtDate.getText());
         startActivity(switchActivityIntent);
     }
+
 }
