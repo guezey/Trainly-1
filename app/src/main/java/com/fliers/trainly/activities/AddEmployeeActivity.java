@@ -21,7 +21,7 @@ import java.util.ArrayList;
 /**
 * Manage Employees Page
 * A page where Companies can view all of their Employees and continue with adding new ones or deleting existing ones
-* @author Erkin Aydın, Alp Afyonluoğlu
+* @author Erkin Aydın
 * @version 03.05.2021
 */
 
