@@ -2,7 +2,6 @@ package com.fliers.trainly.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,11 +16,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fliers.trainly.R;
-import com.fliers.trainly.models.Customer;
-import com.fliers.trainly.models.Schedule;
-import com.fliers.trainly.models.Ticket;
-import com.fliers.trainly.models.Tickets;
-import com.fliers.trainly.models.User;
+import com.fliers.trainly.models.users.Customer;
+import com.fliers.trainly.models.trips.Schedule;
+import com.fliers.trainly.models.trips.Ticket;
+import com.fliers.trainly.models.users.Tickets;
+import com.fliers.trainly.models.users.User;
 
 import java.util.ArrayList;
 

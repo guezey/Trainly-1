@@ -11,9 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fliers.trainly.R;
-import com.fliers.trainly.models.Customer;
-import com.fliers.trainly.models.Ticket;
-import com.fliers.trainly.models.User;
+import com.fliers.trainly.models.users.Customer;
+import com.fliers.trainly.models.trips.Ticket;
+import com.fliers.trainly.models.users.User;
 
 /**
  * Buy Ticket Page

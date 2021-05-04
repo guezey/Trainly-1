@@ -1,4 +1,4 @@
-package com.fliers.trainly.models;
+package com.fliers.trainly.models.trips;
 
 import java.util.ArrayList;
 

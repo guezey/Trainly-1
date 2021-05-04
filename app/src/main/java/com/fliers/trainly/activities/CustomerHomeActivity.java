@@ -21,9 +21,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.fliers.trainly.R;
-import com.fliers.trainly.models.Place;
-import com.fliers.trainly.models.Places;
-import com.fliers.trainly.models.User;
+import com.fliers.trainly.models.trips.Place;
+import com.fliers.trainly.models.trips.Places;
+import com.fliers.trainly.models.users.User;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;

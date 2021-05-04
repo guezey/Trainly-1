@@ -1,8 +1,14 @@
-package com.fliers.trainly.models;
+package com.fliers.trainly.models.users;
 
 import android.content.Context;
-import android.util.Log;
 
+import com.fliers.trainly.models.trips.Line;
+import com.fliers.trainly.models.trips.Place;
+import com.fliers.trainly.models.trips.Places;
+import com.fliers.trainly.models.trips.Schedule;
+import com.fliers.trainly.models.trips.Employee;
+import com.fliers.trainly.models.trips.Ticket;
+import com.fliers.trainly.models.trips.Train;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,13 +35,10 @@ public class Company extends User {
     private final String ECONOMY_WAGON_NO = "economyWagonNo";
     private final String BUSINESS_PRICE = "businessPrice";
     private final String ECONOMY_PRICE = "economyPrice";
-    private final String CURRENT_LOCATION = "currentLocation";
     private final String FROM = "from";
     private final String TO = "to";
     private final String EMPLOYEE_NAMES = "employeeNames";
     private final String EMPLOYEE_LINKED_TRAIN_IDS = "employeeLinkedTrainIds";
-    private final String FEEDBACK_STARS = "feedbackStars";
-    private final String FEEDBACK_COMMENTS = "feedbackComments";
     private final String AVERAGE_POINT = "averagePoint";
     private final String LINE_DEPARTURES = "lineDepartures";
     private final String LINE_ARRIVALS = "lineArrivals";
@@ -172,15 +175,6 @@ public class Company extends User {
      */
     public void removeEmployee( Object employee) {
         employees.remove( employee);
-    }
-
-    /**
-     * Returns last week's customer number for this company.
-     * @return customer number
-     */
-    public int getLastWeeksCustomerNum() {
-        // TODO: to be done
-        return 0;
     }
 
     /**
@@ -534,19 +528,19 @@ public class Company extends User {
                         train = trains.get( count);
 
                         // Save train related general info
-                        reference.child( train.id).child( BUSINESS_WAGON_NO).setValue( String.valueOf( train.businessWagonNum));
-                        reference.child( train.id).child( ECONOMY_WAGON_NO).setValue( String.valueOf( train.economyWagonNum));
-                        reference.child( train.id).child( BUSINESS_PRICE).setValue( String.valueOf( train.businessPrice));
-                        reference.child( train.id).child( ECONOMY_PRICE).setValue( String.valueOf( train.economyPrice));
+                        reference.child( train.getId()).child( BUSINESS_WAGON_NO).setValue( String.valueOf( train.getBusinessWagonNum()));
+                        reference.child( train.getId()).child( ECONOMY_WAGON_NO).setValue( String.valueOf( train.getEconomyWagonNum()));
+                        reference.child( train.getId()).child( BUSINESS_PRICE).setValue( String.valueOf( train.getBusinessPrice()));
+                        reference.child( train.getId()).child( ECONOMY_PRICE).setValue( String.valueOf( train.getEconomyPrice()));
 
                         // Save schedules and their lines
-                        schedules = train.schedules;
+                        schedules = train.getSchedules();
                         for ( int scheduleCount = 0; scheduleCount < schedules.size(); scheduleCount++) {
                             schedule = schedules.get( scheduleCount);
 
-                            reference.child( train.id).child( SCHEDULES).child( schedule.getIdRepresentation( schedule.getDepartureDate())).child( FROM).setValue( String.valueOf( schedule.getDeparturePlace().getName()));
-                            reference.child( train.id).child( SCHEDULES).child( schedule.getIdRepresentation( schedule.getDepartureDate())).child( TO).setValue( String.valueOf( schedule.getArrivalPlace().getName()));
-                            reference.child( train.id).child( SCHEDULES).child( schedule.getIdRepresentation( schedule.getDepartureDate())).child( ESTIMATED_ARRIVAL).setValue( schedule.getIdRepresentation( schedule.getArrivalDate()));
+                            reference.child( train.getId()).child( SCHEDULES).child( schedule.getIdRepresentation( schedule.getDepartureDate())).child( FROM).setValue( String.valueOf( schedule.getDeparturePlace().getName()));
+                            reference.child( train.getId()).child( SCHEDULES).child( schedule.getIdRepresentation( schedule.getDepartureDate())).child( TO).setValue( String.valueOf( schedule.getArrivalPlace().getName()));
+                            reference.child( train.getId()).child( SCHEDULES).child( schedule.getIdRepresentation( schedule.getDepartureDate())).child( ESTIMATED_ARRIVAL).setValue( schedule.getIdRepresentation( schedule.getArrivalDate()));
                         }
                     }
 

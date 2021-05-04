@@ -1,4 +1,4 @@
-package com.fliers.trainly.models;
+package com.fliers.trainly.models.trips;
 
 import android.content.Context;
 import android.content.SharedPreferences;

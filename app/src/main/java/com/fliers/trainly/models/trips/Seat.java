@@ -1,4 +1,6 @@
-package com.fliers.trainly.models;
+package com.fliers.trainly.models.trips;
+
+import com.fliers.trainly.models.trips.Wagon;
 
 /**
 * A class for seats in a Wagon

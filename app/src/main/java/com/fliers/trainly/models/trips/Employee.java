@@ -1,4 +1,6 @@
-package com.fliers.trainly.models;
+package com.fliers.trainly.models.trips;
+
+import com.fliers.trainly.models.trips.Train;
 
 /**
  * Class that represents train machinists.
@@ -37,15 +39,6 @@ public class Employee {
      */
     public Train getAssignedTrain() {
         return assignedTrain;
-    }
-
-    /**
-     * Starts a trip for assigned train if departure time has come.
-     * @return true if departure time has come, otherwise false
-     */
-    public boolean startTrip() {
-        //to be done
-        return false;
     }
 
 }

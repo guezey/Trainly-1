@@ -1,4 +1,4 @@
-package com.fliers.trainly.models;
+package com.fliers.trainly.models.trips;
 
 /**
  * Interface giving x and y coordinate management to implemented classes

@@ -1,7 +1,6 @@
 package com.fliers.trainly.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,8 +12,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.fliers.trainly.R;
-import com.fliers.trainly.models.Schedule;
-import com.fliers.trainly.models.Wagon;
+import com.fliers.trainly.models.trips.Schedule;
+import com.fliers.trainly.models.trips.Wagon;
 
 import java.util.ArrayList;
 

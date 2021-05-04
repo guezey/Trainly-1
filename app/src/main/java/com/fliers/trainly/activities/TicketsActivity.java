@@ -13,10 +13,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.fliers.trainly.R;
-import com.fliers.trainly.models.Place;
-import com.fliers.trainly.models.Places;
-import com.fliers.trainly.models.Ticket;
-import com.fliers.trainly.models.Tickets;
+import com.fliers.trainly.models.trips.Place;
+import com.fliers.trainly.models.trips.Places;
+import com.fliers.trainly.models.trips.Ticket;
+import com.fliers.trainly.models.users.Tickets;
 
 import java.util.ArrayList;
 import java.util.Calendar;

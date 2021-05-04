@@ -12,8 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fliers.trainly.R;
-import com.fliers.trainly.models.Customer;
-import com.fliers.trainly.models.User;
+import com.fliers.trainly.models.users.Customer;
+import com.fliers.trainly.models.users.User;
 
 /**
  * Controls Customer Account page.

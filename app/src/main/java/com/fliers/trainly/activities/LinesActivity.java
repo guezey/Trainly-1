@@ -18,11 +18,11 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.fliers.trainly.R;
-import com.fliers.trainly.models.Company;
-import com.fliers.trainly.models.Line;
-import com.fliers.trainly.models.Place;
-import com.fliers.trainly.models.Places;
-import com.fliers.trainly.models.User;
+import com.fliers.trainly.models.users.Company;
+import com.fliers.trainly.models.trips.Line;
+import com.fliers.trainly.models.trips.Place;
+import com.fliers.trainly.models.trips.Places;
+import com.fliers.trainly.models.users.User;
 
 import java.util.ArrayList;
 

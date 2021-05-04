@@ -1,6 +1,7 @@
-package com.fliers.trainly.models;
+package com.fliers.trainly.models.trips;
 
-import java.sql.Date;
+import com.fliers.trainly.models.users.Company;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -15,7 +16,6 @@ public class Train {
 
     double businessPrice;
     double economyPrice;
-    static int idCounter; // Temporary (In TO-DO list)
     String id;
     int businessWagonNum;
     int economyWagonNum;
@@ -42,12 +42,14 @@ public class Train {
         schedules = new ArrayList<>();
         this.id = id;
     }
+
     /**
     * @return id
     */
     public String getId() {
         return id;
     }
+
     /**
     * Sets the new business wagon number
     * @param a

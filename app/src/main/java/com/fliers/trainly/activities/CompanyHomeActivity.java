@@ -7,18 +7,16 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fliers.trainly.R;
-import com.fliers.trainly.models.Company;
-import com.fliers.trainly.models.Ticket;
-import com.fliers.trainly.models.Tickets;
-import com.fliers.trainly.models.Train;
-import com.fliers.trainly.models.User;
+import com.fliers.trainly.models.users.Company;
+import com.fliers.trainly.models.trips.Ticket;
+import com.fliers.trainly.models.users.Tickets;
+import com.fliers.trainly.models.users.User;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;

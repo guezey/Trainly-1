@@ -1,4 +1,4 @@
-package com.fliers.trainly.models;
+package com.fliers.trainly.models.users;
 
 import android.content.Context;
 
@@ -18,7 +18,6 @@ import java.util.HashMap;
 public class Customer extends User {
     // Properties
     private final String POINTS = "points";
-    private final String TEMP_POINTS = "tempPoints";
 
     private int discountPoints;
 

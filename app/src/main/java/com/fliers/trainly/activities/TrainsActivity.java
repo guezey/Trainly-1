@@ -16,9 +16,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.fliers.trainly.R;
-import com.fliers.trainly.models.Company;
+import com.fliers.trainly.models.users.Company;
 
-import com.fliers.trainly.models.Train;
+import com.fliers.trainly.models.trips.Train;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 /**
