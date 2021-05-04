@@ -279,14 +279,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView122" />
 
+
             <Spinner
                 android:id="@+id/spinLine"
-                android:layout_width="wrap_content"
+                android:layout_width="160dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="14dp"
-                android:layout_marginTop="2dp"
-                android:entries="@array/lines"
-                android:spinnerMode="dropdown"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="8dp"
+                android:drawSelectorOnTop="true"
+                android:popupBackground="@color/white"
                 app:layout_constraintBottom_toBottomOf="@+id/textView47"
                 app:layout_constraintEnd_toEndOf="@+id/constraintLayout42"
                 app:layout_constraintStart_toStartOf="@+id/constraintLayout42"

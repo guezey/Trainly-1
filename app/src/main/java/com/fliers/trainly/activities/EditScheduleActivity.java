@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -21,9 +22,12 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.fliers.trainly.R;
+import com.fliers.trainly.models.Company;
+import com.fliers.trainly.models.Place;
 import com.fliers.trainly.models.Train;
 import com.fliers.trainly.models.Schedule;
 import com.fliers.trainly.models.Line;
+import com.fliers.trainly.models.User;
 
 import java.util.Calendar;
 import java.util.ArrayList;
@@ -55,8 +59,35 @@ public class EditScheduleActivity extends AppCompatActivity {
         Intent intent = getIntent();
         currentTrain = ( Train ) intent.getExtras().get( "train" );
         idText.setText( "Edit schedule information related to the train with the Id number " + currentTrain.getId() );
+
+        Company currentUser = ( Company ) User.getCurrentUserInstance();
+
         lineSpinner = ( Spinner ) findViewById( R.id.spinLine);
-        lineSpinner.setOnItemSelectedListener( (AdapterView.OnItemSelectedListener) this);
+
+        ArrayList<String> lines = new ArrayList<>();
+        lines.add("Select");
+        for ( Line l : currentUser.getLines() ) {
+            lines.add( l.toString() );
+        }
+
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item_lines, lines){
+            /**
+             * Shows spinner items.
+             * @param position
+             * @param convertView
+             * @param parent
+             * @return
+             */
+            @Override
+            public View getDropDownView(int position, View convertView,
+                                        ViewGroup parent) {
+
+                return super.getDropDownView(position, convertView, parent);
+            }
+        };
+
+        spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item_lines);
+        lineSpinner.setAdapter( spinnerArrayAdapter );
         Button save = findViewById( R.id.btSaveSchedule);
         save.setOnClickListener(new View.OnClickListener() {
             @Override
