@@ -54,6 +54,8 @@ public class EditScheduleActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_schedule);
+        getIntent();
+
         idText = findViewById( R.id.tvIdSchedule);
 
         // Get train from previous activity
