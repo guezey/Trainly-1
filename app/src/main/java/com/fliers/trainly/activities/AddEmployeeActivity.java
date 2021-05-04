@@ -64,6 +64,7 @@ public class AddEmployeeActivity extends AppCompatActivity {
         spinnerArrayAdapter.setDropDownViewResource(R.layout.activity_employee_spinner);
         trainId.setAdapter(spinnerArrayAdapter);
 
+        //To go to previous page
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,6 +72,7 @@ public class AddEmployeeActivity extends AppCompatActivity {
             }
         });
 
+        //To add the new Employee with entered specialities
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

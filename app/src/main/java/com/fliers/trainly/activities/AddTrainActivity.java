@@ -19,6 +19,13 @@ import com.fliers.trainly.models.User;
 
 import java.util.ArrayList;
 
+/**
+* Add Train Page
+* A page for Companies to add train to their collections.
+* @author Erkin Aydın
+* @version 03.05.2021
+*/
+
 public class AddTrainActivity extends AppCompatActivity {
 
     Company currentUser;
@@ -50,6 +57,7 @@ public class AddTrainActivity extends AppCompatActivity {
         add = (Button) findViewById(R.id.button);
         back = (ImageView) findViewById(R.id.imageView2);
 
+        //To decrease the amount of businessWagons
         minus1.setOnClickListener( new View.OnClickListener() {
 
             public void onClick(View view) {
@@ -62,6 +70,7 @@ public class AddTrainActivity extends AppCompatActivity {
             }
         });
 
+        //To increase the amount of businessWagons
         plus1.setOnClickListener( new View.OnClickListener() {
 
             public void onClick(View view) {
@@ -75,6 +84,7 @@ public class AddTrainActivity extends AppCompatActivity {
             }
         });
 
+        //To decrease the amount of economyWagons
         minus2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,6 +97,7 @@ public class AddTrainActivity extends AppCompatActivity {
             }
         });
 
+        //To increase the amount of economyWagons
         plus2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,6 +111,7 @@ public class AddTrainActivity extends AppCompatActivity {
             }
         });
 
+        //To inform the Company that economyPrice is bigger than or equal to businessPrice 
         businessPrice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,6 +125,7 @@ public class AddTrainActivity extends AppCompatActivity {
             }
         });
 
+        //To inform the Company that economyPrice is bigger than or equal to businessPrice 
         economyPrice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,6 +139,7 @@ public class AddTrainActivity extends AppCompatActivity {
             }
         });
 
+        //To add the train
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,6 +166,7 @@ public class AddTrainActivity extends AppCompatActivity {
             }
         });
 
+        //To go to previous page
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

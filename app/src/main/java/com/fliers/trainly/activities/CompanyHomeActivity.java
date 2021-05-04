@@ -33,7 +33,6 @@ import java.util.ArrayList;
 public class CompanyHomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     // Properties
     Company company;
-    ImageView menuButton;
     TextView trainNumber;
     TextView customerLastWeek;
     TextView lineNumber;
@@ -76,6 +75,14 @@ public class CompanyHomeActivity extends AppCompatActivity implements Navigation
         });
 
         // Generate the statistics on the screen
+        trainNumber = findViewById( R.id.tvTrainNumber);
+        customerLastWeek = findViewById( R.id.tvLastWeekCustomer);
+        lineNumber = findViewById( R.id.tvLineNumber);
+        employeeNumber = findViewById( R.id.tvNumberEmployees);
+        revenueLastWeek = findViewById( R.id.tvAverageRevenue);
+        balance = findViewById( R.id.tvBalance);
+        starPointText = findViewById( R.id.tvAveragePoint);
+
         trainNumber.setText( company.getTrains().size() + "" );
         customerLastWeek.setText( tickets.size() + "" );
         lineNumber.setText( company.getLines().size() + "" );
@@ -97,13 +104,6 @@ public class CompanyHomeActivity extends AppCompatActivity implements Navigation
             starIndex++;
         }
 
-        // Opens the menu to go other pages
-        menuButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick( View v ) {
-                CompanyHomeActivity.this.openOptionsMenu();
-            }
-        });
     }
 
     /**
