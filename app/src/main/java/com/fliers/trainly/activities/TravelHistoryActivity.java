@@ -21,6 +21,7 @@ import com.fliers.trainly.models.Customer;
 import com.fliers.trainly.models.Schedule;
 import com.fliers.trainly.models.Ticket;
 import com.fliers.trainly.models.Tickets;
+import com.fliers.trainly.models.User;
 
 import java.util.ArrayList;
 
@@ -31,6 +32,7 @@ import java.util.ArrayList;
  */
 public class TravelHistoryActivity extends AppCompatActivity {
 
+    Customer currentUser;
     ArrayList<Ticket> tickets;
 
     /**
@@ -44,6 +46,7 @@ public class TravelHistoryActivity extends AppCompatActivity {
         ListView history = findViewById(R.id.history);
         ImageView btBack = findViewById(R.id.btBack);
         Button saveButton = findViewById(R.id.button);
+        currentUser = (Customer) Customer.getCurrentUserInstance();
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             /**
@@ -52,7 +55,19 @@ public class TravelHistoryActivity extends AppCompatActivity {
              */
             @Override
             public void onClick(View view) {
-                //TODO: save feedback
+                if ( currentUser.isConnectedToInternet()) {
+                    currentUser.saveToServer(new User.ServerSyncListener() {
+                        @Override
+                        public void onSync(boolean isSynced) {
+                            if ( isSynced)
+                                Toast.makeText( getApplicationContext(), "Saved feedback", Toast.LENGTH_SHORT).show();
+                            else
+                                Toast.makeText( getApplicationContext(), "Cannot reach Trainly servers at the moment", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+                else
+                    Toast.makeText( getApplicationContext(), "Please check your internet connection", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -68,7 +83,7 @@ public class TravelHistoryActivity extends AppCompatActivity {
         });
 
         Tickets ticketManager = new Tickets( getApplicationContext());
-        tickets = ticketManager.getBoughtTickets((Customer) Customer.getCurrentUserInstance());
+        tickets = ticketManager.getBoughtTickets(currentUser);
 
         if ( tickets.size() == 0) {
             Toast.makeText( getApplicationContext(), "No tickets found", Toast.LENGTH_SHORT).show();

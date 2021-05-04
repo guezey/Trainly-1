@@ -2,10 +2,12 @@ package com.fliers.trainly.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,32 +21,33 @@ import com.fliers.trainly.R;
 import com.fliers.trainly.models.Company;
 import com.fliers.trainly.models.Line;
 import com.fliers.trainly.models.Place;
+import com.fliers.trainly.models.Places;
 import com.fliers.trainly.models.User;
 
 import java.util.ArrayList;
 
-//import java.awt.Button;
-//import java.awt.View;
-
-//import javax.swing.text.View;
-
-public class LinesActivity extends AppCompatActivity implements LinesCoordinatesActivity.CoordinatesActivityListener{
-
-    private final String LOGGED_IN_USER_TYPE = "loggedInUserType";
-    private final int NO_LOGIN = 0;
-    private final int COMPANY_LOGIN = 1;
-    private final int CUSTOMER_LOGIN = 2;
+/**
+ * Controls Lines page.
+ * @author Ali Emir Güzey
+ * @author Erkin Aydın
+ * @version 04.05.2021
+ */
+public class LinesActivity extends AppCompatActivity {
 
     Company currentUser;
-    private EditText editTextTextPersonName2;
-    private EditText editTextTextPersonName3;
-    private double x1;
-    private double y1;
-    private double x2;
-    private double y2;
+    Places placeManager;
+    private AutoCompleteTextView acPlace1;
+    private AutoCompleteTextView acPlace2;
+    private EditText etLatitude1;
+    private EditText etLongitude1;
+    private EditText etLatitude2;
+    private EditText etLongitude2;
+    private double lat1;
+    private double lon1;
+    private double lat2;
+    private double lon2;
     private Button button;
-    private SharedPreferences preferences;
-    private int loginType;
+
     private ImageView back;
     ArrayList<Line> lines;
 
@@ -53,21 +56,27 @@ public class LinesActivity extends AppCompatActivity implements LinesCoordinates
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lines);
 
-        preferences = getSharedPreferences( String.valueOf( R.string.app_name), Context.MODE_PRIVATE);
-        loginType = preferences.getInt( LOGGED_IN_USER_TYPE, NO_LOGIN);
-
-//        if ( loginType == COMPANY_LOGIN) {
-            currentUser = (Company) User.getCurrentUserInstance();
-//        }
-//        else if ( loginType == CUSTOMER_LOGIN) {
-//            currentUser = (Customer) User.getCurrentUserInstance();
-//        }
-
-
-        editTextTextPersonName2 = (EditText) findViewById(R.id.editTextTextPersonName2);
-        editTextTextPersonName3 = (EditText) findViewById(R.id.editTextTextPersonName3);
+        currentUser = (Company) User.getCurrentUserInstance();
+        placeManager = Places.getInstance();
+        acPlace1 = findViewById(R.id.acPlace1);
+        acPlace2 = findViewById(R.id.acPlace2);
+        etLatitude1 = findViewById(R.id.etLatitude1);
+        etLongitude1 = findViewById(R.id.etLongitude1);
+        etLatitude2 = findViewById(R.id.etLatitude2);
+        etLongitude2 = findViewById(R.id.etLongitude2);
         button = (Button) findViewById(R.id.button);
         back = (ImageView) findViewById(R.id.imageView2);
+
+        ArrayList<String> placeNames = new ArrayList<>();
+        for ( Place p : placeManager.getAll() ) {
+            placeNames.add(p.getName());
+        }
+
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner_item_lines, placeNames);
+
+        adapter.setNotifyOnChange(true);
+        acPlace1.setAdapter(adapter);
+        acPlace2.setAdapter(adapter);
 
         back.setOnClickListener( new View.OnClickListener() {
 
@@ -80,46 +89,122 @@ public class LinesActivity extends AppCompatActivity implements LinesCoordinates
 
             public void onClick(View view) {
 
-//                if( !(currentUser.isConnectedToInternet())) {
-//
-//                    Toast.makeText( getApplicationContext(), "No Internet Connection", Toast.LENGTH_SHORT).show();
-//                }
-                //else {
-                    String editTextTextPersonName2String = editTextTextPersonName2.getText().toString();
-                    String editTextTextPersonName3String = editTextTextPersonName3.getText().toString();
-                    if (!(editTextTextPersonName2String.trim().equalsIgnoreCase("")
-                            || editTextTextPersonName3String.trim().equalsIgnoreCase(""))) {
+                if( !(currentUser.isConnectedToInternet())) {
+
+                    Toast.makeText( getApplicationContext(), "No Internet Connection", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    if (!(acPlace1.getText().toString().equals("")
+                            || acPlace2.getText().toString().equals("")
+                            || etLatitude1.getText().toString().equals("")
+                            || etLongitude1.getText().toString().equals("")
+                            || etLatitude2.getText().toString().equals("")
+                            || etLongitude2.getText().toString().equals(""))) {
 
                         Place departurePlace;
                         Place arrivalPlace;
+                        ArrayList<Place> placesToSave;
                         Line newNormalLine;
                         Line newReverseLine;
+                        String nameOf1;
+                        String nameOf2;
 
-                        openDialog();
-                        departurePlace = new Place( editTextTextPersonName2String, x1, y1);
-                        arrivalPlace = new Place( editTextTextPersonName3String, x2, y2);
+                        placesToSave = new ArrayList<>();
+                        lat1 = Double.parseDouble(etLatitude1.getText().toString());
+                        lon1 = Double.parseDouble(etLongitude1.getText().toString());
+                        lat2 = Double.parseDouble(etLatitude2.getText().toString());
+                        lon2 = Double.parseDouble(etLongitude2.getText().toString());
+                        nameOf1 = acPlace1.getText().toString().substring(0,1).toUpperCase() + acPlace1.getText().toString().substring(1).toLowerCase();
+                        nameOf2 = acPlace2.getText().toString().substring(0,1).toUpperCase() + acPlace2.getText().toString().substring(1).toLowerCase();
+
+                        if ( etLatitude1.isEnabled()) {
+                            departurePlace = new Place(nameOf1, lat1, lon1);
+                            placesToSave.add(departurePlace);
+                        }
+                        else
+                            departurePlace = placeManager.findByName(nameOf1);
+
+                        if ( etLatitude2.isEnabled()) {
+                            arrivalPlace = new Place(nameOf2, lat2, lon2);
+                            placesToSave.add(arrivalPlace);
+                        }
+                        else
+                            arrivalPlace = placeManager.findByName(nameOf2);
+
                         newNormalLine = new Line( departurePlace, arrivalPlace);
                         newReverseLine = new Line( arrivalPlace, departurePlace);
 
-//                        ((Company)currentUser).addLine( newNormalLine);
-//                        ((Company)currentUser).addLine( newReverseLine);
-                    }
-                    if (editTextTextPersonName2String.trim().equalsIgnoreCase("")) {
+                        currentUser.addLine( newNormalLine);
+                        currentUser.addLine( newReverseLine);
 
-                        editTextTextPersonName2.setError("Invalid Input");
-                    }
-                    if (editTextTextPersonName3String.trim().equalsIgnoreCase("")) {
+                        savePlace(placesToSave);
 
-                        editTextTextPersonName3.setError("Invalid Input");
+                    }
+                    else {
+                        Toast.makeText( getApplicationContext(), "Please check your inputs", Toast.LENGTH_SHORT).show();
                     }
                 }
-            //}
+            }
+        });
+
+        acPlace1.addTextChangedListener( new TextWatcher() {
+
+            String name;
+
+            @Override
+            public void beforeTextChanged( CharSequence s, int start, int count, int after) {
+                // Empty method
+            }
+
+            @Override
+            public void onTextChanged( CharSequence s, int start, int before, int count) {
+
+                name = acPlace1.getText().toString().substring(0,1).toUpperCase() + acPlace1.getText().toString().substring(1).toLowerCase();
+                if ( placeManager.findByName(name) != null) {
+                    etLatitude1.setEnabled(false);
+                    etLatitude1.setText(String.valueOf(placeManager.findByName(name).getLatitude()));
+                    etLongitude1.setEnabled(false);
+                    etLongitude1.setText(String.valueOf(placeManager.findByName(name).getLongitude()));
+                }
+            }
+
+            @Override
+            public void afterTextChanged( Editable s) {
+                // Empty method
+            }
+        });
+
+        acPlace2.addTextChangedListener( new TextWatcher() {
+
+            String name;
+
+            @Override
+            public void beforeTextChanged( CharSequence s, int start, int count, int after) {
+                // Empty method
+            }
+
+            @Override
+            public void onTextChanged( CharSequence s, int start, int before, int count) {
+
+                name = acPlace2.getText().toString().substring(0,1).toUpperCase() + acPlace2.getText().toString().substring(1).toLowerCase();
+                if ( placeManager.findByName(name) != null) {
+                    etLatitude2.setEnabled(false);
+                    etLatitude2.setText(String.valueOf(placeManager.findByName(name).getLatitude()));
+                    etLongitude2.setEnabled(false);
+                    etLongitude2.setText(String.valueOf(placeManager.findByName(name).getLongitude()));
+                }
+            }
+
+            @Override
+            public void afterTextChanged( Editable s) {
+                // Empty method
+            }
         });
 
         ListView listLines = findViewById( R.id.listLines );
         lines = currentUser.getLines();
 
-        if ( lines.size() == 0) {
+        if ( lines.size() == 0 ) {
             Toast.makeText( getApplicationContext(), "No lines found", Toast.LENGTH_SHORT).show();
         }
         else {
@@ -127,23 +212,6 @@ public class LinesActivity extends AppCompatActivity implements LinesCoordinates
             listLines.setAdapter( customAdaptor );
         }
 
-    }
-
-    public void openDialog() {
-
-        LinesCoordinatesActivity coordinatesActivity = new LinesCoordinatesActivity();
-        coordinatesActivity.show(getSupportFragmentManager(), "Enter Coordinates");
-        //coordinatesActivity.departureText.setText("" + editTextTextPersonName2.toString());
-        //coordinatesActivity.arrivalText.setText("" + editTextTextPersonName3.toString());
-    }
-
-    @Override
-    public void applyTexts(double posX1, double posY1, double posX2, double posY2) {
-
-        x1 = posX1;
-        y1 = posY1;
-        x2 = posX2;
-        y2 = posY2;
     }
 
     class CustomAdaptor extends BaseAdapter {
@@ -158,15 +226,58 @@ public class LinesActivity extends AppCompatActivity implements LinesCoordinates
         @Override public long getItemId( int position) {
             return 0;
         }
+
         @Override public View getView( final int position, View convertView, ViewGroup parent) {
-            // View view = getLayoutInflater().inflate( R.layout.list_item_lines, null);
-            View view = null;
+            View view = getLayoutInflater().inflate( R.layout.list_item_lines, null);
 
             // Get title text view
             TextView tvLineTitle = view.findViewById( R.id.tvLine );
-            tvLineTitle.setText( currentUser.getLines().get(position) + "" );
+            tvLineTitle.setText( currentUser.getLines().get(position).toString() );
 
             return view;
+        }
+    }
+
+    /**
+     * Saves places to server
+     * @param placesToSave places to be saved to server
+     * @author Alp Afyonluoğlu
+     */
+    private void savePlace( ArrayList<Place> placesToSave) {
+        // Variables
+        Place place;
+
+        // Code
+        if ( placesToSave.size() > 0) {
+            // Add places one by one
+            place = placesToSave.get( 0);
+            placesToSave.remove( 0);
+            placeManager.add( place, new Places.ServerSyncListener() {
+                @Override
+                public void onSync( boolean isSynced) {
+                    if ( isSynced) {
+                        savePlace( placesToSave);
+                    }
+                    else {
+                        Toast.makeText( getApplicationContext(), "Trainly servers are unavailable at the moment", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+        else {
+            // Save added line to server
+            currentUser.saveToServer( new User.ServerSyncListener() {
+                @Override
+                public void onSync( boolean isSynced) {
+                    if ( isSynced) {
+                        Toast.makeText( getApplicationContext(), "New line is saved", Toast.LENGTH_SHORT).show();
+                        // Other functions
+                    }
+                    else {
+                        Toast.makeText( getApplicationContext(), "Trainly servers are unavailable at the moment", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         }
     }
 }

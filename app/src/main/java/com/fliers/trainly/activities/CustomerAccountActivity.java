@@ -9,9 +9,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fliers.trainly.R;
 import com.fliers.trainly.models.Customer;
+import com.fliers.trainly.models.User;
 
 /**
  * Controls Customer Account page.
@@ -19,6 +21,8 @@ import com.fliers.trainly.models.Customer;
  * @version 03.05.2021
  */
 public class CustomerAccountActivity extends AppCompatActivity {
+
+    Customer currentUser;
 
     /**
      * Manipulates view once available
@@ -29,7 +33,7 @@ public class CustomerAccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_account);
 
-        Customer c = (Customer) Customer.getCurrentUserInstance();
+        currentUser = (Customer) Customer.getCurrentUserInstance();
         ImageView btBack = findViewById(R.id.imageView2);
         TextView tvAccountName = findViewById(R.id.tvNameCustomer);
         TextView tvDiscountPoints = findViewById(R.id.tvDiscountPoints);
@@ -56,7 +60,20 @@ public class CustomerAccountActivity extends AppCompatActivity {
              */
             @Override
             public void onClick(View view) {
-                c.setName(etChangeName.getText().toString());
+                if ( currentUser.isConnectedToInternet()) {
+                    currentUser.setName(etChangeName.getText().toString());
+                    currentUser.saveToServer(new User.ServerSyncListener() {
+                        @Override
+                        public void onSync(boolean isSynced) {
+                            if (isSynced)
+                                Toast.makeText( getApplicationContext(), "Changed name", Toast.LENGTH_SHORT).show();
+                            else
+                                Toast.makeText( getApplicationContext(), "Cannot reach Trainly servers at the moment", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+                else
+                    Toast.makeText( getApplicationContext(), "Please check your internet connection", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -71,9 +88,9 @@ public class CustomerAccountActivity extends AppCompatActivity {
             }
         });
 
-        tvEmailValue.setText( c.getEmail());
-        tvDiscountPoints.setText( "Discount points: " + String.valueOf(c.getDiscountPoints()));
-        tvAccountName.setText( c.getName());
+        tvEmailValue.setText( currentUser.getEmail());
+        tvDiscountPoints.setText( "Discount points: " + String.valueOf(currentUser.getDiscountPoints()));
+        tvAccountName.setText( currentUser.getName());
     }
 
     /**
