@@ -8,9 +8,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fliers.trainly.R;
 import com.fliers.trainly.models.Company;
+import com.fliers.trainly.models.User;
 
 /**
  * Controls Company Home page.
@@ -18,6 +20,8 @@ import com.fliers.trainly.models.Company;
  * @version 03.05.2021
  */
 public class CompanyAccountActivity extends AppCompatActivity {
+
+    Company currentUser;
 
     /**
      * Manipulates view once available.
@@ -28,7 +32,7 @@ public class CompanyAccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_company_account);
 
-        Company c = (Company) Company.getCurrentUserInstance();
+        currentUser = (Company) Company.getCurrentUserInstance();
         ImageView btBack = findViewById(R.id.imageView2);
         TextView tvAccountName = findViewById(R.id.tvAccountName);
         TextView tvTrainNum = findViewById(R.id.tvTrainNum);
@@ -54,12 +58,25 @@ public class CompanyAccountActivity extends AppCompatActivity {
              */
             @Override
             public void onClick(View view) {
-                c.setName( etChangeName.getText().toString());
+                if ( currentUser.isConnectedToInternet()) {
+                    currentUser.setName(etChangeName.getText().toString());
+                    currentUser.saveToServer(new User.ServerSyncListener() {
+                        @Override
+                        public void onSync(boolean isSynced) {
+                            if (isSynced)
+                                Toast.makeText( getApplicationContext(), "Changed name", Toast.LENGTH_SHORT).show();
+                            else
+                                Toast.makeText( getApplicationContext(), "Cannot reach Trainly servers at the moment", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+                else
+                    Toast.makeText( getApplicationContext(), "Please check your internet connection", Toast.LENGTH_SHORT).show();
             }
         });
 
-        tvEmailValue.setText( c.getEmail());
-        tvTrainNum.setText( "Train number: " + String.valueOf(c.getTrains().size()));
-        tvAccountName.setText( c.getName());
+        tvEmailValue.setText( currentUser.getEmail());
+        tvTrainNum.setText( "Train number: " + String.valueOf(currentUser.getTrains().size()));
+        tvAccountName.setText( currentUser.getName());
     }
 }
