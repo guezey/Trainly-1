@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutWagonBusiness"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
@@ -526,11 +527,10 @@
                     android:layout_marginStart="6dp"
                     android:layout_marginTop="6dp"
                     android:layout_marginEnd="6dp"
-                    android:tint="@color/white"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/outline_rounded_corner_s" />
+                    app:srcCompat="@drawable/outline_rounded_corner_s"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 

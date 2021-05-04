@@ -5,12 +5,14 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fliers.trainly.R;
 import com.fliers.trainly.models.Schedule;
@@ -21,8 +23,11 @@ import java.util.ArrayList;
 public class TicketInfoActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     Schedule schedule;
-    View economyWagon;
-    View businessWagon;
+    ConstraintLayout economyWagon;
+    ConstraintLayout businessWagon;
+    TextView tvWagonOfSeat;
+    TextView tvSeatNoOfTicketValue;
+    TextView tvPriceOfTicketValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,20 +35,28 @@ public class TicketInfoActivity extends AppCompatActivity implements AdapterView
         setContentView(R.layout.activity_ticket_info);
 
         Intent intent = getIntent();
-        schedule = (Schedule) intent.getSerializableExtra("schedule");
+        schedule = Schedule.getTempInstance();
         Spinner spinnerWagons = findViewById(R.id.spinnerWagon);
+        TextView tvTicketTitle = findViewById(R.id.tvTicketTitle);
+        tvWagonOfSeat = findViewById(R.id.tvWagonOfSeat);
+        tvSeatNoOfTicketValue = findViewById(R.id.tvSeatNoOfTicketValue);
+        tvPriceOfTicketValue = findViewById(R.id.tvPriceOfTicketValue);
         TextView tvLine = findViewById(R.id.tvLine);
         TextView tvDep = findViewById(R.id.tvDepSchedule);
         TextView tvArr = findViewById(R.id.tvArrSchedule);
         TextView tvPrices = findViewById(R.id.tvPricesOfSchedule);
-        economyWagon = findViewById(R.id.includeEconomy);
-        businessWagon = findViewById(R.id.includeBusiness);
+        economyWagon = findViewById(R.id.layoutWagonEconomy);
+        businessWagon = findViewById(R.id.layoutWagonBusiness);
 
-        tvLine.setText(schedule.getLine().toString());
-        tvDep.setText("Departure: " + schedule.getDepartureDate().toString());
-        tvArr.setText("Arrival       " + schedule.getArrivalDate().toString());
-        tvPrices.setText("*Economy class wagon seats: $" + String.valueOf(schedule.getEconomyPrice())
-                        + "\n*Business class wagon seats: $" + String.valueOf(schedule.getBusinessPrice()));
+        tvTicketTitle.setText( schedule.getLinkedTrain().getLinkedCompany().getName());
+        tvLine.setText( schedule.getLine().toString());
+        tvDep.setText("Departure: " + Schedule.calendarToString( schedule.getDepartureDate()));
+        tvArr.setText("Arrival       " + Schedule.calendarToString( schedule.getArrivalDate()));
+        tvPrices.setText("*Economy class wagon seats: $" + String.valueOf( schedule.getEconomyPrice())
+                        + "\n*Business class wagon seats: $" + String.valueOf( schedule.getBusinessPrice()));
+        tvWagonOfSeat.setText( "Wagon: ");
+        tvSeatNoOfTicketValue.setText( "");
+        tvPriceOfTicketValue.setText( "");
 
         ArrayList<Wagon> wagons = schedule.getWagons();
         ArrayList<String> spinnerItems = new ArrayList<>();
@@ -76,21 +89,28 @@ public class TicketInfoActivity extends AppCompatActivity implements AdapterView
 
         spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item_wagons);
         spinnerWagons.setAdapter(spinnerArrayAdapter);
+
+        spinnerWagons.setOnItemSelectedListener( this);
     }
 
+    @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-        TextView tvWagonNo = findViewById(R.id.tvWagonOfSeat);
-        tvWagonNo.setText("Wagon no: " + String.valueOf( pos + 1));
+        try {
+            tvWagonOfSeat.setText( "Wagon: " + ( pos + 1));
 
-        if ( pos < schedule.getLinkedTrain().getBusinessWagonNum()) {
-            economyWagon.setVisibility(View.GONE);
-            businessWagon.setVisibility(View.VISIBLE);
+            if ( pos < schedule.getLinkedTrain().getBusinessWagonNum()) {
+                economyWagon.setVisibility(View.GONE);
+                businessWagon.setVisibility(View.VISIBLE);
 
 
+            }
+            else {
+                economyWagon.setVisibility(View.VISIBLE);
+                businessWagon.setVisibility(View.GONE);
+            }
         }
-        else {
-            economyWagon.setVisibility(View.VISIBLE);
-            businessWagon.setVisibility(View.GONE);
+        catch (Exception e) {
+            Log.d( "APP_DEBUG", e.toString());
         }
     }
 

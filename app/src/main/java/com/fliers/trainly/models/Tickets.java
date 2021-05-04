@@ -579,35 +579,6 @@ s     * @param db SQL Database
     }
 
     /**
-     * Sends query to get a list of tickets available to buy
-     * @param departure departure place
-     * @param arrival arrival place
-     * @param departureTime departure time
-     * @return list of tickets
-     */
-    public ArrayList<Ticket> getQueriedTickets( Place departure, Place arrival, Calendar departureTime) {
-        // Variables
-        SQLiteDatabase db;
-        Cursor data;
-        long departureTimeStart;
-        long departureTimeEnd;
-        Calendar calendarStart;
-        Calendar calendarEnd;
-
-        // Code
-        calendarEnd = departureTime;
-        departureTimeEnd = getLongFromCalendar( calendarEnd);
-
-        calendarStart = calendarEnd;
-        calendarStart.add( Calendar.DAY_OF_MONTH, 1);
-        departureTimeStart = getLongFromCalendar( calendarStart);
-
-        db = this.getWritableDatabase();
-        data = db.rawQuery( "SELECT * FROM " + TABLE_NAME + " WHERE " + DEPARTURE + " = '" + departure.getName() + "' AND " + ARRIVAL + " = '" + arrival.getName() + "' AND " + DEPARTURE_TIME + " <= " + departureTimeStart + " AND " + DEPARTURE_TIME + " >= " + departureTimeEnd + " AND " + OWNER + " = '" + NULL +"' ORDER BY " + DEPARTURE_TIME + " ASC;", null);
-        return dataToArrayList( data);
-    }
-
-    /**
      * Sends query to get a list of tickets available to buy for different schedules
      * @param departure departure place
      * @param arrival arrival place

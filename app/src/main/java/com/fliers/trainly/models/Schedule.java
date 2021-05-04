@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class Schedule implements Serializable {
     
     // Properties
+    private static Schedule tempInstance = null;
     private Calendar departureDate;
     private Calendar arrivalDate;
     private ArrayList<Wagon> wagons;
@@ -254,5 +255,61 @@ public class Schedule implements Serializable {
      */
     public double getEconomyPrice() {
         return economyPrice;
+    }
+
+    /**
+     * Converts calendar to readble string
+     * @param calendar calendar to be converted
+     * @return converted string
+     * @author Alp Afyonluoğlu
+     */
+    public static String calendarToString( Calendar calendar) {
+        // Variables
+        String year;
+        String month;
+        String day;
+        String hour;
+        String minute;
+
+        // Code
+        year = String.valueOf( calendar.get( Calendar.YEAR));
+        month = String.valueOf( calendar.get( Calendar.MONTH) + 1);
+        day = String.valueOf( calendar.get( Calendar.DAY_OF_MONTH));
+        hour = String.valueOf( calendar.get( Calendar.HOUR_OF_DAY));
+        minute = String.valueOf( calendar.get( Calendar.MINUTE));
+
+        if ( month.length() == 1) {
+            month = "0" + month;
+        }
+        if ( day.length() == 1) {
+            day = "0" + day;
+        }
+        if ( hour.length() == 1) {
+            hour = "0" + hour;
+        }
+        if ( minute.length() == 1) {
+            minute = "0" + minute;
+        }
+
+        return day + "." + month + "." + year + " " + hour + ":" + minute;
+    }
+
+    /**
+     * Getter method for static schedule temp instance
+     * @return temp instance
+     * @author Alp Afyonluoğlu
+     */
+    public static Schedule getTempInstance() {
+        return tempInstance;
+
+    }
+
+    /**
+     * Setter method for static schedule temp instance
+     * @param schedule temp instance to be set
+     * @author Alp Afyonluoğlu
+     */
+    public static void setTempInstance( Schedule schedule) {
+        Schedule.tempInstance = schedule;
     }
 }

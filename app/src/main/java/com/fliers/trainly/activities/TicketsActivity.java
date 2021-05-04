@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.fliers.trainly.R;
 import com.fliers.trainly.models.Place;
 import com.fliers.trainly.models.Places;
+import com.fliers.trainly.models.Schedule;
 import com.fliers.trainly.models.Ticket;
 import com.fliers.trainly.models.Tickets;
 
@@ -128,10 +129,10 @@ public class TicketsActivity extends AppCompatActivity {
             tvTicketTitle.setText( ticket.getSeat().getLinkedWagon().getLinkedSchedule().
                     getLinkedTrain().getLinkedCompany().getName());
             tvDirection.setText( "From " + departure + " to " + arrival);
-            tvDepTime.setText( "Departure: " + ticket.getSeat().getLinkedWagon().
-                    getLinkedSchedule().getDepartureDate().toString());
-            tvArrTime.setText( "Arrival:       " + ticket.getSeat().getLinkedWagon().
-                    getLinkedSchedule().getArrivalDate().toString());
+            tvDepTime.setText( "Departure: " + Schedule.calendarToString( ticket.getSeat().getLinkedWagon().
+                    getLinkedSchedule().getDepartureDate()));
+            tvArrTime.setText( "Arrival:       " + Schedule.calendarToString( ticket.getSeat().getLinkedWagon().
+                    getLinkedSchedule().getArrivalDate()));
 
             view.setOnClickListener( new View.OnClickListener() {
                 @Override
@@ -140,8 +141,8 @@ public class TicketsActivity extends AppCompatActivity {
                  */
                 public void onClick(View view) {
                     goToTicketInfo();
-                    switchActivityIntent.putExtra("schedule", ticket.getSeat().getLinkedWagon().getLinkedSchedule());
-                    startActivity( switchActivityIntent);;
+                    Schedule.setTempInstance( ticket.getSeat().getLinkedWagon().getLinkedSchedule());
+                    startActivity( switchActivityIntent);
                 }
             });
 

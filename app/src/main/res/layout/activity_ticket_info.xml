@@ -102,7 +102,7 @@
                             app:srcCompat="@drawable/ic_baseline_picture_in_picture_96" />
 
                         <TextView
-                            android:id="@+id/tvTitleSchedule"
+                            android:id="@+id/tvTicketTitle"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
@@ -124,8 +124,8 @@
                             android:layout_marginTop="8dp"
                             android:fontFamily="@font/nunito"
                             android:text="Ankara to Istanbul"
-                            app:layout_constraintStart_toStartOf="@+id/tvTitleSchedule"
-                            app:layout_constraintTop_toBottomOf="@+id/tvTitleSchedule" />
+                            app:layout_constraintStart_toStartOf="@+id/tvTicketTitle"
+                            app:layout_constraintTop_toBottomOf="@+id/tvTicketTitle" />
 
                         <TextView
 
@@ -135,7 +135,7 @@
                             android:layout_marginTop="4dp"
                             android:fontFamily="@font/nunito"
                             android:text="Departure: 24.03.2021   10:00"
-                            app:layout_constraintStart_toStartOf="@+id/tvTitleSchedule"
+                            app:layout_constraintStart_toStartOf="@+id/tvTicketTitle"
                             app:layout_constraintTop_toBottomOf="@+id/tvLine" />
 
                         <TextView
@@ -145,7 +145,7 @@
                             android:layout_marginTop="4dp"
                             android:fontFamily="@font/nunito"
                             android:text="Arrival:       24.03.2021   14:00"
-                            app:layout_constraintStart_toStartOf="@+id/tvTitleSchedule"
+                            app:layout_constraintStart_toStartOf="@+id/tvTicketTitle"
                             app:layout_constraintTop_toBottomOf="@+id/tvDepSchedule" />
 
                         <TextView
@@ -155,7 +155,7 @@
                             android:layout_marginTop="4dp"
                             android:fontFamily="@font/nunito"
                             android:text="Wagon no: 3"
-                            app:layout_constraintStart_toStartOf="@+id/tvTitleSchedule"
+                            app:layout_constraintStart_toStartOf="@+id/tvTicketTitle"
                             app:layout_constraintTop_toBottomOf="@+id/tvArrSchedule" />
 
                         <TextView
@@ -165,7 +165,7 @@
                             android:layout_marginTop="4dp"
                             android:fontFamily="@font/nunito"
                             android:text="Seat no: "
-                            app:layout_constraintStart_toStartOf="@+id/tvTitleSchedule"
+                            app:layout_constraintStart_toStartOf="@+id/tvTicketTitle"
                             app:layout_constraintTop_toBottomOf="@+id/tvWagonOfSeat" />
 
                         <TextView
@@ -177,7 +177,7 @@
                             android:fontFamily="@font/nunito"
                             android:text="Price: "
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="@+id/tvTitleSchedule"
+                            app:layout_constraintStart_toStartOf="@+id/tvTicketTitle"
                             app:layout_constraintTop_toBottomOf="@+id/tvSeatNoOfTicket"
                             app:layout_constraintVertical_bias="0.0" />
 
@@ -226,10 +226,9 @@
                     android:layout_width="0dp"
                     android:layout_height="700dp"
                     android:layout_marginTop="8dp"
-                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout8" />
+                    app:layout_constraintTop_toBottomOf="@+id/includeEconomy" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/constraintLayout8"
@@ -397,7 +396,7 @@
                     app:backgroundTint="@color/orange700"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/includeEconomy" />
+                    app:layout_constraintTop_toBottomOf="@+id/includeBusiness" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="0dp"
