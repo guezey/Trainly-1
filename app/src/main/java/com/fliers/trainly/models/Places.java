@@ -91,8 +91,8 @@ public class Places {
             reference = database.getReference( SERVER_KEY + "/Places/");
 
             // Save to server
-            reference.child( p.getName()).child( "x").setValue( p.getLongitude());
-            reference.child( p.getName()).child( "y").setValue( p.getLatitude());
+            reference.child( p.getName()).child( "x").setValue( String.valueOf( p.getLongitude()));
+            reference.child( p.getName()).child( "y").setValue( String.valueOf( p.getLatitude()));
 
             // Save to list in memory
             places.add( p);
@@ -215,7 +215,7 @@ public class Places {
                             coordinates = (HashMap<String, String>) placeInfo.getValue();
 
                             // Add to list in memory
-                            retrievedPlace = new Place( placeName, Double.parseDouble( coordinates.get( "x")), Double.parseDouble( coordinates.get( "y")));
+                            retrievedPlace = new Place( placeName, Double.parseDouble( coordinates.get( "y")), Double.parseDouble( coordinates.get( "x")));
                             places.add( retrievedPlace);
 
                             // Add to string set to save to local storage

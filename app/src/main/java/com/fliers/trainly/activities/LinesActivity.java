@@ -137,7 +137,7 @@ public class LinesActivity extends AppCompatActivity {
                         currentUser.addLine( newNormalLine);
                         currentUser.addLine( newReverseLine);
 
-                        savePlace(placesToSave);
+                        savePlace( placesToSave);
 
                     }
                     else {
@@ -159,12 +159,20 @@ public class LinesActivity extends AppCompatActivity {
             @Override
             public void onTextChanged( CharSequence s, int start, int before, int count) {
 
-                name = acPlace1.getText().toString().substring(0,1).toUpperCase() + acPlace1.getText().toString().substring(1).toLowerCase();
-                if ( placeManager.findByName(name) != null) {
-                    etLatitude1.setEnabled(false);
-                    etLatitude1.setText(String.valueOf(placeManager.findByName(name).getLatitude()));
-                    etLongitude1.setEnabled(false);
-                    etLongitude1.setText(String.valueOf(placeManager.findByName(name).getLongitude()));
+                if ( acPlace1.getText().toString().length() != 0) {
+                    name = acPlace1.getText().toString().substring(0,1).toUpperCase() + acPlace1.getText().toString().substring(1).toLowerCase();
+                    if ( placeManager.findByName(name) != null) {
+                        etLatitude1.setEnabled(false);
+                        etLatitude1.setText(String.valueOf(placeManager.findByName(name).getLatitude()));
+                        etLongitude1.setEnabled(false);
+                        etLongitude1.setText(String.valueOf(placeManager.findByName(name).getLongitude()));
+                    }
+                    else {
+                        etLatitude1.setEnabled( true);
+                        etLatitude1.setText( "");
+                        etLongitude1.setEnabled( true);
+                        etLongitude1.setText( "");
+                    }
                 }
             }
 
@@ -185,13 +193,20 @@ public class LinesActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged( CharSequence s, int start, int before, int count) {
-
-                name = acPlace2.getText().toString().substring(0,1).toUpperCase() + acPlace2.getText().toString().substring(1).toLowerCase();
-                if ( placeManager.findByName(name) != null) {
-                    etLatitude2.setEnabled(false);
-                    etLatitude2.setText(String.valueOf(placeManager.findByName(name).getLatitude()));
-                    etLongitude2.setEnabled(false);
-                    etLongitude2.setText(String.valueOf(placeManager.findByName(name).getLongitude()));
+                if ( acPlace2.getText().toString().length() != 0) {
+                    name = acPlace2.getText().toString().substring(0,1).toUpperCase() + acPlace2.getText().toString().substring(1).toLowerCase();
+                    if ( placeManager.findByName(name) != null) {
+                        etLatitude2.setEnabled(false);
+                        etLatitude2.setText(String.valueOf(placeManager.findByName(name).getLatitude()));
+                        etLongitude2.setEnabled(false);
+                        etLongitude2.setText(String.valueOf(placeManager.findByName(name).getLongitude()));
+                    }
+                    else {
+                        etLatitude2.setEnabled( true);
+                        etLatitude2.setText( "");
+                        etLongitude2.setEnabled( true);
+                        etLongitude2.setText( "");
+                    }
                 }
             }
 
@@ -271,7 +286,12 @@ public class LinesActivity extends AppCompatActivity {
                 public void onSync( boolean isSynced) {
                     if ( isSynced) {
                         Toast.makeText( getApplicationContext(), "New line is saved", Toast.LENGTH_SHORT).show();
-                        // Other functions
+                        acPlace1.setText( "");
+                        acPlace2.setText( "");
+                        etLatitude1.setText( "");
+                        etLongitude1.setText( "");
+                        etLatitude2.setText( "");
+                        etLongitude2.setText( "");
                     }
                     else {
                         Toast.makeText( getApplicationContext(), "Trainly servers are unavailable at the moment", Toast.LENGTH_SHORT).show();

@@ -114,7 +114,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/title1" />
 
                 <TextView
-                    android:id="@+id/tvEmployeePerformance"
+                    android:id="@+id/cap1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
@@ -124,14 +124,14 @@
                     app:layout_constraintTop_toBottomOf="@+id/tvEmployeeName" />
 
                 <TextView
-                    android:id="@+id/tvEmployeeLinkedTrain"
+                    android:id="@+id/lin1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:fontFamily="@font/nunito"
                     android:text="Arrival:       24.03.2021   14:00"
                     app:layout_constraintStart_toStartOf="@+id/title1"
-                    app:layout_constraintTop_toBottomOf="@+id/tvEmployeePerformance" />
+                    app:layout_constraintTop_toBottomOf="@+id/cap1" />
 
                 <TextView
                     android:id="@+id/lin3"
@@ -141,7 +141,7 @@
                     android:fontFamily="@font/nunito"
                     android:text="Wagon no: 3"
                     app:layout_constraintStart_toStartOf="@+id/title1"
-                    app:layout_constraintTop_toBottomOf="@+id/tvEmployeeLinkedTrain" />
+                    app:layout_constraintTop_toBottomOf="@+id/lin1" />
 
                 <TextView
                     android:id="@+id/s11"
@@ -167,7 +167,7 @@
                     app:layout_constraintVertical_bias="0.0" />
 
                 <TextView
-                    android:id="@+id/tvEmployeeStatus"
+                    android:id="@+id/s12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"

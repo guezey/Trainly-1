@@ -732,7 +732,6 @@ s     * @param db SQL Database
         String customerId;
         Company company;
         Train train;
-        Place defaultPlace;
         Schedule schedule;
         Line line;
         Places places;
@@ -770,8 +769,7 @@ s     * @param db SQL Database
                 // Create ticket
                 company = new Company( companyName, companyId, context);
 
-                defaultPlace = new Place( "Train" + trainId, 0, 0);
-                train = new Train( company, defaultPlace, businessWagonNo, economyWagonNo, businessPrice, economyPrice, trainId);
+                train = new Train( company, businessWagonNo, economyWagonNo, businessPrice, economyPrice, trainId);
 
                 departurePlace = places.findByName( departurePlaceName);
                 arrivalPlace = places.findByName( arrivalPlaceName);

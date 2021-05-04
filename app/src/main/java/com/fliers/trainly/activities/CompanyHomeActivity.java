@@ -127,7 +127,7 @@ public class CompanyHomeActivity extends AppCompatActivity implements Navigation
             startActivity( intent);
         }
         else if ( item.getItemId() == R.id.navEmployees) {
-            intent = new Intent( getApplicationContext(), LinesActivity.class);
+            intent = new Intent( getApplicationContext(), EmployeesActivity.class);
             startActivity( intent);
         }
         else if ( item.getItemId() == R.id.navAccountCompany) {
