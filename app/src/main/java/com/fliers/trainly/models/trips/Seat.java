@@ -1,15 +1,14 @@
 package com.fliers.trainly.models.trips;
 
-import com.fliers.trainly.models.trips.Wagon;
-
 /**
 * A class for seats in a Wagon
 *@author Erkin Aydın
 *@version 23-04-2021__v/1.1
 */
 public class Seat {
-    String seatNumber;
-    Wagon linkedWagon;
+    
+    private String seatNumber;
+    private Wagon linkedWagon;
 
     /**
     * The constructor of the Seat class

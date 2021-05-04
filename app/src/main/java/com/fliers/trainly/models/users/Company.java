@@ -2,11 +2,11 @@ package com.fliers.trainly.models.users;
 
 import android.content.Context;
 
+import com.fliers.trainly.models.trips.Employee;
 import com.fliers.trainly.models.trips.Line;
 import com.fliers.trainly.models.trips.Place;
 import com.fliers.trainly.models.trips.Places;
 import com.fliers.trainly.models.trips.Schedule;
-import com.fliers.trainly.models.trips.Employee;
 import com.fliers.trainly.models.trips.Ticket;
 import com.fliers.trainly.models.trips.Train;
 import com.google.firebase.database.DataSnapshot;
@@ -35,10 +35,13 @@ public class Company extends User {
     private final String ECONOMY_WAGON_NO = "economyWagonNo";
     private final String BUSINESS_PRICE = "businessPrice";
     private final String ECONOMY_PRICE = "economyPrice";
+    private final String CURRENT_LOCATION = "currentLocation";
     private final String FROM = "from";
     private final String TO = "to";
     private final String EMPLOYEE_NAMES = "employeeNames";
     private final String EMPLOYEE_LINKED_TRAIN_IDS = "employeeLinkedTrainIds";
+    private final String FEEDBACK_STARS = "feedbackStars";
+    private final String FEEDBACK_COMMENTS = "feedbackComments";
     private final String AVERAGE_POINT = "averagePoint";
     private final String LINE_DEPARTURES = "lineDepartures";
     private final String LINE_ARRIVALS = "lineArrivals";
@@ -175,6 +178,15 @@ public class Company extends User {
      */
     public void removeEmployee( Object employee) {
         employees.remove( employee);
+    }
+
+    /**
+     * Returns last week's customer number for this company.
+     * @return customer number
+     */
+    public int getLastWeeksCustomerNum() {
+        // TODO: to be done
+        return 0;
     }
 
     /**

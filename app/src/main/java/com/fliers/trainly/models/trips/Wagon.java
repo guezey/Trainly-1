@@ -11,8 +11,8 @@ import java.util.ArrayList;
 
 public class Wagon {
     private final String[] seatLetters = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"};
-    private final int BUSINESS_SEAT_NUM = 30;
-    private final int ECONOMY_SEAT_NUM = 48;
+    private final int BUSINESS_SEAT_NUM = 32;
+    private final int ECONOMY_SEAT_NUM = 44;
 
     private ArrayList<Seat> seats;
     private boolean business;
@@ -98,6 +98,7 @@ public class Wagon {
         seatIndex = letterIndex * 4 + Integer.parseInt( seatNumber) - 1;
         return seats.get( seatIndex);
     }
+
 
     /**
      * Getter method for array list of seats

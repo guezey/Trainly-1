@@ -92,6 +92,7 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
             }
         });
 
+
         places = Places.getInstance();
 
         ArrayList<String> names = new ArrayList<>();

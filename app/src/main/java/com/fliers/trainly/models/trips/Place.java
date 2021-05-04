@@ -1,7 +1,5 @@
 package com.fliers.trainly.models.trips;
 
-import com.fliers.trainly.models.trips.Locatable;
-
 /**
  * Class to represent places for train travels.
  * @author Ali Emir Güzey

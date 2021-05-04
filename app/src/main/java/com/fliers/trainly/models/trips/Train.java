@@ -14,13 +14,13 @@ import java.util.Calendar;
 
 public class Train {
 
-    double businessPrice;
-    double economyPrice;
-    String id;
-    int businessWagonNum;
-    int economyWagonNum;
-    ArrayList<Schedule> schedules;
-    Company linkedCompany;
+    private double businessPrice;
+    private double economyPrice;
+    private String id;
+    private int businessWagonNum;
+    private int economyWagonNum;
+    private ArrayList<Schedule> schedules;
+    private Company linkedCompany;
 
     /**
     * Constructor of the Train class
@@ -42,14 +42,12 @@ public class Train {
         schedules = new ArrayList<>();
         this.id = id;
     }
-
     /**
     * @return id
     */
     public String getId() {
         return id;
     }
-
     /**
     * Sets the new business wagon number
     * @param a
