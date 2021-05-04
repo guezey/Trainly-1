@@ -540,19 +540,19 @@ public class Company extends User {
                         train = trains.get( count);
 
                         // Save train related general info
-                        reference.child( train.id).child( BUSINESS_WAGON_NO).setValue( String.valueOf( train.businessWagonNum));
-                        reference.child( train.id).child( ECONOMY_WAGON_NO).setValue( String.valueOf( train.economyWagonNum));
-                        reference.child( train.id).child( BUSINESS_PRICE).setValue( String.valueOf( train.businessPrice));
-                        reference.child( train.id).child( ECONOMY_PRICE).setValue( String.valueOf( train.economyPrice));
+                        reference.child( train.getId()).child( BUSINESS_WAGON_NO).setValue( String.valueOf( train.getBusinessWagonNum()));
+                        reference.child( train.getId()).child( ECONOMY_WAGON_NO).setValue( String.valueOf( train.getEconomyWagonNum()));
+                        reference.child( train.getId()).child( BUSINESS_PRICE).setValue( String.valueOf( train.getBusinessPrice()));
+                        reference.child( train.getId()).child( ECONOMY_PRICE).setValue( String.valueOf( train.getEconomyPrice()));
 
                         // Save schedules and their lines
-                        schedules = train.schedules;
+                        schedules = train.getSchedules();
                         for ( int scheduleCount = 0; scheduleCount < schedules.size(); scheduleCount++) {
                             schedule = schedules.get( scheduleCount);
 
-                            reference.child( train.id).child( SCHEDULES).child( schedule.getIdRepresentation( schedule.getDepartureDate())).child( FROM).setValue( String.valueOf( schedule.getDeparturePlace().getName()));
-                            reference.child( train.id).child( SCHEDULES).child( schedule.getIdRepresentation( schedule.getDepartureDate())).child( TO).setValue( String.valueOf( schedule.getArrivalPlace().getName()));
-                            reference.child( train.id).child( SCHEDULES).child( schedule.getIdRepresentation( schedule.getDepartureDate())).child( ESTIMATED_ARRIVAL).setValue( schedule.getIdRepresentation( schedule.getArrivalDate()));
+                            reference.child( train.getId()).child( SCHEDULES).child( schedule.getIdRepresentation( schedule.getDepartureDate())).child( FROM).setValue( String.valueOf( schedule.getDeparturePlace().getName()));
+                            reference.child( train.getId()).child( SCHEDULES).child( schedule.getIdRepresentation( schedule.getDepartureDate())).child( TO).setValue( String.valueOf( schedule.getArrivalPlace().getName()));
+                            reference.child( train.getId()).child( SCHEDULES).child( schedule.getIdRepresentation( schedule.getDepartureDate())).child( ESTIMATED_ARRIVAL).setValue( schedule.getIdRepresentation( schedule.getArrivalDate()));
                         }
                     }
 
