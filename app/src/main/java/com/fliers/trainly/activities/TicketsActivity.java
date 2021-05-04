@@ -74,7 +74,7 @@ public class TicketsActivity extends AppCompatActivity {
         Place departurePlace = places.findByName(departure);
         Place arrivalPlace = places.findByName(arrival);
         Tickets ticketManager = new Tickets( getApplicationContext());
-        tickets = ticketManager.getQueriedTickets( departurePlace, arrivalPlace, calendar);
+        tickets = ticketManager.getOneTicketPerSchedule( departurePlace, arrivalPlace, calendar);
 
         if ( tickets.size() == 0) {
             title.setText("No tickets were found for " + date + " from " + departure + " to " + arrival);
