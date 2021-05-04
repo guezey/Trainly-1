@@ -12,13 +12,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.fliers.trainly.R;
-import com.fliers.trainly.models.Schedule;
-import com.fliers.trainly.models.Seat;
-import com.fliers.trainly.models.Tickets;
-import com.fliers.trainly.models.Wagon;
+import com.fliers.trainly.models.trips.Schedule;
+import com.fliers.trainly.models.trips.Seat;
+import com.fliers.trainly.models.users.Tickets;
+import com.fliers.trainly.models.trips.Wagon;
 
 import java.util.ArrayList;
 

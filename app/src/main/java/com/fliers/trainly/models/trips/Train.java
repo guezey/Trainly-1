@@ -1,6 +1,7 @@
-package com.fliers.trainly.models;
+package com.fliers.trainly.models.trips;
 
-import java.sql.Date;
+import com.fliers.trainly.models.users.Company;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 

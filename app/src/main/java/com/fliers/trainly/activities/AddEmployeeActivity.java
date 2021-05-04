@@ -12,10 +12,10 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.fliers.trainly.R;
-import com.fliers.trainly.models.Company;
-import com.fliers.trainly.models.Employee;
-import com.fliers.trainly.models.Train;
-import com.fliers.trainly.models.User;
+import com.fliers.trainly.models.users.Company;
+import com.fliers.trainly.models.trips.Employee;
+import com.fliers.trainly.models.trips.Train;
+import com.fliers.trainly.models.users.User;
 
 import java.util.ArrayList;
 /**

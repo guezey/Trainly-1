@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -22,13 +21,12 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.fliers.trainly.R;
-import com.fliers.trainly.models.Company;
-import com.fliers.trainly.models.Place;
-import com.fliers.trainly.models.Tickets;
-import com.fliers.trainly.models.Train;
-import com.fliers.trainly.models.Schedule;
-import com.fliers.trainly.models.Line;
-import com.fliers.trainly.models.User;
+import com.fliers.trainly.models.users.Company;
+import com.fliers.trainly.models.users.Tickets;
+import com.fliers.trainly.models.trips.Train;
+import com.fliers.trainly.models.trips.Schedule;
+import com.fliers.trainly.models.trips.Line;
+import com.fliers.trainly.models.users.User;
 
 import java.util.Calendar;
 import java.util.ArrayList;

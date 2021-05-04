@@ -1,4 +1,4 @@
-package com.fliers.trainly.models;
+package com.fliers.trainly.models.users;
 
 import android.content.Context;
 

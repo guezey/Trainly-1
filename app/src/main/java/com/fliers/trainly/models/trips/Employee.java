@@ -1,4 +1,4 @@
-package com.fliers.trainly.models;
+package com.fliers.trainly.models.trips;
 
 /**
  * Class that represents train machinists.

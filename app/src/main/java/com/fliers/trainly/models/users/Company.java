@@ -1,8 +1,14 @@
-package com.fliers.trainly.models;
+package com.fliers.trainly.models.users;
 
 import android.content.Context;
-import android.util.Log;
 
+import com.fliers.trainly.models.trips.Employee;
+import com.fliers.trainly.models.trips.Line;
+import com.fliers.trainly.models.trips.Place;
+import com.fliers.trainly.models.trips.Places;
+import com.fliers.trainly.models.trips.Schedule;
+import com.fliers.trainly.models.trips.Ticket;
+import com.fliers.trainly.models.trips.Train;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

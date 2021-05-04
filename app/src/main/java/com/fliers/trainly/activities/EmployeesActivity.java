@@ -14,9 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fliers.trainly.R;
-import com.fliers.trainly.models.Company;
-import com.fliers.trainly.models.Employee;
-import com.fliers.trainly.models.User;
+import com.fliers.trainly.models.users.Company;
+import com.fliers.trainly.models.trips.Employee;
+import com.fliers.trainly.models.users.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;

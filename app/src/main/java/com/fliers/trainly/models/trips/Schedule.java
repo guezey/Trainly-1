@@ -1,10 +1,9 @@
-package com.fliers.trainly.models;
+package com.fliers.trainly.models.trips;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.ArrayList;
 
 /**

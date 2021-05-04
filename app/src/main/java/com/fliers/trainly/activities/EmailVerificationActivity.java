@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
@@ -15,11 +14,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fliers.trainly.R;
-import com.fliers.trainly.models.Company;
-import com.fliers.trainly.models.Customer;
-import com.fliers.trainly.models.Place;
-import com.fliers.trainly.models.Places;
-import com.fliers.trainly.models.User;
+import com.fliers.trainly.models.users.Company;
+import com.fliers.trainly.models.users.Customer;
+import com.fliers.trainly.models.trips.Places;
+import com.fliers.trainly.models.users.User;
 
 /**
  * Activity class verifying email link and logging user in

@@ -10,24 +10,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
 import com.fliers.trainly.R;
-import com.fliers.trainly.models.Company;
-import com.fliers.trainly.models.Customer;
-import com.fliers.trainly.models.Line;
-import com.fliers.trainly.models.Place;
-import com.fliers.trainly.models.Places;
-import com.fliers.trainly.models.Schedule;
-import com.fliers.trainly.models.Ticket;
-import com.fliers.trainly.models.Tickets;
-import com.fliers.trainly.models.Train;
-import com.fliers.trainly.models.User;
-
-import java.util.Calendar;
+import com.fliers.trainly.models.users.Company;
+import com.fliers.trainly.models.users.Customer;
+import com.fliers.trainly.models.trips.Places;
+import com.fliers.trainly.models.users.Tickets;
+import com.fliers.trainly.models.users.User;
 
 /**
  * Activity class directing user to home activity or welcome activity
