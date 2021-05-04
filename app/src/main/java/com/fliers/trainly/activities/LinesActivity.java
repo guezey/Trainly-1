@@ -107,21 +107,27 @@ public class LinesActivity extends AppCompatActivity {
 
                         Place departurePlace;
                         Place arrivalPlace;
+                        ArrayList<Place> placesToSave;
                         Line newNormalLine;
                         Line newReverseLine;
 
+                        placesToSave = new ArrayList<>();
                         lat1 = Double.parseDouble(etLatitude1.getText().toString());
                         lon1 = Double.parseDouble(etLongitude1.getText().toString());
                         lat2 = Double.parseDouble(etLatitude2.getText().toString());
                         lon2 = Double.parseDouble(etLongitude2.getText().toString());
 
-                        if ( etLatitude1.isEnabled())
+                        if ( etLatitude1.isEnabled()) {
                             departurePlace = new Place(etPlace1.getText().toString(), lat1, lon1);
+                            placesToSave.add(departurePlace);
+                        }
                         else
                             departurePlace = placeManager.findByName(etPlace1.getText().toString());
 
-                        if ( etLatitude2.isEnabled())
+                        if ( etLatitude2.isEnabled()) {
                             arrivalPlace = new Place(etPlace2.getText().toString(), lat2, lon2);
+                            placesToSave.add(arrivalPlace);
+                        }
                         else
                             arrivalPlace = placeManager.findByName(etPlace2.getText().toString());
 
@@ -130,15 +136,8 @@ public class LinesActivity extends AppCompatActivity {
 
                         currentUser.addLine( newNormalLine);
                         currentUser.addLine( newReverseLine);
-                        currentUser.saveToServer( new User.ServerSyncListener() {
-                            @Override
-                            public void onSync(boolean isSynced) {
-                                if (isSynced)
-                                    Toast.makeText( getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
-                                else
-                                    Toast.makeText( getApplicationContext(), "Couldn't save. Try again", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+
+                        savePlace(placesToSave);
 
                     }
                     else {
@@ -243,6 +242,49 @@ public class LinesActivity extends AppCompatActivity {
             tvLineTitle.setText( currentUser.getLines().get(position).toString() );
 
             return view;
+        }
+    }
+
+    /**
+     * Saves places to server
+     * @param placesToSave places to be saved to server
+     * @author Alp Afyonluoğlu
+     */
+    private void savePlace( ArrayList<Place> placesToSave) {
+        // Variables
+        Place place;
+
+        // Code
+        if ( placesToSave.size() > 0) {
+            // Add places one by one
+            place = placesToSave.get( 0);
+            placesToSave.remove( 0);
+            placeManager.add( place, new Places.ServerSyncListener() {
+                @Override
+                public void onSync( boolean isSynced) {
+                    if ( isSynced) {
+                        savePlace( placesToSave);
+                    }
+                    else {
+                        Toast.makeText( getApplicationContext(), "Trainly servers are unavailable at the moment", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+        else {
+            // Save added line to server
+            currentUser.saveToServer( new User.ServerSyncListener() {
+                @Override
+                public void onSync( boolean isSynced) {
+                    if ( isSynced) {
+                        Toast.makeText( getApplicationContext(), "New line is saved", Toast.LENGTH_SHORT).show();
+                        // Other functions
+                    }
+                    else {
+                        Toast.makeText( getApplicationContext(), "Trainly servers are unavailable at the moment", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         }
     }
 }
