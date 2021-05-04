@@ -13,14 +13,14 @@ import java.util.Calendar;
 
 public class Train {
 
-    double businessPrice;
-    double economyPrice;
-    static int idCounter; // Temporary (In TO-DO list)
-    String id;
-    int businessWagonNum;
-    int economyWagonNum;
-    ArrayList<Schedule> schedules;
-    Company linkedCompany;
+    private double businessPrice;
+    private double economyPrice;
+    private static int idCounter; // Temporary (In TO-DO list)
+    private String id;
+    private int businessWagonNum;
+    private int economyWagonNum;
+    private ArrayList<Schedule> schedules;
+    private Company linkedCompany;
 
     /**
     * Constructor of the Train class
