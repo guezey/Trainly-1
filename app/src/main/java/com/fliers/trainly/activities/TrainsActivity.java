@@ -21,6 +21,11 @@ import com.fliers.trainly.models.Company;
 import com.fliers.trainly.models.Train;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+/**
+ * Controls Manage Trains page.
+ * @author Ali Emir Güzey
+ * @version 04.05.2021
+ */
 public class TrainsActivity extends AppCompatActivity {
 
     Company currentUser;
