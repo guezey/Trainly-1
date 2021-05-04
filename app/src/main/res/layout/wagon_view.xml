@@ -2,10 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layoutWagonBusiness"
+    android:id="@+id/layoutWagon"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:visibility="visible">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
@@ -41,7 +42,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="30dp"
-                android:layout_height="56dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp">
 
 
@@ -59,7 +60,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="30dp"
-                android:layout_height="56dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp">
 
 
@@ -77,7 +78,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="30dp"
-                android:layout_height="56dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp">
 
 
@@ -95,7 +96,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="30dp"
-                android:layout_height="56dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp">
 
 
@@ -113,7 +114,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="30dp"
-                android:layout_height="56dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp">
 
 
@@ -131,7 +132,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="30dp"
-                android:layout_height="56dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp">
 
 
@@ -149,7 +150,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="30dp"
-                android:layout_height="56dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp">
 
 
@@ -167,7 +168,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="30dp"
-                android:layout_height="56dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp">
 
 
@@ -184,8 +185,9 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/letterB1"
                 android:layout_width="30dp"
-                android:layout_height="56dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp">
 
 
@@ -202,8 +204,9 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/letterB2"
                 android:layout_width="30dp"
-                android:layout_height="56dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp">
 
 
@@ -219,6 +222,25 @@
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/letterB3"
+                android:layout_width="30dp"
+                android:layout_height="48dp"
+                android:layout_margin="8dp">
+
+
+                <TextView
+                    android:id="@+id/tvRowK"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito"
+                    android:text="K"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
         </LinearLayout>
 
         <LinearLayout
@@ -228,17 +250,18 @@
             android:layout_marginStart="32dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/letterColumn"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:id="@+id/seat1"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:background="@drawable/outline_rounded_corner_s">
 
                 <ImageView
-                    android:id="@+id/imageView15"
+                    android:id="@+id/seat1T"
                     android:layout_width="0dp"
                     android:layout_height="6dp"
                     android:layout_marginStart="6dp"
@@ -251,13 +274,34 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:id="@+id/seat5"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/outline_rounded_corner_s">
+
+                <ImageView
+                    android:id="@+id/seat5T"
+                    android:layout_width="0dp"
+                    android:layout_height="6dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="6dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/outline_rounded_corner_s" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/seat9"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:background="@drawable/outline_rounded_corner_sf">
 
                 <ImageView
-                    android:id="@+id/imageView15"
+                    android:id="@+id/seat9T"
                     android:layout_width="0dp"
                     android:layout_height="6dp"
                     android:layout_marginStart="6dp"
@@ -270,13 +314,14 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:id="@+id/seat13"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:background="@drawable/outline_rounded_corner_s">
 
                 <ImageView
-                    android:id="@+id/imageView15"
+                    android:id="@+id/seat13T"
                     android:layout_width="0dp"
                     android:layout_height="6dp"
                     android:layout_marginStart="6dp"
@@ -289,13 +334,14 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:id="@+id/seat17"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:background="@drawable/outline_rounded_corner_sf">
 
                 <ImageView
-                    android:id="@+id/imageView15"
+                    android:id="@+id/seat17T"
                     android:layout_width="0dp"
                     android:layout_height="6dp"
                     android:layout_marginStart="6dp"
@@ -308,13 +354,14 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:id="@+id/seat21"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:background="@drawable/outline_rounded_corner_s">
 
                 <ImageView
-                    android:id="@+id/imageView15"
+                    android:id="@+id/seat21T"
                     android:layout_width="0dp"
                     android:layout_height="6dp"
                     android:layout_marginStart="6dp"
@@ -328,13 +375,14 @@
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:id="@+id/seat25"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:background="@drawable/outline_rounded_corner_s">
 
                 <ImageView
-                    android:id="@+id/imageView125"
+                    android:id="@+id/seat25T"
                     android:layout_width="0dp"
                     android:layout_height="6dp"
                     android:layout_marginStart="6dp"
@@ -347,13 +395,14 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:id="@+id/seat29"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:background="@drawable/outline_rounded_corner_s">
 
                 <ImageView
-                    android:id="@+id/imageView125"
+                    android:id="@+id/seat29T"
                     android:layout_width="0dp"
                     android:layout_height="6dp"
                     android:layout_marginStart="6dp"
@@ -366,13 +415,14 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:id="@+id/seat33"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:background="@drawable/outline_rounded_corner_sf">
 
                 <ImageView
-                    android:id="@+id/imageView125"
+                    android:id="@+id/seat33T"
                     android:layout_width="0dp"
                     android:layout_height="6dp"
                     android:layout_marginStart="6dp"
@@ -385,13 +435,14 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:id="@+id/seat37"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:background="@drawable/outline_rounded_corner_sf">
 
                 <ImageView
-                    android:id="@+id/imageView125"
+                    android:id="@+id/seat37T"
                     android:layout_width="0dp"
                     android:layout_height="6dp"
                     android:layout_marginStart="6dp"
@@ -404,15 +455,14 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:id="@+id/seat41"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
-                android:background="@drawable/outline_rounded_corner_sf"
-                tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="656dp">
+                android:background="@drawable/outline_rounded_corner_sf">
 
                 <ImageView
-                    android:id="@+id/imageView125"
+                    android:id="@+id/seat41T"
                     android:layout_width="0dp"
                     android:layout_height="6dp"
                     android:layout_marginStart="6dp"
@@ -431,77 +481,20 @@
             android:id="@+id/seatColumn2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/seatColumn1"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_margin="8dp"
-                android:background="@drawable/outline_rounded_corner_sf">
-
-                <ImageView
-                    android:id="@+id/imageView15"
-                    android:layout_width="0dp"
-                    android:layout_height="6dp"
-                    android:layout_marginStart="6dp"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginEnd="6dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/outline_rounded_corner_s" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_margin="8dp"
-                android:background="@drawable/outline_rounded_corner_sf">
-
-                <ImageView
-                    android:id="@+id/imageView15"
-                    android:layout_width="0dp"
-                    android:layout_height="6dp"
-                    android:layout_marginStart="6dp"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginEnd="6dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/outline_rounded_corner_s" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_margin="8dp"
-                android:background="@drawable/outline_rounded_corner_sf">
-
-                <ImageView
-                    android:id="@+id/imageView15"
-                    android:layout_width="0dp"
-                    android:layout_height="6dp"
-                    android:layout_marginStart="6dp"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginEnd="6dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/outline_rounded_corner_s" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:id="@+id/seat2"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:background="@drawable/outline_rounded_corner_s">
 
                 <ImageView
-                    android:id="@+id/imageView15"
+                    android:id="@+id/seat2T"
                     android:layout_width="0dp"
                     android:layout_height="6dp"
                     android:layout_marginStart="6dp"
@@ -514,14 +507,14 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:id="@+id/seat6"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
-                android:background="@drawable/outline_rounded_corner_sf"
-                android:backgroundTint="@color/orange700">
+                android:background="@drawable/outline_rounded_corner_sf">
 
                 <ImageView
-                    android:id="@+id/imageView15"
+                    android:id="@+id/seat6T"
                     android:layout_width="0dp"
                     android:layout_height="6dp"
                     android:layout_marginStart="6dp"
@@ -530,37 +523,99 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/outline_rounded_corner_s"/>
+                    app:srcCompat="@drawable/outline_rounded_corner_s" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/seat10"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/outline_rounded_corner_sf">
+
+                <ImageView
+                    android:id="@+id/seat10T"
+                    android:layout_width="0dp"
+                    android:layout_height="6dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="6dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/outline_rounded_corner_s" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:id="@+id/seat14"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/outline_rounded_corner_sf">
+
+                <ImageView
+                    android:id="@+id/seat14T"
+                    android:layout_width="0dp"
+                    android:layout_height="6dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="6dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/outline_rounded_corner_s" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/seat18"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:background="@drawable/outline_rounded_corner_s">
 
                 <ImageView
-                    android:id="@+id/imageView125"
+                    android:id="@+id/seat18T"
                     android:layout_width="0dp"
                     android:layout_height="6dp"
                     android:layout_marginStart="6dp"
+                    android:layout_marginTop="6dp"
                     android:layout_marginEnd="6dp"
-                    android:layout_marginBottom="6dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/outline_rounded_corner_s" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:id="@+id/seat22"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:background="@drawable/outline_rounded_corner_sf">
 
                 <ImageView
-                    android:id="@+id/imageView125"
+                    android:id="@+id/seat22T"
+                    android:layout_width="0dp"
+                    android:layout_height="6dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="6dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/outline_rounded_corner_s" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/seat26"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/outline_rounded_corner_s">
+
+                <ImageView
+                    android:id="@+id/seat26T"
                     android:layout_width="0dp"
                     android:layout_height="6dp"
                     android:layout_marginStart="6dp"
@@ -573,13 +628,14 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:id="@+id/seat30"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:background="@drawable/outline_rounded_corner_sf">
 
                 <ImageView
-                    android:id="@+id/imageView125"
+                    android:id="@+id/seat30T"
                     android:layout_width="0dp"
                     android:layout_height="6dp"
                     android:layout_marginStart="6dp"
@@ -592,13 +648,14 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:id="@+id/seat34"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:background="@drawable/outline_rounded_corner_sf">
 
                 <ImageView
-                    android:id="@+id/imageView125"
+                    android:id="@+id/seat34T"
                     android:layout_width="0dp"
                     android:layout_height="6dp"
                     android:layout_marginStart="6dp"
@@ -611,15 +668,34 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:id="@+id/seat38"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
-                android:background="@drawable/outline_rounded_corner_s"
-                tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="656dp">
+                android:background="@drawable/outline_rounded_corner_sf">
 
                 <ImageView
-                    android:id="@+id/imageView125"
+                    android:id="@+id/seat38T"
+                    android:layout_width="0dp"
+                    android:layout_height="6dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_marginBottom="6dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:srcCompat="@drawable/outline_rounded_corner_s" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/seat42"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/outline_rounded_corner_s">
+
+                <ImageView
+                    android:id="@+id/seat42T"
                     android:layout_width="0dp"
                     android:layout_height="6dp"
                     android:layout_marginStart="6dp"
@@ -639,20 +715,254 @@
             android:id="@+id/seatColumn3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="32dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/seatColumn4"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/seat3"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/outline_rounded_corner_s">
+
+                <ImageView
+                    android:id="@+id/seat3T"
+                    android:layout_width="0dp"
+                    android:layout_height="6dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="6dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/outline_rounded_corner_s" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/seat7"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/outline_rounded_corner_sf">
+
+                <ImageView
+                    android:id="@+id/seat7T"
+                    android:layout_width="0dp"
+                    android:layout_height="6dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="6dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/outline_rounded_corner_s" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/seat11"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/outline_rounded_corner_sf">
+
+                <ImageView
+                    android:id="@+id/seat11T"
+                    android:layout_width="0dp"
+                    android:layout_height="6dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="6dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/outline_rounded_corner_s" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/seat15"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/outline_rounded_corner_s">
+
+                <ImageView
+                    android:id="@+id/seat15T"
+                    android:layout_width="0dp"
+                    android:layout_height="6dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="6dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/outline_rounded_corner_s" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/seat19"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/outline_rounded_corner_s">
+
+                <ImageView
+                    android:id="@+id/seat19T"
+                    android:layout_width="0dp"
+                    android:layout_height="6dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="6dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/outline_rounded_corner_s" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/seat23"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/outline_rounded_corner_sf">
+
+                <ImageView
+                    android:id="@+id/seat23T"
+                    android:layout_width="0dp"
+                    android:layout_height="6dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="6dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/outline_rounded_corner_s" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/seat27"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/outline_rounded_corner_sf">
+
+                <ImageView
+                    android:id="@+id/seat27T"
+                    android:layout_width="0dp"
+                    android:layout_height="6dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_marginBottom="6dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:srcCompat="@drawable/outline_rounded_corner_s" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/seat31"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/outline_rounded_corner_sf">
+
+                <ImageView
+                    android:id="@+id/seat31T"
+                    android:layout_width="0dp"
+                    android:layout_height="6dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_marginBottom="6dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:srcCompat="@drawable/outline_rounded_corner_s" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/seat35"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/outline_rounded_corner_s">
+
+                <ImageView
+                    android:id="@+id/seat35T"
+                    android:layout_width="0dp"
+                    android:layout_height="6dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_marginBottom="6dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:srcCompat="@drawable/outline_rounded_corner_s" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/seat39"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/outline_rounded_corner_s">
+
+                <ImageView
+                    android:id="@+id/seat39T"
+                    android:layout_width="0dp"
+                    android:layout_height="6dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_marginBottom="6dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:srcCompat="@drawable/outline_rounded_corner_s" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/seat43"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/outline_rounded_corner_sf">
+
+                <ImageView
+                    android:id="@+id/seat43T"
+                    android:layout_width="0dp"
+                    android:layout_height="6dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_marginBottom="6dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:srcCompat="@drawable/outline_rounded_corner_s" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/seatColumn4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:id="@+id/seat4"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:background="@drawable/outline_rounded_corner_sf">
 
                 <ImageView
-                    android:id="@+id/imageView15"
+                    android:id="@+id/seat4T"
                     android:layout_width="0dp"
                     android:layout_height="6dp"
                     android:layout_marginStart="6dp"
@@ -665,13 +975,34 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:id="@+id/seat8"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/outline_rounded_corner_sf">
+
+                <ImageView
+                    android:id="@+id/seat8T"
+                    android:layout_width="0dp"
+                    android:layout_height="6dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="6dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/outline_rounded_corner_s" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/seat12"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:background="@drawable/outline_rounded_corner_s">
 
                 <ImageView
-                    android:id="@+id/imageView15"
+                    android:id="@+id/seat12T"
                     android:layout_width="0dp"
                     android:layout_height="6dp"
                     android:layout_marginStart="6dp"
@@ -684,13 +1015,14 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:id="@+id/seat16"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:background="@drawable/outline_rounded_corner_sf">
 
                 <ImageView
-                    android:id="@+id/imageView15"
+                    android:id="@+id/seat16T"
                     android:layout_width="0dp"
                     android:layout_height="6dp"
                     android:layout_marginStart="6dp"
@@ -703,13 +1035,14 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:id="@+id/seat20"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:background="@drawable/outline_rounded_corner_sf">
 
                 <ImageView
-                    android:id="@+id/imageView15"
+                    android:id="@+id/seat20T"
                     android:layout_width="0dp"
                     android:layout_height="6dp"
                     android:layout_marginStart="6dp"
@@ -722,13 +1055,14 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:id="@+id/seat24"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:background="@drawable/outline_rounded_corner_s">
 
                 <ImageView
-                    android:id="@+id/imageView15"
+                    android:id="@+id/seat24T"
                     android:layout_width="0dp"
                     android:layout_height="6dp"
                     android:layout_marginStart="6dp"
@@ -742,13 +1076,14 @@
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:id="@+id/seat28"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:background="@drawable/outline_rounded_corner_sf">
 
                 <ImageView
-                    android:id="@+id/imageView125"
+                    android:id="@+id/seat28T"
                     android:layout_width="0dp"
                     android:layout_height="6dp"
                     android:layout_marginStart="6dp"
@@ -761,13 +1096,14 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:id="@+id/seat32"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:background="@drawable/outline_rounded_corner_s">
 
                 <ImageView
-                    android:id="@+id/imageView125"
+                    android:id="@+id/seat32T"
                     android:layout_width="0dp"
                     android:layout_height="6dp"
                     android:layout_marginStart="6dp"
@@ -780,13 +1116,14 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:id="@+id/seat36"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:background="@drawable/outline_rounded_corner_s">
 
                 <ImageView
-                    android:id="@+id/imageView125"
+                    android:id="@+id/seat36T"
                     android:layout_width="0dp"
                     android:layout_height="6dp"
                     android:layout_marginStart="6dp"
@@ -799,13 +1136,14 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:id="@+id/seat40"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:background="@drawable/outline_rounded_corner_s">
 
                 <ImageView
-                    android:id="@+id/imageView125"
+                    android:id="@+id/seat40T"
                     android:layout_width="0dp"
                     android:layout_height="6dp"
                     android:layout_marginStart="6dp"
@@ -818,13 +1156,14 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:id="@+id/seat44"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:background="@drawable/outline_rounded_corner_sf">
 
                 <ImageView
-                    android:id="@+id/imageView125"
+                    android:id="@+id/seat44T"
                     android:layout_width="0dp"
                     android:layout_height="6dp"
                     android:layout_marginStart="6dp"

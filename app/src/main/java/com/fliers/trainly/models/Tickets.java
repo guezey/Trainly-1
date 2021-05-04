@@ -450,10 +450,10 @@ s     * @param db SQL Database
                 + COMPANY_ID + " = " + company.getCompanyId() + " AND "
                 + TRAIN_ID + " = " + train.getId() + " AND "
                 + DEPARTURE_TIME + " = " + departureTime + " AND "
-                + DEPARTURE + " = " + from.getName() + " AND "
-                + ARRIVAL + " = " + to.getName() + " AND "
+                + DEPARTURE + " = '" + from.getName() + "' AND "
+                + ARRIVAL + " = '" + to.getName() + "' AND "
                 + WAGON_NO + " = " + wagon.getWagonNumber() + " AND "
-                + SEAT_NO + " = " + seat.getSeatNumber() + ";", null);
+                + SEAT_NO + " = '" + seat.getSeatNumber() + "';", null);
 
         return data;
     }
