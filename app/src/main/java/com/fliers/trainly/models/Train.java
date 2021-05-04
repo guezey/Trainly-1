@@ -15,7 +15,6 @@ public class Train {
 
     private double businessPrice;
     private double economyPrice;
-    private static int idCounter; // Temporary (In TO-DO list)
     private String id;
     private int businessWagonNum;
     private int economyWagonNum;
