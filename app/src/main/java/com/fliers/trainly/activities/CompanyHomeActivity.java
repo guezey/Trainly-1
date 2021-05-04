@@ -50,7 +50,8 @@ public class CompanyHomeActivity extends AppCompatActivity implements Navigation
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_company_home);
 
-        company = ( Company ) User.getCurrentUserInstance();
+        // Get recently sold tickets of the company
+        company = ( Company ) Company.getCurrentUserInstance();
         Tickets ticketManager = new Tickets( getApplicationContext() );
         tickets = ticketManager.getRecentlySoldTickets( company );
 

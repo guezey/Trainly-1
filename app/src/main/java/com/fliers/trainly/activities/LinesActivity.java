@@ -229,7 +229,16 @@ public class LinesActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Adaptor for listing the line cards
+     * @author Cengizhan Terzioğlu
+     * @version 03.05.2021
+     */
     class CustomAdaptor extends BaseAdapter {
+        /**
+         * Getter method for the line count for a company
+         * @return
+         */
         @Override public int getCount() {
             return lines.size();
         }
@@ -242,6 +251,13 @@ public class LinesActivity extends AppCompatActivity {
             return 0;
         }
 
+        /**
+         * Getter method for the view of a line card
+         * @param position position of the line in the company's line array list
+         * @param convertView
+         * @param parent
+         * @return the view of a line card
+         */
         @Override public View getView( final int position, View convertView, ViewGroup parent) {
             View view = getLayoutInflater().inflate( R.layout.list_item_lines, null);
 
