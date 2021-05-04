@@ -88,11 +88,11 @@ public class CompanyHomeActivity extends AppCompatActivity implements Navigation
         int starIndex = 0;
         for ( double i = roundAverage; i < 0; i-- ) {
             if ( i >= 1 )
-                starPoint[starIndex].setImageResource( R.drawable.ic_baseline_star_outline_48 );
+                starPoint[starIndex].setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_48 ) );
             else if ( i == 0.5 )
-                starPoint[starIndex].setImageResource( R.drawable.ic_baseline_star_half_48 );
+                starPoint[starIndex].setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_half_48 ) );
             else
-                starPoint[starIndex].setImageResource( R.drawable.ic_baseline_star_48 );
+                starPoint[starIndex].setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_outline_48 ) );
         }
 
         // Opens the menu to go other pages
