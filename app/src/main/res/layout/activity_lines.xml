@@ -111,8 +111,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/etPlace1"
+        <AutoCompleteTextView
+            android:id="@+id/acPlace1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -136,7 +136,7 @@
             android:hint="latitude"
             android:inputType="numberDecimal"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etPlace1" />
+            app:layout_constraintTop_toBottomOf="@+id/acPlace1" />
 
         <EditText
             android:id="@+id/etLongitude1"
@@ -148,7 +148,7 @@
             android:hint="longitude"
             android:inputType="numberDecimal"
             app:layout_constraintStart_toEndOf="@+id/etLatitude1"
-            app:layout_constraintTop_toBottomOf="@+id/etPlace1" />
+            app:layout_constraintTop_toBottomOf="@+id/acPlace1" />
 
         <TextView
             android:id="@+id/textView21"
@@ -157,13 +157,13 @@
             android:text="-"
             android:textSize="18dp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/etPlace1"
+            app:layout_constraintBottom_toBottomOf="@+id/acPlace1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/etPlace1" />
+            app:layout_constraintTop_toTopOf="@+id/acPlace1" />
 
-        <EditText
-            android:id="@+id/etPlace2"
+        <AutoCompleteTextView
+            android:id="@+id/acPlace2"
             android:layout_width="146dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -174,7 +174,7 @@
             android:inputType="textPersonName"
             android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/etPlace1"
+            app:layout_constraintStart_toEndOf="@+id/acPlace1"
             app:layout_constraintTop_toBottomOf="@+id/textView20" />
 
         <EditText
@@ -186,7 +186,7 @@
             android:hint="latitude"
             android:inputType="numberDecimal"
             app:layout_constraintEnd_toStartOf="@+id/etLongitude2"
-            app:layout_constraintTop_toBottomOf="@+id/etPlace2" />
+            app:layout_constraintTop_toBottomOf="@+id/acPlace2" />
 
         <EditText
             android:id="@+id/etLongitude2"
@@ -198,7 +198,7 @@
             android:hint="longitude"
             android:inputType="numberDecimal"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etPlace2" />
+            app:layout_constraintTop_toBottomOf="@+id/acPlace2" />
 
         <TextView
             android:id="@+id/textView2"
