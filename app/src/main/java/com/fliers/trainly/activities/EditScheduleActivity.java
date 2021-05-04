@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.fliers.trainly.R;
 import com.fliers.trainly.models.Company;
 import com.fliers.trainly.models.Place;
+import com.fliers.trainly.models.Tickets;
 import com.fliers.trainly.models.Train;
 import com.fliers.trainly.models.Schedule;
 import com.fliers.trainly.models.Line;
@@ -121,6 +122,34 @@ public class EditScheduleActivity extends AppCompatActivity {
                         Schedule newSchedule = new Schedule( departure, arrival, ( Line ) lineSpinner.getSelectedItem(),
                                 currentTrain.getBusinessWagonNum(), currentTrain.getEconomyWagonNum(), currentTrain );
                         currentTrain.addSchedule( newSchedule );
+
+                        currentUser.saveToServer( new User.ServerSyncListener() {
+
+                            @Override
+                            public void onSync(boolean isSynced) {
+                                if ( !isSynced ) {
+                                    Toast.makeText( getApplicationContext(), "Trainly servers are unavailable at the moment", Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    Toast.makeText( getApplicationContext(), "New schedule is saved", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
+                        Tickets ticketManager = new Tickets( getApplicationContext() );
+                        ticketManager.createTickets(newSchedule, new Tickets.ServerSyncListener() {
+                            @Override
+                            public void onSync(boolean isSynced) {
+                                if ( !isSynced ) {
+                                    Toast.makeText( getApplicationContext(), "Trainly servers are unavailable at the moment", Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    Toast.makeText( getApplicationContext(), "New tickets have been created", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
+
                     }
                 }
 
@@ -172,7 +201,7 @@ public class EditScheduleActivity extends AppCompatActivity {
 
                             @Override
                             public void onDateSet( DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth ) {
+                                                   int monthOfYear, int dayOfMonth ) {
 
                                 dDateText.setText( dayOfMonth + "/" + (monthOfYear + 1) + "/" + year );
 
@@ -216,7 +245,7 @@ public class EditScheduleActivity extends AppCompatActivity {
 
                             @Override
                             public void onDateSet( DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth ) {
+                                                   int monthOfYear, int dayOfMonth ) {
 
                                 aDateText.setText( dayOfMonth + "/" + (monthOfYear + 1) + "/" + year );
 
