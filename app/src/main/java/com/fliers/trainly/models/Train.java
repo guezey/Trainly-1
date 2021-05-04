@@ -17,8 +17,6 @@ public class Train {
     double economyPrice;
     static int idCounter; // Temporary (In TO-DO list)
     String id;
-    double lat;
-    double lon;
     int businessWagonNum;
     int economyWagonNum;
     ArrayList<Schedule> schedules;
@@ -27,18 +25,15 @@ public class Train {
     /**
     * Constructor of the Train class
     * @param company
-    * @param spawnPlace
     * @param businessWagonNum
     * @param economyWagonNum
     * @param bPrice
     * @param ePrice
     * @param id
      */
-    public Train( Company company, Place spawnPlace, int businessWagonNum,
+    public Train( Company company, int businessWagonNum,
                 int economyWagonNum, double bPrice, double ePrice, String id) {
         linkedCompany = company;
-        lat = spawnPlace.getLatitude();
-        lon = spawnPlace.getLongitude();
         this.businessWagonNum = businessWagonNum;
         this.economyWagonNum = economyWagonNum;
         this.schedules = schedules;
