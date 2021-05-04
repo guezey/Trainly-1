@@ -93,6 +93,7 @@ public class CompanyHomeActivity extends AppCompatActivity implements Navigation
                 starPoint[starIndex].setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_half_48 ) );
             else
                 starPoint[starIndex].setImageDrawable( getResources().getDrawable( R.drawable.ic_baseline_star_outline_48 ) );
+            starIndex++;
         }
 
         // Opens the menu to go other pages
