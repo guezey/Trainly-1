@@ -159,8 +159,7 @@ public class LinesActivity extends AppCompatActivity implements LinesCoordinates
             return 0;
         }
         @Override public View getView( final int position, View convertView, ViewGroup parent) {
-            // View view = getLayoutInflater().inflate( R.layout.list_item_lines, null);
-            View view = null;
+            View view = getLayoutInflater().inflate( R.layout.list_item_lines, null);
 
             // Get title text view
             TextView tvLineTitle = view.findViewById( R.id.tvLine );

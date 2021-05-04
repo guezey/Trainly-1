@@ -11,11 +11,11 @@
     android:background="@color/gray010"
     tools:context=".activities.CompanyHomeActivity">
 
-    <fragment
-        android:id="@+id/fragmentCompanyHome"
+    <include
+        android:id="@+id/includeCompanyHome"
+        layout="@layout/fragment_company_home"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@layout/fragment_company_home" />
+        android:layout_height="match_parent"/>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navViewCompany"
