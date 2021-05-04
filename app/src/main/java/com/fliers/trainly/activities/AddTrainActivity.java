@@ -31,7 +31,6 @@ public class AddTrainActivity extends AppCompatActivity {
     private EditText businessPrice;
     private EditText economyPrice;
     private ImageView back;
-    private Spinner lineChoice;
     private Button add;
 
     @Override
@@ -50,8 +49,6 @@ public class AddTrainActivity extends AppCompatActivity {
         economyPrice = (EditText) findViewById(R.id.editTextNumber2);
         add = (Button) findViewById(R.id.button);
         back = (ImageView) findViewById(R.id.imageView2);
-        lineChoice = (Spinner) findViewById(R.id.spinner);
-
 
         minus1.setOnClickListener( new View.OnClickListener() {
 
@@ -133,7 +130,6 @@ public class AddTrainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Line newLine = (Line) lineChoice.getSelectedItem();
                 int businessNum = Integer.parseInt( businessCounter.getText().toString());
                 int economyNum = Integer.parseInt( economyCounter.getText().toString());
                 double bPrice = Double.parseDouble( businessPrice.getText().toString());
@@ -151,7 +147,7 @@ public class AddTrainActivity extends AppCompatActivity {
                     addId += 0;
                 }
                 addId += idRoot;
-                Train newTrain = new Train( currentUser, newLine.getDeparture(), businessNum, economyNum, bPrice, ePrice, addId);
+                Train newTrain = new Train( currentUser, businessNum, economyNum, bPrice, ePrice, addId);
                 currentUser.addTrain( newTrain);
             }
         });
