@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -66,8 +67,9 @@ public class TicketsActivity extends AppCompatActivity {
         int year = Integer.parseInt(date.substring(6));
         int month = Integer.parseInt(date.substring(3,5));
         int day = Integer.parseInt(date.substring(0,2));
+        Log.d( "APP_DEBUG", year + " " + month + " " + day);
         Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month, day);
+        calendar.set(year, month - 1, day, 0, 0);
         tickets = new ArrayList<>(0);
 
         Places places = Places.getInstance();

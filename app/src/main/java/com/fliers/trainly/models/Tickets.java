@@ -603,7 +603,7 @@ s     * @param db SQL Database
         departureTimeStart = getLongFromCalendar( calendarStart);
 
         db = this.getWritableDatabase();
-        data = db.rawQuery( "SELECT * FROM " + TABLE_NAME + " WHERE " + DEPARTURE + " = '" + departure.getName() + "' AND " + ARRIVAL + " = '" + arrival.getName() + "' AND " + DEPARTURE_TIME + " >= " + departureTimeStart + " AND " + DEPARTURE_TIME + " <= " + departureTimeEnd + " AND " + OWNER + " = '" + NULL +"' ORDER BY " + DEPARTURE_TIME + " ASC;", null);
+        data = db.rawQuery( "SELECT * FROM " + TABLE_NAME + " WHERE " + DEPARTURE + " = '" + departure.getName() + "' AND " + ARRIVAL + " = '" + arrival.getName() + "' AND " + DEPARTURE_TIME + " <= " + departureTimeStart + " AND " + DEPARTURE_TIME + " >= " + departureTimeEnd + " AND " + OWNER + " = '" + NULL +"' ORDER BY " + DEPARTURE_TIME + " ASC;", null);
         return dataToArrayList( data);
     }
 
@@ -632,7 +632,9 @@ s     * @param db SQL Database
         departureTimeStart = getLongFromCalendar( calendarStart);
 
         db = this.getWritableDatabase();
-        data = db.rawQuery( "SELECT DISTINCT ON " + COMPANY_ID + ", " + TRAIN_ID + ", " + DEPARTURE_TIME + " * FROM " + TABLE_NAME + " WHERE " + DEPARTURE + " = '" + departure.getName() + "' AND " + ARRIVAL + " = '" + arrival.getName() + "' AND " + DEPARTURE_TIME + " >= " + departureTimeStart + " AND " + DEPARTURE_TIME + " <= " + departureTimeEnd + " AND " + OWNER + " = '" + NULL +"' ORDER BY " + DEPARTURE_TIME + " ASC;", null);
+        // data = db.rawQuery( "SELECT DISTINCT ON " + COMPANY_ID + ", " + TRAIN_ID + ", " + DEPARTURE_TIME + " * FROM " + TABLE_NAME + " WHERE " + DEPARTURE + " = '" + departure.getName() + "' AND " + ARRIVAL + " = '" + arrival.getName() + "' AND " + DEPARTURE_TIME + " >= " + departureTimeStart + " AND " + DEPARTURE_TIME + " <= " + departureTimeEnd + " AND " + OWNER + " = '" + NULL +"' ORDER BY " + DEPARTURE_TIME + " ASC;", null);
+        data = db.rawQuery( "SELECT * FROM " + TABLE_NAME + " WHERE " + DEPARTURE + " = '" + departure.getName() + "' AND " + ARRIVAL + " = '" + arrival.getName() + "' AND " + DEPARTURE_TIME + " <= " + departureTimeStart + " AND " + DEPARTURE_TIME + " >= " + departureTimeEnd + " AND " + OWNER + " = '" + NULL +"' GROUP BY "
+                + COMPANY_ID + ", " + TRAIN_ID + ", " + DEPARTURE_TIME + " ORDER BY " + DEPARTURE_TIME + " ASC;", null);
         return dataToArrayList( data);
     }
 
