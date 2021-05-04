@@ -34,6 +34,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.navigation.NavigationView;
 
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -223,33 +224,6 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         if ( parent == departureSpinner) {
-//            if (parent.getItemAtPosition(pos).toString().equals("Istanbul")) {
-//                if ( prevDepMarker != null)
-//                    prevDepMarker.remove();
-//                String text = parent.getItemAtPosition(pos).toString();
-//                // Add a marker in Istanbul and move the camera
-//                LatLng istanbul = new LatLng(41.02935, 28.99392 );
-//                prevDepMarker = mMap.addMarker(new MarkerOptions().position(istanbul).title("Departure: " + text));
-//                mMap.animateCamera(CameraUpdateFactory.newLatLng(istanbul));
-//            }
-//            else if (parent.getItemAtPosition(pos).toString().equals("Ankara")) {
-//                if ( prevDepMarker != null)
-//                    prevDepMarker.remove();
-//                String text = parent.getItemAtPosition(pos).toString();
-//                // Add a marker in Istanbul and move the camera
-//                LatLng ankara = new LatLng(39.93677, 32.84647 );
-//                prevDepMarker = mMap.addMarker(new MarkerOptions().position(ankara).title("Departure: " + text));
-//                mMap.animateCamera(CameraUpdateFactory.newLatLng(ankara));
-//            }
-//            else if (parent.getItemAtPosition(pos).toString().equals("Izmir")) {
-//                if ( prevDepMarker != null)
-//                    prevDepMarker.remove();
-//                String text = parent.getItemAtPosition(pos).toString();
-//                // Add a marker in Istanbul and move the camera
-//                LatLng izmir = new LatLng(38.43506, 27.14353 );
-//                prevDepMarker = mMap.addMarker(new MarkerOptions().position(izmir).title("Departure: " + text));
-//                mMap.animateCamera(CameraUpdateFactory.newLatLng(izmir));
-//            }
             if (!parent.getItemAtPosition(pos).toString().equals("Select")) {
                 if (prevDepMarker != null)
                     prevDepMarker.remove();
@@ -262,33 +236,6 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
             }
         }
         else if ( parent == arrivalSpinner) {
-//            if (parent.getItemAtPosition(pos).toString().equals("Istanbul")) {
-//                if ( prevArrMarker != null )
-//                    prevArrMarker.remove();
-//                String text = parent.getItemAtPosition(pos).toString();
-//                // Add a marker in Istanbul and move the camera
-//                LatLng istanbul = new LatLng(41.02935, 28.99392 );
-//                prevArrMarker = mMap.addMarker(new MarkerOptions().position(istanbul).title("Arrival: " + text));
-//                mMap.animateCamera(CameraUpdateFactory.newLatLng(istanbul));
-//            }
-//            else if (parent.getItemAtPosition(pos).toString().equals("Ankara")) {
-//                if ( prevArrMarker != null )
-//                    prevArrMarker.remove();
-//                String text = parent.getItemAtPosition(pos).toString();
-//                // Add a marker in Istanbul and move the camera
-//                LatLng ankara = new LatLng(39.93677, 32.84647 );
-//                prevArrMarker = mMap.addMarker(new MarkerOptions().position(ankara).title("Arrival: " + text));
-//                mMap.animateCamera(CameraUpdateFactory.newLatLng(ankara));
-//            }
-//            else if (parent.getItemAtPosition(pos).toString().equals("Izmir")) {
-//                if (prevArrMarker != null)
-//                    prevArrMarker.remove();
-//                String text = parent.getItemAtPosition(pos).toString();
-//                // Add a marker in Istanbul and move the camera
-//                LatLng izmir = new LatLng(38.43506, 27.14353);
-//                prevArrMarker = mMap.addMarker(new MarkerOptions().position(izmir).title("Arrival: " + text));
-//                mMap.animateCamera(CameraUpdateFactory.newLatLng(izmir));
-//            }
             if (!parent.getItemAtPosition(pos).toString().equals("Select")) {
                 if (prevArrMarker != null)
                     prevArrMarker.remove();

@@ -31,6 +31,7 @@ public class Tickets extends SQLiteOpenHelper {
     private final String COMPANY_ID = "company_id";
     private final String TRAIN_ID = "train_id";
     private final String DEPARTURE_TIME = "departure_time";
+    private final String ARRIVAL_TIME = "arrival_time";
     private final String DEPARTURE = "departure";
     private final String ARRIVAL = "arrival";
     private final String WAGON_NO = "wagon_no";
@@ -45,6 +46,7 @@ public class Tickets extends SQLiteOpenHelper {
     private final String NULL = "null";
     private final String UNKNOWN = "unk";
 
+    private final String ESTIMATED_ARRIVAL = "estimatedArrival";
     private final String FROM = "from";
     private final String TO = "to";
     private final String TRAINS = "trains";
@@ -80,6 +82,7 @@ s     * @param db SQL Database
                 COMPANY_ID + " TEXT, " +
                 TRAIN_ID + " TEXT, " +
                 DEPARTURE_TIME + " LONG, " +
+                ARRIVAL_TIME + " LONG, " +
                 DEPARTURE + " TEXT, " +
                 ARRIVAL + " TEXT, " +
                 WAGON_NO + " INTEGER, " +
@@ -129,6 +132,7 @@ s     * @param db SQL Database
         Train train;
         Company company;
         Calendar departureTimeCalendar;
+        Calendar arrivalTimeCalendar;
         Customer customer;
         String companyName;
         String companyId;
@@ -139,6 +143,7 @@ s     * @param db SQL Database
         String hour;
         String minute;
         long departureTime;
+        long arrivalTime;
         String from;
         String to;
         int wagonNo;
@@ -163,6 +168,7 @@ s     * @param db SQL Database
         train = schedule.getLinkedTrain();
         company = train.getLinkedCompany();
         departureTimeCalendar = schedule.getDepartureDate();
+        arrivalTimeCalendar = schedule.getArrivalDate();
         customer = ticket.getCustomer();
 
         companyName = company.getName();
@@ -172,25 +178,11 @@ s     * @param db SQL Database
         economyWagonNo = train.getEconomyWagonNum();
         businessPrice = train.getBusinessPrice();
         economyPrice = train.getEconomyPrice();
-        year = String.valueOf( departureTimeCalendar.get( Calendar.YEAR));
-        month = String.valueOf( departureTimeCalendar.get( Calendar.MONTH));
-        day = String.valueOf( departureTimeCalendar.get( Calendar.DAY_OF_MONTH));
-        hour = String.valueOf( departureTimeCalendar.get( Calendar.HOUR_OF_DAY));
-        minute = String.valueOf( departureTimeCalendar.get( Calendar.MINUTE));
+        departureTime = Long.parseLong( schedule.getIdRepresentation( departureTimeCalendar));
+        arrivalTime = Long.parseLong( schedule.getIdRepresentation( arrivalTimeCalendar));
 
-        if ( month.length() == 1) {
-            month = "0" + month;
-        }
-        if ( day.length() == 1) {
-            day = "0" + day;
-        }
-        if ( hour.length() == 1) {
-            hour = "0" + hour;
-        }
-        if ( minute.length() == 1) {
-            minute = "0" + minute;
-        }
-        departureTime = Long.parseLong( year + month + day + hour + minute);
+
+
 
         from = fromPlace.getName();
         to = toPlace.getName();
@@ -206,7 +198,7 @@ s     * @param db SQL Database
             customerId = customer.getId();
         }
 
-        add( companyName, companyId, trainId, departureTime, from, to, wagonNo, seatNo, businessWagonNo, economyWagonNo, businessPrice, economyPrice, comment, stars, customerId);
+        add( companyName, companyId, trainId, departureTime, arrivalTime, from, to, wagonNo, seatNo, businessWagonNo, economyWagonNo, businessPrice, economyPrice, comment, stars, customerId);
     }
 
     /**
@@ -215,6 +207,7 @@ s     * @param db SQL Database
      * @param companyId company id
      * @param trainId train id
      * @param departureTime departure time as long value
+     * @param arrivalTime arrival time as long value
      * @param from departure place
      * @param to arrival place
      * @param wagonNo wagon number
@@ -227,7 +220,7 @@ s     * @param db SQL Database
      * @param stars star rating feedback
      * @param customerId customer id of the owner
      */
-    private void add( String companyName, String companyId, String trainId, long departureTime, String from, String to, int wagonNo, String seatNo, int businessWagonNo, int economyWagonNo, double businessPrice, double economyPrice, String comment, int stars, String customerId) {
+    private void add( String companyName, String companyId, String trainId, long departureTime, long arrivalTime, String from, String to, int wagonNo, String seatNo, int businessWagonNo, int economyWagonNo, double businessPrice, double economyPrice, String comment, int stars, String customerId) {
         // Variables
         SQLiteDatabase db;
         ContentValues values;
@@ -240,6 +233,7 @@ s     * @param db SQL Database
         values.put( COMPANY_ID, companyId);
         values.put( TRAIN_ID, trainId);
         values.put( DEPARTURE_TIME, departureTime);
+        values.put( ARRIVAL_TIME, arrivalTime);
         values.put( DEPARTURE, from);
         values.put( ARRIVAL, to);
         values.put( WAGON_NO, wagonNo);
@@ -580,7 +574,7 @@ s     * @param db SQL Database
         departureTimeStart = getLongFromCalendar( calendarStart);
 
         db = this.getWritableDatabase();
-        data = db.rawQuery( "SELECT * FROM " + TABLE_NAME + " WHERE " + COMPANY_ID + " = '" + company.getCompanyId() + "' AND " + DEPARTURE_TIME + " >= " + departureTimeStart + " AND " + DEPARTURE_TIME + " <= " + departureTimeEnd + " ORDER BY " + DEPARTURE_TIME + " DESC;", null);
+        data = db.rawQuery( "SELECT * FROM " + TABLE_NAME + " WHERE " + COMPANY_ID + " = '" + company.getCompanyId() + "' AND " + DEPARTURE_TIME + " >= " + departureTimeStart + " AND " + DEPARTURE_TIME + " <= " + departureTimeEnd + " AND " + OWNER + " <> '" + NULL + "' ORDER BY " + DEPARTURE_TIME + " DESC;", null);
         return dataToArrayList( data);
     }
 
@@ -691,7 +685,7 @@ s     * @param db SQL Database
 
         // Code
         year = String.valueOf( calendar.get( Calendar.YEAR));
-        month = String.valueOf( calendar.get( Calendar.MONTH));
+        month = String.valueOf( calendar.get( Calendar.MONTH) + 1);
         day = String.valueOf( calendar.get( Calendar.DAY_OF_MONTH));
         hour = String.valueOf( calendar.get( Calendar.HOUR_OF_DAY));
         minute = String.valueOf( calendar.get( Calendar.MINUTE));
@@ -724,6 +718,7 @@ s     * @param db SQL Database
         String companyId;
         String trainId;
         String departureTime;
+        String arrivalTime;
         String departurePlaceName;
         String arrivalPlaceName;
         int wagonNo;
@@ -759,6 +754,7 @@ s     * @param db SQL Database
                 companyId = data.getString( data.getColumnIndex( COMPANY_ID));
                 trainId = data.getString( data.getColumnIndex( TRAIN_ID));
                 departureTime = String.valueOf( data.getLong( data.getColumnIndex( DEPARTURE_TIME)));
+                arrivalTime = String.valueOf( data.getLong( data.getColumnIndex( ARRIVAL_TIME)));
                 departurePlaceName = data.getString( data.getColumnIndex( DEPARTURE));
                 arrivalPlaceName = data.getString( data.getColumnIndex( ARRIVAL));
                 wagonNo = data.getInt( data.getColumnIndex( WAGON_NO));
@@ -780,7 +776,7 @@ s     * @param db SQL Database
                 departurePlace = places.findByName( departurePlaceName);
                 arrivalPlace = places.findByName( arrivalPlaceName);
                 line = new Line( departurePlace, arrivalPlace);
-                schedule = new Schedule( departureTime, "", line, businessWagonNo, economyWagonNo, train);
+                schedule = new Schedule( departureTime, arrivalTime, line, businessWagonNo, economyWagonNo, train);
                 train.addSchedule( schedule);
 
                 wagon = schedule.getWagon( wagonNo - 1);
@@ -912,7 +908,7 @@ s     * @param db SQL Database
             database = FirebaseDatabase.getInstance();
             reference = database.getReference( SERVER_KEY + "/Companies/");
 
-            if ( !isEmpty()) {
+            if ( data.getCount() != 0) {
                 data.moveToFirst();
                 do {
                     companyId = data.getString( data.getColumnIndex( COMPANY_ID));
@@ -1013,6 +1009,7 @@ s     * @param db SQL Database
                     String trainId;
                     String departureTimeStr;
                     long departureTime;
+                    long arrivalTime;
                     String from;
                     String to;
                     int wagonNo;
@@ -1031,11 +1028,13 @@ s     * @param db SQL Database
                     // Erase all database data and refill with server data
                     reset( db);
                     if ( dataSnapshot.exists()) {
+                        Log.d( "APP_DEBUG", "OK");
                         for ( DataSnapshot company : dataSnapshot.getChildren()) {
                             companyId = company.getKey();
                             companyName = company.child( NAME).getValue( String.class);
 
                             for ( DataSnapshot train : company.child( TRAINS).getChildren()) {
+                                Log.d( "APP_DEBUG", "1: " + train.getRef());
                                 trainId = train.getKey();
                                 businessWagonNo = Integer.parseInt( train.child( BUSINESS_WAGON_NO_FB).getValue( String.class));
                                 economyWagonNo = Integer.parseInt( train.child( ECONOMY_WAGON_NO_FB).getValue( String.class));
@@ -1043,10 +1042,12 @@ s     * @param db SQL Database
                                 economyPrice = Double.parseDouble( train.child( ECONOMY_PRICE_FB).getValue( String.class));
 
                                 for ( DataSnapshot schedule : train.child( SCHEDULES).getChildren()) {
+                                    Log.d( "APP_DEBUG", "2: " + schedule.getRef());
                                     departureTimeStr = schedule.getKey();
                                     departureTime = Long.parseLong( departureTimeStr);
                                     from = schedule.child( FROM).getValue( String.class);
                                     to = schedule.child( TO).getValue( String.class);
+                                    arrivalTime = Long.parseLong( schedule.child( ESTIMATED_ARRIVAL).getValue( String.class));
 
                                     for ( DataSnapshot wagon : schedule.child( WAGONS).getChildren()) {
                                         wagonNo = Integer.parseInt( wagon.getKey());
@@ -1057,7 +1058,7 @@ s     * @param db SQL Database
                                             comment = seat.child( COMMENT).getValue( String.class);
                                             stars = Integer.parseInt( seat.child( STARS).getValue( String.class));
 
-                                            add( companyName, companyId, trainId, departureTime, from, to, wagonNo, seatNo, businessWagonNo, economyWagonNo, businessPrice, economyPrice, comment, stars, customerId);
+                                            add( companyName, companyId, trainId, departureTime, arrivalTime, from, to, wagonNo, seatNo, businessWagonNo, economyWagonNo, businessPrice, economyPrice, comment, stars, customerId);
                                         }
                                     }
                                 }

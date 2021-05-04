@@ -125,7 +125,7 @@ public class Schedule implements Serializable {
 
         // Code
         year = String.valueOf( date.get( Calendar.YEAR));
-        month = String.valueOf( date.get( Calendar.MONTH));
+        month = String.valueOf( date.get( Calendar.MONTH) + 1);
         day = String.valueOf( date.get( Calendar.DAY_OF_MONTH));
         hour = String.valueOf( date.get( Calendar.HOUR_OF_DAY));
         minute = String.valueOf( date.get( Calendar.MINUTE));
