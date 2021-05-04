@@ -63,6 +63,7 @@ public class EditScheduleActivity extends AppCompatActivity {
 
         Company currentUser = ( Company ) User.getCurrentUserInstance();
 
+        // Create spinner item for lines
         lineSpinner = ( Spinner ) findViewById( R.id.spinLine);
 
         ArrayList<String> lines = new ArrayList<>();
@@ -90,6 +91,8 @@ public class EditScheduleActivity extends AppCompatActivity {
         spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item_lines);
         lineSpinner.setAdapter( spinnerArrayAdapter );
         Button save = findViewById( R.id.btSaveSchedule);
+
+        // Save button to save a schedule
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick( View v ) {
@@ -123,6 +126,9 @@ public class EditScheduleActivity extends AppCompatActivity {
                                 currentTrain.getBusinessWagonNum(), currentTrain.getEconomyWagonNum(), currentTrain );
                         currentTrain.addSchedule( newSchedule );
 
+                        /**
+                         * Save schedule to server
+                         */
                         currentUser.saveToServer( new User.ServerSyncListener() {
 
                             @Override
@@ -136,6 +142,9 @@ public class EditScheduleActivity extends AppCompatActivity {
                             }
                         });
 
+                        /**
+                         * Create and save tickets to server
+                         */
                         Tickets ticketManager = new Tickets( getApplicationContext() );
                         ticketManager.createTickets(newSchedule, new Tickets.ServerSyncListener() {
                             @Override
@@ -186,6 +195,7 @@ public class EditScheduleActivity extends AppCompatActivity {
         aTimeText = ( TextView ) findViewById( R.id.tvArrivalTime );
         aDateText = ( TextView ) findViewById( R.id.tvArrivalDate );
 
+        // Departure date picker dialog
         dDateText.setOnClickListener(new View.OnClickListener() {
             // Get Current Date
             @Override
@@ -211,6 +221,7 @@ public class EditScheduleActivity extends AppCompatActivity {
             }
         });
 
+        // Departure time picker dialog
         dTimeText.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick( View v ) {
@@ -230,6 +241,7 @@ public class EditScheduleActivity extends AppCompatActivity {
             }
         });
 
+        // Arrival date picker dialog
         aDateText.setOnClickListener(new View.OnClickListener() {
             // Get Current Date
             @Override
@@ -255,6 +267,7 @@ public class EditScheduleActivity extends AppCompatActivity {
             }
         });
 
+        // Arrival time picker dialog
         aTimeText.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick( View v ) {
@@ -289,8 +302,14 @@ public class EditScheduleActivity extends AppCompatActivity {
 
     }
 
-    // Arrange the schedule cards
+    /**
+     * Adaptor class for schedule cards
+     */
     class CustomAdaptor extends BaseAdapter {
+        /**
+         * Getter method for the schedule count for a train
+         * @return how many schedules a train has
+         */
         @Override
         public int getCount() {
             return currentTrain.getSchedules().size();
@@ -306,6 +325,13 @@ public class EditScheduleActivity extends AppCompatActivity {
             return 0;
         }
 
+        /**
+         * Getter method for the view of the schedule cards
+         * @param position position of the schedule in the train's schedules array list
+         * @param convertView
+         * @param parent
+         * @return the view of the schedule card
+         */
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             View view = getLayoutInflater().inflate(R.layout.list_item_schedules, null);

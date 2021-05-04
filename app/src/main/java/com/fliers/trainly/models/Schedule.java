@@ -24,6 +24,16 @@ public class Schedule implements Serializable {
     private double economyPrice;
 
     // Constructors
+
+    /**
+     * Creates a schedule for a train
+     * @param departureDate departure date and time
+     * @param arrivalDate arrival date and time
+     * @param line which line the train is working
+     * @param business business wagon number
+     * @param economy economy wagon number
+     * @param linkedTrain the train having this schedule
+     */
     public Schedule( Calendar departureDate, Calendar arrivalDate, Line line, int business, int economy, Train linkedTrain) {
         this.departureDate = departureDate;
         this.arrivalDate = arrivalDate;
@@ -35,6 +45,16 @@ public class Schedule implements Serializable {
         createWagons( business, economy );
     }
 
+    /**
+     * Creates a schedule for a train
+     * @param departureDateId id generated for the departure date and time
+     * @param arrivalDateId id generate for the arrival date and time
+     * @param line which line the train is working
+     * @param business business wagon number
+     * @param economy economy wagon number
+     * @param linkedTrain the train having this schedule
+     * @author Alp Afyonluoğlu
+     */
     public Schedule( String departureDateId, String arrivalDateId, Line line, int business, int economy, Train linkedTrain) {
         this.departureDate = getDateFromIdRepresentation( departureDateId);
         this.arrivalDate = getDateFromIdRepresentation( arrivalDateId);
@@ -45,22 +65,44 @@ public class Schedule implements Serializable {
     }
 
     // Methods
+
+    /**
+     * Getter method for departure date
+     * @return departure date and time of the train
+     */
     public Calendar getDepartureDate() {
         return this.departureDate;
     }
 
+    /**
+     * Getter method for arrival date
+     * @return planned arrival date and time of the train
+     */
     public Calendar getArrivalDate() {
         return this.arrivalDate;
     }
 
+    /**
+     * Getter method for wagons
+     * @return an array list having the all wagons of the train
+     */
     public ArrayList<Wagon> getWagons() {
         return this.wagons;
     }
 
+    /**
+     * Getter method for a specific wagon
+     * @param wagonIndex index of the chosen wagon
+     * @return the wagon of a train with the given index
+     */
     public Wagon getWagon( int wagonIndex ) {
         return getWagons().get( wagonIndex );
     }
 
+    /**
+     * Getter method for linked train to a schedule
+     * @return the train which has this schedule
+     */
     public Train getLinkedTrain() {
         return this.linkedTrain;
     }

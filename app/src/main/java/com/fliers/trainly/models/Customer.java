@@ -44,16 +44,21 @@ public class Customer extends User {
     }
 
     // Methods
+
+    /**
+     * Getter method for discount points
+     * @return how many discount points that customer has
+     */
     public int getDiscountPoints() {
         return this.discountPoints;
     }
 
+    /**
+     * Set method for discount points
+     * @param discountPoints new value for discount points
+     */
     public void setDiscountPoints( int discountPoints ) {
         this.discountPoints = discountPoints;
-    }
-
-    public void buyTicket( Ticket ticket ) {
-        // TODO: to be done
     }
 
     /**

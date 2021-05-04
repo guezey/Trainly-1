@@ -64,7 +64,16 @@ public class EmployeesActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Adaptor for listing the employee cards
+     * @author Cengizhan Terzioğlu
+     * @version 03.05.2021
+     */
     class CustomAdaptor extends BaseAdapter {
+        /**
+         * Getter method for employee count of a company
+         * @return how many employees a company has
+         */
         @Override public int getCount() {
             return employees.size();
         }
@@ -76,6 +85,14 @@ public class EmployeesActivity extends AppCompatActivity {
         @Override public long getItemId( int position) {
             return 0;
         }
+
+        /**
+         * Getter method for the view of an employee card
+         * @param position position of the employee in the employees array list of company
+         * @param convertView
+         * @param parent
+         * @return view of the employee card
+         */
         @Override public View getView( final int position, View convertView, ViewGroup parent) {
             // View view = getLayoutInflater().inflate( R.layout.list_item_employees, null);
             View view = null;
