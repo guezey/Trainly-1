@@ -639,8 +639,8 @@ public class Company extends User {
                                         int economyWagonNo;
                                         double businessPrice;
                                         double economyPrice;
-                                        int currentX;
-                                        int currentY;
+                                        double currentX;
+                                        double currentY;
                                         Place currentLocation;
                                         ArrayList<Schedule> schedules;
                                         Schedule schedule;
@@ -671,24 +671,30 @@ public class Company extends User {
                                             if ( dataSnapshot.child( "trains").exists()) {
                                                 for ( DataSnapshot trainData : dataSnapshot.child( "trains").getChildren()) {
                                                     trainId = trainData.getKey();
-                                                    businessWagonNo = Integer.parseInt( trainData.child( trainId).child( BUSINESS_WAGON_NO).getValue( String.class));
-                                                    economyWagonNo = Integer.parseInt( trainData.child( trainId).child( ECONOMY_WAGON_NO).getValue( String.class));
-                                                    businessPrice = Double.parseDouble( trainData.child( trainId).child( BUSINESS_PRICE).getValue( String.class));
-                                                    economyPrice = Double.parseDouble( trainData.child( trainId).child( ECONOMY_PRICE).getValue( String.class));
-                                                    currentX = Integer.parseInt( trainData.child( trainId).child( CURRENT_LOCATION).child( "x").getValue( String.class));
-                                                    currentY = Integer.parseInt( trainData.child( trainId).child( CURRENT_LOCATION).child( "y").getValue( String.class));
+                                                    businessWagonNo = Integer.parseInt( trainData.child( BUSINESS_WAGON_NO).getValue( String.class));
+                                                    economyWagonNo = Integer.parseInt( trainData.child( ECONOMY_WAGON_NO).getValue( String.class));
+                                                    businessPrice = Double.parseDouble( trainData.child( BUSINESS_PRICE).getValue( String.class));
+                                                    economyPrice = Double.parseDouble( trainData.child( ECONOMY_PRICE).getValue( String.class));
+                                                    currentX = Double.parseDouble( trainData.child( CURRENT_LOCATION).child( "x").getValue( String.class));
+                                                    currentY = Double.parseDouble( trainData.child( CURRENT_LOCATION).child( "y").getValue( String.class));
                                                     currentLocation = new Place( "Train " + trainId, currentY, currentX);
 
                                                     train = new Train( THIS_COMPANY, currentLocation, businessWagonNo, economyWagonNo, businessPrice, economyPrice, trainId);
                                                     schedules = new ArrayList<>();
-                                                    for ( DataSnapshot scheduleData : dataSnapshot.child( trainId).child( SCHEDULES).getChildren()) {
+                                                    for ( DataSnapshot scheduleData : trainData.child( SCHEDULES).getChildren()) {
                                                         departureId = scheduleData.getKey();
-                                                        arrivalId = trainData.child( ESTIMATED_ARRIVAL).getValue( String.class);
-                                                        from = trainData.child( FROM).getValue( String.class);
-                                                        to = trainData.child( TO).getValue( String.class);
+                                                        arrivalId = scheduleData.child( ESTIMATED_ARRIVAL).getValue( String.class);
+                                                        from = scheduleData.child( FROM).getValue( String.class);
+                                                        to = scheduleData.child( TO).getValue( String.class);
 
                                                         departure = places.findByName( from);
+                                                        if ( departure == null) {
+                                                            departure = new Place( "Unknown", 0, 0);
+                                                        }
                                                         arrival = places.findByName( to);
+                                                        if ( arrival == null) {
+                                                            arrival = new Place( "Unknown", 0, 0);
+                                                        }
                                                         line = new Line( departure, arrival);
 
                                                         schedule = new Schedule( departureId, arrivalId, line, businessWagonNo, economyWagonNo, train);

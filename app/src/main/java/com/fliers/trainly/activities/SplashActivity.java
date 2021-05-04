@@ -18,9 +18,16 @@ import android.widget.TextView;
 import com.fliers.trainly.R;
 import com.fliers.trainly.models.Company;
 import com.fliers.trainly.models.Customer;
+import com.fliers.trainly.models.Line;
+import com.fliers.trainly.models.Place;
 import com.fliers.trainly.models.Places;
+import com.fliers.trainly.models.Schedule;
+import com.fliers.trainly.models.Ticket;
 import com.fliers.trainly.models.Tickets;
+import com.fliers.trainly.models.Train;
 import com.fliers.trainly.models.User;
+
+import java.util.Calendar;
 
 /**
  * Activity class directing user to home activity or welcome activity
@@ -128,10 +135,36 @@ public class SplashActivity extends AppCompatActivity {
 
                                                     // Code
                                                     if ( loginType == COMPANY_LOGIN) {
+                                                        // TODO: FOR DEBUG
+//                                                        Company thisCompany = (Company) currentUser;
+//
+//                                                        Train train = new Train( thisCompany, new Place( "Unknown", 0, 0), 1, 1, 20, 12, "001");
+//                                                        thisCompany.addTrain( train);
+//
+//                                                        Calendar now = Calendar.getInstance();
+//                                                        Line line = new Line( places.findByName( "Ankara"), places.findByName( "Izmir"));
+//                                                        Schedule schedule = new Schedule( now, now, line, train.getBusinessWagonNum(), train.getEconomyWagonNum(), train);
+//                                                        train.addSchedule( schedule);
+//
+//                                                        thisCompany.saveToServer( new User.ServerSyncListener() {
+//                                                            @Override
+//                                                            public void onSync( boolean isSynced) {
+//                                                                tickets.createTickets(schedule, new Tickets.ServerSyncListener() {
+//                                                                    @Override
+//                                                                    public void onSync( boolean isSynced) {
+//
+//                                                                    }
+//                                                                });
+//                                                            }
+//                                                        });
+
                                                         homeIntent = new Intent( getApplicationContext(), CompanyHomeActivity.class);
                                                     }
                                                     else {
                                                         homeIntent = new Intent( getApplicationContext(), CustomerHomeActivity.class);
+
+//                                                        startActivity( homeIntent);
+//                                                        finish();
                                                     }
 
                                                     startActivity( homeIntent);

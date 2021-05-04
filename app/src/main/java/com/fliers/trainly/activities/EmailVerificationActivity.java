@@ -17,6 +17,8 @@ import android.widget.Toast;
 import com.fliers.trainly.R;
 import com.fliers.trainly.models.Company;
 import com.fliers.trainly.models.Customer;
+import com.fliers.trainly.models.Place;
+import com.fliers.trainly.models.Places;
 import com.fliers.trainly.models.User;
 
 /**
@@ -50,6 +52,7 @@ public class EmailVerificationActivity extends AppCompatActivity {
         Button btContinue;
         TextView tvTitleEmailVerified;
         TextView tvDescriptionEmailVerified;
+        Places places;
 
         // Code
         layoutLoading = findViewById( R.id.layoutLoadingV);
@@ -79,55 +82,68 @@ public class EmailVerificationActivity extends AppCompatActivity {
                 currentUser = new Customer( getApplicationContext());
             }
 
-            currentUser.completeLogin( emailLink, new User.LoginListener() {
+            places = new Places( getApplicationContext());
+            places.update( new Places.ServerSyncListener() {
                 @Override
-                public void onLogin( boolean isLoggedIn) {
-                    // Variables
-                    String name;
-
-                    // Code
-                    if ( !isLoggedIn) {
-                        // Invalid link
-                        Toast.makeText( getApplicationContext(), "This link is no longer valid", Toast.LENGTH_SHORT).show();
+                public void onSync( boolean isSynced) {
+                    if ( !isSynced) {
+                        Toast.makeText( getApplicationContext(), "Trainly servers are unavailable at the moment", Toast.LENGTH_SHORT).show();
                     }
                     else {
-                        User.setCurrentUserInstance( currentUser);
+                        Places.setInstance( places);
 
-                        // Check if user has a new account
-                        if ( !currentUser.isNewAccount()) {
-                            name = currentUser.getName();
-                            // Get only first name
-                            if ( name.contains( " ")) {
-                                name = name.split( " ")[0];
-                            }
-                            tvTitleEmailVerified.setText( "Welcome " + name + "!");
-                            tvDescriptionEmailVerified.setText( "Everything is ready for you. You can continue to your account.");
-
-                            preferences.edit().putInt( LOGGED_IN_USER_TYPE, tempLoginType).apply();
-                        }
-
-                        btContinue.setOnClickListener( new View.OnClickListener() {
+                        currentUser.completeLogin( emailLink, new User.LoginListener() {
                             @Override
-                            public void onClick( View v) {
+                            public void onLogin( boolean isLoggedIn) {
                                 // Variables
-                                Intent continueIntent;
+                                String name;
 
                                 // Code
-                                if ( currentUser.isNewAccount()) {
-                                    continueIntent = new Intent( getApplicationContext(), RegisterActivity.class);
+                                if ( !isLoggedIn) {
+                                    // Invalid link
+                                    Toast.makeText( getApplicationContext(), "This link is no longer valid", Toast.LENGTH_SHORT).show();
                                 }
                                 else {
-                                    continueIntent = new Intent( getApplicationContext(), SplashActivity.class);
-                                }
+                                    User.setCurrentUserInstance( currentUser);
 
-                                startActivity( continueIntent);
-                                finish();
+                                    // Check if user has a new account
+                                    if ( !currentUser.isNewAccount()) {
+                                        name = currentUser.getName();
+                                        // Get only first name
+                                        if ( name.contains( " ")) {
+                                            name = name.split( " ")[0];
+                                        }
+                                        tvTitleEmailVerified.setText( "Welcome " + name + "!");
+                                        tvDescriptionEmailVerified.setText( "Everything is ready for you. You can continue to your account.");
+
+                                        preferences.edit().putInt( LOGGED_IN_USER_TYPE, tempLoginType).apply();
+                                    }
+
+                                    btContinue.setOnClickListener( new View.OnClickListener() {
+                                        @Override
+                                        public void onClick( View v) {
+                                            // Variables
+                                            Intent continueIntent;
+
+                                            // Code
+                                            if ( currentUser.isNewAccount()) {
+                                                continueIntent = new Intent( getApplicationContext(), RegisterActivity.class);
+                                            }
+                                            else {
+                                                continueIntent = new Intent( getApplicationContext(), SplashActivity.class);
+                                            }
+
+                                            startActivity( continueIntent);
+                                            finish();
+                                        }
+                                    });
+
+                                    // Hide loading layout
+                                    layoutLoading.animate().alpha( 0).setDuration( 250).setInterpolator( new DecelerateInterpolator()).start();
+                                    layoutEmailVerified.animate().alpha( 1).setDuration( 250).setInterpolator( new DecelerateInterpolator()).start();
+                                }
                             }
                         });
-
-                        // Hide loading layout
-                        layoutLoading.animate().alpha( 0).setDuration( 250).setInterpolator( new DecelerateInterpolator()).start();
-                        layoutEmailVerified.animate().alpha( 1).setDuration( 250).setInterpolator( new DecelerateInterpolator()).start();
                     }
                 }
             });
