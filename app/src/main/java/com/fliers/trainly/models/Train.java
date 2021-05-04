@@ -137,7 +137,6 @@ public class Train {
      * @author Ali Emir Güzey
      */
     public boolean isOnTrip() {
-        //TODO: update this
         Calendar c;
         c = Calendar.getInstance();
         if (getSchedule(c) != null)
