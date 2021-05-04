@@ -143,12 +143,7 @@ public class RegisterActivity extends AppCompatActivity {
                                         Intent continueIntent;
 
                                         // Code
-                                        if ( tempLoginType == COMPANY_LOGIN) {
-                                            continueIntent = new Intent( getApplicationContext(), CompanyHomeActivity.class);
-                                        }
-                                        else {
-                                            continueIntent = new Intent( getApplicationContext(), CustomerHomeActivity.class);
-                                        }
+                                        continueIntent = new Intent( getApplicationContext(), SplashActivity.class);
 
                                         startActivity( continueIntent);
                                         finish();

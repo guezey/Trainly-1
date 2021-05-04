@@ -160,7 +160,6 @@ public abstract class User {
      *                 be called when server sync is completed
      */
     protected void onLoginEmailVerified( LoginListener listener) {
-        Log.d( "APP_DEBUG", "OK-0");
         if ( isNewAccount) {
             // Register
 

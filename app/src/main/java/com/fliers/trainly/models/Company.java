@@ -221,21 +221,26 @@ public class Company extends User {
         FirebaseDatabase database;
         DatabaseReference reference;
         int sum;
+        int totalTicketNo;
 
         // Code
         ticketManager = new Tickets( context);
         tickets = ticketManager.getRecentlySoldTickets( this);
 
         sum = 0;
+        totalTicketNo = 0;
         for ( int count = 0; count < tickets.size(); count++) {
-            sum = sum + tickets.get( count).getStarRating();
+            if ( tickets.get( count).getStarRating() != 0) {
+                totalTicketNo++;
+                sum = sum + tickets.get( count).getStarRating();
+            }
         }
 
-        if ( tickets.size() == 0) {
+        if ( totalTicketNo == 0) {
             averagePoint = 0;
         }
         else {
-            averagePoint = (double) sum / tickets.size();
+            averagePoint = (double) sum / totalTicketNo;
         }
 
         // Save to server
@@ -593,11 +598,9 @@ public class Company extends User {
         final Company THIS_COMPANY = this;
 
         // Code
-        Log.d( "APP_DEBUG", "OK-1");
         super.getFromServer( new ServerSyncListener() {
             @Override
             public void onSync( boolean isSynced) {
-                Log.d( "APP_DEBUG", "OK-2: " + isSynced);
                 if ( isSynced) {
                     // Variables
                     FirebaseDatabase database;
