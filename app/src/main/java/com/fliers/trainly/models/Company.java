@@ -1,6 +1,7 @@
 package com.fliers.trainly.models;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -254,22 +255,32 @@ public class Company extends User {
      */
     @Override
     protected void onLoginEmailVerified( LoginListener listener) {
-        createCompanyId( new IdCreateListener() {
-            @Override
-            public void onIdCreated( boolean isCreated) {
-                if ( isCreated) {
-                    Company.super.onLoginEmailVerified( new LoginListener() {
-                        @Override
-                        public void onLogin( boolean isLoggedIn) {
-                            listener.onLogin( isLoggedIn);
-                        }
-                    });
+        if ( isNewAccount) {
+            createCompanyId( new IdCreateListener() {
+                @Override
+                public void onIdCreated( boolean isCreated) {
+                    if ( isCreated) {
+                        Company.super.onLoginEmailVerified( new LoginListener() {
+                            @Override
+                            public void onLogin( boolean isLoggedIn) {
+                                listener.onLogin( isLoggedIn);
+                            }
+                        });
+                    }
+                    else {
+                        listener.onLogin( false);
+                    }
                 }
-                else {
-                    listener.onLogin( false);
+            });
+        }
+        else {
+            super.onLoginEmailVerified( new LoginListener() {
+                @Override
+                public void onLogin( boolean isLoggedIn) {
+                    listener.onLogin( isLoggedIn);
                 }
-            }
-        });
+            });
+        }
     }
 
     /**
@@ -582,9 +593,11 @@ public class Company extends User {
         final Company THIS_COMPANY = this;
 
         // Code
+        Log.d( "APP_DEBUG", "OK-1");
         super.getFromServer( new ServerSyncListener() {
             @Override
             public void onSync( boolean isSynced) {
+                Log.d( "APP_DEBUG", "OK-2: " + isSynced);
                 if ( isSynced) {
                     // Variables
                     FirebaseDatabase database;
@@ -648,60 +661,64 @@ public class Company extends User {
                                         if ( dataSnapshot.exists()) {
                                             places = Places.getInstance();
                                             companyData = (HashMap<String, Object>) dataSnapshot.getValue();
-                                            balance = Double.parseDouble( (String) companyData.get( COMPANY_ID));
+                                            balance = Double.parseDouble( (String) companyData.get( BALANCE));
 
                                             // Create trains with server data
                                             trains = new ArrayList<>();
-                                            for ( DataSnapshot trainData : dataSnapshot.child( "trains").getChildren()) {
-                                                trainId = trainData.getKey();
-                                                businessWagonNo = Integer.parseInt( trainData.child( trainId).child( BUSINESS_WAGON_NO).getValue( String.class));
-                                                economyWagonNo = Integer.parseInt( trainData.child( trainId).child( ECONOMY_WAGON_NO).getValue( String.class));
-                                                businessPrice = Double.parseDouble( trainData.child( trainId).child( BUSINESS_PRICE).getValue( String.class));
-                                                economyPrice = Double.parseDouble( trainData.child( trainId).child( ECONOMY_PRICE).getValue( String.class));
-                                                currentX = Integer.parseInt( trainData.child( trainId).child( CURRENT_LOCATION).child( "x").getValue( String.class));
-                                                currentY = Integer.parseInt( trainData.child( trainId).child( CURRENT_LOCATION).child( "y").getValue( String.class));
-                                                currentLocation = new Place( "Train " + trainId, currentY, currentX);
+                                            if ( dataSnapshot.child( "trains").exists()) {
+                                                for ( DataSnapshot trainData : dataSnapshot.child( "trains").getChildren()) {
+                                                    trainId = trainData.getKey();
+                                                    businessWagonNo = Integer.parseInt( trainData.child( trainId).child( BUSINESS_WAGON_NO).getValue( String.class));
+                                                    economyWagonNo = Integer.parseInt( trainData.child( trainId).child( ECONOMY_WAGON_NO).getValue( String.class));
+                                                    businessPrice = Double.parseDouble( trainData.child( trainId).child( BUSINESS_PRICE).getValue( String.class));
+                                                    economyPrice = Double.parseDouble( trainData.child( trainId).child( ECONOMY_PRICE).getValue( String.class));
+                                                    currentX = Integer.parseInt( trainData.child( trainId).child( CURRENT_LOCATION).child( "x").getValue( String.class));
+                                                    currentY = Integer.parseInt( trainData.child( trainId).child( CURRENT_LOCATION).child( "y").getValue( String.class));
+                                                    currentLocation = new Place( "Train " + trainId, currentY, currentX);
 
-                                                train = new Train( THIS_COMPANY, currentLocation, businessWagonNo, economyWagonNo, businessPrice, economyPrice, trainId);
-                                                schedules = new ArrayList<>();
-                                                for ( DataSnapshot scheduleData : dataSnapshot.child( trainId).child( SCHEDULES).getChildren()) {
-                                                    departureId = scheduleData.getKey();
-                                                    arrivalId = trainData.child( ESTIMATED_ARRIVAL).getValue( String.class);
-                                                    from = trainData.child( FROM).getValue( String.class);
-                                                    to = trainData.child( TO).getValue( String.class);
+                                                    train = new Train( THIS_COMPANY, currentLocation, businessWagonNo, economyWagonNo, businessPrice, economyPrice, trainId);
+                                                    schedules = new ArrayList<>();
+                                                    for ( DataSnapshot scheduleData : dataSnapshot.child( trainId).child( SCHEDULES).getChildren()) {
+                                                        departureId = scheduleData.getKey();
+                                                        arrivalId = trainData.child( ESTIMATED_ARRIVAL).getValue( String.class);
+                                                        from = trainData.child( FROM).getValue( String.class);
+                                                        to = trainData.child( TO).getValue( String.class);
 
-                                                    departure = places.findByName( from);
-                                                    arrival = places.findByName( to);
-                                                    line = new Line( departure, arrival);
+                                                        departure = places.findByName( from);
+                                                        arrival = places.findByName( to);
+                                                        line = new Line( departure, arrival);
 
-                                                    schedule = new Schedule( departureId, arrivalId, line, businessWagonNo, economyWagonNo, train);
-                                                    train.addSchedule( schedule);
-                                                    schedules.add( schedule);
+                                                        schedule = new Schedule( departureId, arrivalId, line, businessWagonNo, economyWagonNo, train);
+                                                        train.addSchedule( schedule);
+                                                        schedules.add( schedule);
+                                                    }
+                                                    trains.add( train);
                                                 }
-                                                trains.add( train);
                                             }
 
                                             // Create employees with server data
                                             employees = new ArrayList<>();
-                                            for ( DataSnapshot employeeData : dataSnapshot.child( "employees").getChildren()) {
-                                                employeeName = employeeData.getKey();
-                                                employeeLinkedId = employeeData.getValue( String.class);
+                                            if ( dataSnapshot.child( "employees").exists()) {
+                                                for ( DataSnapshot employeeData : dataSnapshot.child( "employees").getChildren()) {
+                                                    employeeName = employeeData.getKey();
+                                                    employeeLinkedId = employeeData.getValue( String.class);
 
-                                                // Find linked train of the employee
-                                                islinkedTrainFound = false;
-                                                for ( Train linkedTrain : trains) {
-                                                    if ( linkedTrain.getId().equals( employeeLinkedId)) {
-                                                        employee = new Employee( employeeName, linkedTrain);
-                                                        employees.add( employee);
+                                                    // Find linked train of the employee
+                                                    islinkedTrainFound = false;
+                                                    for ( Train linkedTrain : trains) {
+                                                        if ( linkedTrain.getId().equals( employeeLinkedId)) {
+                                                            employee = new Employee( employeeName, linkedTrain);
+                                                            employees.add( employee);
 
-                                                        islinkedTrainFound = true;
-                                                        break;
+                                                            islinkedTrainFound = true;
+                                                            break;
+                                                        }
                                                     }
-                                                }
 
-                                                if ( !islinkedTrainFound) {
-                                                    employee = new Employee( employeeName, null);
-                                                    employees.add( employee);
+                                                    if ( !islinkedTrainFound) {
+                                                        employee = new Employee( employeeName, null);
+                                                        employees.add( employee);
+                                                    }
                                                 }
                                             }
 
@@ -709,15 +726,17 @@ public class Company extends User {
 
                                             // Create lines  with server data
                                             lines = new ArrayList<>();
-                                            for ( DataSnapshot ticketData : dataSnapshot.child( "lines").getChildren()) {
-                                                lineDeparture = ticketData.child( DEPARTURE).getValue( String.class);
-                                                lineArrival = ticketData.child( ARRIVAL).getValue( String.class);
+                                            if ( dataSnapshot.child( "lines").exists()) {
+                                                for ( DataSnapshot ticketData : dataSnapshot.child( "lines").getChildren()) {
+                                                    lineDeparture = ticketData.child( DEPARTURE).getValue( String.class);
+                                                    lineArrival = ticketData.child( ARRIVAL).getValue( String.class);
 
-                                                arrival = places.findByName( lineArrival);
-                                                departure = places.findByName( lineDeparture);
+                                                    arrival = places.findByName( lineArrival);
+                                                    departure = places.findByName( lineDeparture);
 
-                                                line = new Line( departure, arrival);
-                                                lines.add( line);
+                                                    line = new Line( departure, arrival);
+                                                    lines.add( line);
+                                                }
                                             }
 
                                             listener.onSync( true);
