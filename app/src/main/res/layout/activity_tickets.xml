@@ -76,33 +76,15 @@
 
         <ListView
             android:id="@+id/listTickets"
-            android:layout_width="365dp"
-            android:layout_height="465dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/buttonSearch"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvTicketFilter" />
-
-        <Button
-            android:id="@+id/buttonSearch"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:alpha="0.8"
-            android:background="@drawable/button_orange"
-            android:text="Choose a ticket for me"
-            android:textAllCaps="false"
-            android:textSize="18dp"
-            android:textStyle="bold"
-            app:backgroundTint="@color/orange700"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -450,10 +450,10 @@ s     * @param db SQL Database
                 + COMPANY_ID + " = " + company.getCompanyId() + " AND "
                 + TRAIN_ID + " = " + train.getId() + " AND "
                 + DEPARTURE_TIME + " = " + departureTime + " AND "
-                + DEPARTURE + " = " + from.getName() + " AND "
-                + ARRIVAL + " = " + to.getName() + " AND "
+                + DEPARTURE + " = '" + from.getName() + "' AND "
+                + ARRIVAL + " = '" + to.getName() + "' AND "
                 + WAGON_NO + " = " + wagon.getWagonNumber() + " AND "
-                + SEAT_NO + " = " + seat.getSeatNumber() + ";", null);
+                + SEAT_NO + " = '" + seat.getSeatNumber() + "';", null);
 
         return data;
     }
@@ -579,35 +579,6 @@ s     * @param db SQL Database
     }
 
     /**
-     * Sends query to get a list of tickets available to buy
-     * @param departure departure place
-     * @param arrival arrival place
-     * @param departureTime departure time
-     * @return list of tickets
-     */
-    public ArrayList<Ticket> getQueriedTickets( Place departure, Place arrival, Calendar departureTime) {
-        // Variables
-        SQLiteDatabase db;
-        Cursor data;
-        long departureTimeStart;
-        long departureTimeEnd;
-        Calendar calendarStart;
-        Calendar calendarEnd;
-
-        // Code
-        calendarEnd = departureTime;
-        departureTimeEnd = getLongFromCalendar( calendarEnd);
-
-        calendarStart = calendarEnd;
-        calendarStart.add( Calendar.DAY_OF_MONTH, 1);
-        departureTimeStart = getLongFromCalendar( calendarStart);
-
-        db = this.getWritableDatabase();
-        data = db.rawQuery( "SELECT * FROM " + TABLE_NAME + " WHERE " + DEPARTURE + " = '" + departure.getName() + "' AND " + ARRIVAL + " = '" + arrival.getName() + "' AND " + DEPARTURE_TIME + " >= " + departureTimeStart + " AND " + DEPARTURE_TIME + " <= " + departureTimeEnd + " AND " + OWNER + " = '" + NULL +"' ORDER BY " + DEPARTURE_TIME + " ASC;", null);
-        return dataToArrayList( data);
-    }
-
-    /**
      * Sends query to get a list of tickets available to buy for different schedules
      * @param departure departure place
      * @param arrival arrival place
@@ -632,7 +603,9 @@ s     * @param db SQL Database
         departureTimeStart = getLongFromCalendar( calendarStart);
 
         db = this.getWritableDatabase();
-        data = db.rawQuery( "SELECT DISTINCT ON " + COMPANY_ID + ", " + TRAIN_ID + ", " + DEPARTURE_TIME + " * FROM " + TABLE_NAME + " WHERE " + DEPARTURE + " = '" + departure.getName() + "' AND " + ARRIVAL + " = '" + arrival.getName() + "' AND " + DEPARTURE_TIME + " >= " + departureTimeStart + " AND " + DEPARTURE_TIME + " <= " + departureTimeEnd + " AND " + OWNER + " = '" + NULL +"' ORDER BY " + DEPARTURE_TIME + " ASC;", null);
+        // data = db.rawQuery( "SELECT DISTINCT ON " + COMPANY_ID + ", " + TRAIN_ID + ", " + DEPARTURE_TIME + " * FROM " + TABLE_NAME + " WHERE " + DEPARTURE + " = '" + departure.getName() + "' AND " + ARRIVAL + " = '" + arrival.getName() + "' AND " + DEPARTURE_TIME + " >= " + departureTimeStart + " AND " + DEPARTURE_TIME + " <= " + departureTimeEnd + " AND " + OWNER + " = '" + NULL +"' ORDER BY " + DEPARTURE_TIME + " ASC;", null);
+        data = db.rawQuery( "SELECT * FROM " + TABLE_NAME + " WHERE " + DEPARTURE + " = '" + departure.getName() + "' AND " + ARRIVAL + " = '" + arrival.getName() + "' AND " + DEPARTURE_TIME + " <= " + departureTimeStart + " AND " + DEPARTURE_TIME + " >= " + departureTimeEnd + " AND " + OWNER + " = '" + NULL +"' GROUP BY "
+                + COMPANY_ID + ", " + TRAIN_ID + ", " + DEPARTURE_TIME + " ORDER BY " + DEPARTURE_TIME + " ASC;", null);
         return dataToArrayList( data);
     }
 

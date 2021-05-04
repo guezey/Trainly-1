@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +24,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.fliers.trainly.R;
 import com.fliers.trainly.models.Place;
 import com.fliers.trainly.models.Places;
+import com.fliers.trainly.models.Ticket;
+import com.fliers.trainly.models.Tickets;
 import com.fliers.trainly.models.User;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,6 +38,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.navigation.NavigationView;
 
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -91,6 +95,7 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
                 drawer.openDrawer( Gravity.LEFT);
             }
         });
+
 
         places = Places.getInstance();
 
