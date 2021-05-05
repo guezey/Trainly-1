@@ -46,6 +46,8 @@ public class TravelHistoryActivity extends AppCompatActivity {
         ImageView btBack = findViewById(R.id.btBack);
         Button saveButton = findViewById(R.id.button);
         currentUser = (Customer) Customer.getCurrentUserInstance();
+        Tickets ticketManager = new Tickets( getApplicationContext());
+        tickets = ticketManager.getBoughtTickets(currentUser);
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             /**
@@ -55,7 +57,7 @@ public class TravelHistoryActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if ( currentUser.isConnectedToInternet()) {
-                    currentUser.saveToServer(new User.ServerSyncListener() {
+                    ticketManager.saveFeedback( tickets, currentUser, new Tickets.ServerSyncListener() {
                         @Override
                         public void onSync(boolean isSynced) {
                             if ( isSynced)
@@ -81,8 +83,7 @@ public class TravelHistoryActivity extends AppCompatActivity {
             }
         });
 
-        Tickets ticketManager = new Tickets( getApplicationContext());
-        tickets = ticketManager.getBoughtTickets(currentUser);
+
 
         if ( tickets.size() == 0) {
             Toast.makeText( getApplicationContext(), "No tickets found", Toast.LENGTH_SHORT).show();
@@ -151,7 +152,7 @@ public class TravelHistoryActivity extends AppCompatActivity {
                             + schedule.getIdRepresentation(schedule.getDepartureDate()).substring(10));
             tvArrTime.setText( "Arrival:       " + schedule.getIdRepresentation(schedule.getArrivalDate()).substring(6,8) + "/"
                     + schedule.getIdRepresentation(schedule.getArrivalDate()).substring(4,6) + "/"
-                    + schedule.getIdRepresentation(schedule.getArrivalDate()).substring(0,3) + "   "
+                    + schedule.getIdRepresentation(schedule.getArrivalDate()).substring(0,4) + "   "
                     + schedule.getIdRepresentation(schedule.getArrivalDate()).substring(8,10) + ":"
                     + schedule.getIdRepresentation(schedule.getArrivalDate()).substring(10));
             tvWagonNo.setText( "Wagon no: " + String.valueOf(ticket.getSeat().getLinkedWagon().getWagonNumber()));

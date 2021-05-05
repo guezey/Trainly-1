@@ -53,7 +53,6 @@ public class Tickets extends SQLiteOpenHelper {
     private final String OWNER = "owner";
     private final String NULL = "null";
     private final String UNKNOWN = "unk";
-
     private final String ESTIMATED_ARRIVAL = "estimatedArrival";
     private final String FROM = "from";
     private final String TO = "to";

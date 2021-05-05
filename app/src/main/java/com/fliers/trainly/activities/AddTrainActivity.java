@@ -158,10 +158,10 @@ public class AddTrainActivity extends AppCompatActivity {
                 String idRoot = biggestId + "";
                 String addId = "";
                 for( int i = idRoot.length(); i < 3; i++) {
-                    addId += 0;
+                    idRoot.insert(0, "0");
                 }
-                addId += idRoot;
-                Train newTrain = new Train( currentUser, businessNum, economyNum, bPrice, ePrice, addId);
+                String id = String.valueOf(idRoot);
+                Train newTrain = new Train( currentUser, businessNum, economyNum, bPrice, ePrice, id);
                 currentUser.addTrain( newTrain);
 
                 add.setEnabled( false);

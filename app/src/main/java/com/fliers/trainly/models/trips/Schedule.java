@@ -151,7 +151,6 @@ public class Schedule implements Serializable {
         }
     }
 
-
     /**
      * Calculates String version of given date to be used in ids
      * @return date as string
