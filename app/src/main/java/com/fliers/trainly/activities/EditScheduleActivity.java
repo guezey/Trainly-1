@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
@@ -21,6 +22,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.fliers.trainly.R;
+import com.fliers.trainly.models.trips.Place;
 import com.fliers.trainly.models.users.Company;
 import com.fliers.trainly.models.users.Tickets;
 import com.fliers.trainly.models.trips.Train;
@@ -57,8 +59,7 @@ public class EditScheduleActivity extends AppCompatActivity {
         idText = findViewById( R.id.tvIdSchedule);
 
         // Get train from previous activity
-        Intent intent = getIntent();
-        currentTrain = ( Train ) intent.getExtras().get( "train" );
+        currentTrain = Train.getTempInstance();
         idText.setText( "Edit schedule information related to the train with the Id number " + currentTrain.getId() );
 
         Company currentUser = ( Company ) User.getCurrentUserInstance();
@@ -96,84 +97,98 @@ public class EditScheduleActivity extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick( View v ) {
-                // If there are areas unfilled send an error message
-                if ( dDateText.toString().equals( "Add date" ) || dTimeText.toString().equals( "Add time" ) ||
-                        aDateText.toString().equals( "Add date" ) || aTimeText.toString().equals( "Add time" ) ) {
-                    Toast.makeText( getApplicationContext(), "There are areas unfilled!", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    // If arrival is earlier than departure send an error message
-                    String sDDate = dDateText.toString();
-                    String sDTime = dTimeText.toString();
-                    Calendar departure = null;
-                    departure.set( Integer.parseInt( sDDate.substring( 6, 10 ) ), Integer.parseInt( sDDate.substring( 3, 5 ) ),
-                            Integer.parseInt( sDDate.substring( 0, 2 ) ), Integer.parseInt( sDTime.substring( 0, 2 ) ),
-                            Integer.parseInt( sDTime.substring( 3, 5 ) ) );
-
-                    String sADate = aDateText.toString();
-                    String sATime = aTimeText.toString();
-                    Calendar arrival = null;
-                    arrival.set( Integer.parseInt( sADate.substring( 6, 10 ) ), Integer.parseInt( sADate.substring( 3, 5 ) ),
-                            Integer.parseInt( sADate.substring( 0, 2 ) ), Integer.parseInt( sATime.substring( 0, 2 ) ),
-                            Integer.parseInt( sATime.substring( 3, 5 ) ) );
-
-                    if ( departure.compareTo( arrival ) > 0 ) {
-                        Toast.makeText( getApplicationContext(), "Departure should be earlier than arrival!", Toast.LENGTH_SHORT).show();
+                try {
+                    // If there are areas unfilled send an error message
+                    if ( dDateText.getText().toString().equals( "Add date" ) || dTimeText.getText().toString().equals( "Add time" ) ||
+                            aDateText.getText().toString().equals( "Add date" ) || aTimeText.getText().toString().equals( "Add time" ) ) {
+                        Toast.makeText( getApplicationContext(), "There are areas unfilled!", Toast.LENGTH_SHORT).show();
                     }
-                    // If there is no problem add the new schedule to the train
                     else {
-                        Schedule newSchedule = new Schedule( departure, arrival, ( Line ) lineSpinner.getSelectedItem(),
-                                currentTrain.getBusinessWagonNum(), currentTrain.getEconomyWagonNum(), currentTrain );
-                        currentTrain.addSchedule( newSchedule );
+                        // If arrival is earlier than departure send an error message
+                        String sDDate = dDateText.getText().toString();
+                        String sDTime = dTimeText.getText().toString();
+                        Calendar departure = Calendar.getInstance();
+                        departure.set( Integer.parseInt( sDDate.substring( 6, 10 ) ), Integer.parseInt( sDDate.substring( 3, 5 ) ),
+                                Integer.parseInt( sDDate.substring( 0, 2 ) ), Integer.parseInt( sDTime.substring( 0, 2 ) ),
+                                Integer.parseInt( sDTime.substring( 3, 5 ) ) );
 
-                        /**
-                         * Save schedule to server
-                         */
-                        currentUser.saveToServer( new User.ServerSyncListener() {
+                        String sADate = aDateText.getText().toString();
+                        String sATime = aTimeText.getText().toString();
+                        Calendar arrival = Calendar.getInstance();
+                        arrival.set( Integer.parseInt( sADate.substring( 6, 10 ) ), Integer.parseInt( sADate.substring( 3, 5 ) ),
+                                Integer.parseInt( sADate.substring( 0, 2 ) ), Integer.parseInt( sATime.substring( 0, 2 ) ),
+                                Integer.parseInt( sATime.substring( 3, 5 ) ) );
 
-                            @Override
-                            public void onSync(boolean isSynced) {
-                                if ( !isSynced ) {
-                                    Toast.makeText( getApplicationContext(), "Trainly servers are unavailable at the moment", Toast.LENGTH_SHORT).show();
-                                }
-                                else {
-                                    Toast.makeText( getApplicationContext(), "New schedule is saved", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-
-                        /**
-                         * Create and save tickets to server
-                         */
-                        Tickets ticketManager = new Tickets( getApplicationContext() );
-                        ticketManager.createTickets(newSchedule, new Tickets.ServerSyncListener() {
-                            @Override
-                            public void onSync(boolean isSynced) {
-                                if ( !isSynced ) {
-                                    Toast.makeText( getApplicationContext(), "Trainly servers are unavailable at the moment", Toast.LENGTH_SHORT).show();
-                                }
-                                else {
-                                    Toast.makeText( getApplicationContext(), "New tickets have been created", Toast.LENGTH_SHORT).show();
+                        if ( departure.compareTo( arrival ) > 0 ) {
+                            Toast.makeText( getApplicationContext(), "Departure should be earlier than arrival!", Toast.LENGTH_SHORT).show();
+                        }
+                        // If there is no problem add the new schedule to the train
+                        else {
+                            Place p = new Place( "Unknown", 0, 0);
+                            Line line = new Line( p, p);
+                            for( Line l : ((Company) currentUser).getLines()) {
+                                if ( l.toString().equals( lineSpinner.getSelectedItem().toString())) {
+                                    line = l;
+                                    break;
                                 }
                             }
-                        });
+
+                            Schedule newSchedule = new Schedule( departure, arrival, line,
+                                    currentTrain.getBusinessWagonNum(), currentTrain.getEconomyWagonNum(), currentTrain );
+                            currentTrain.addSchedule( newSchedule );
+
+                            /**
+                             * Save schedule to server
+                             */
+                            currentUser.saveToServer( new User.ServerSyncListener() {
+
+                                @Override
+                                public void onSync(boolean isSynced) {
+                                    if ( !isSynced ) {
+                                        Toast.makeText( getApplicationContext(), "Trainly servers are unavailable at the moment", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else {
+                                        Toast.makeText( getApplicationContext(), "New schedule is saved", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+
+                            /**
+                             * Create and save tickets to server
+                             */
+                            Tickets ticketManager = new Tickets( getApplicationContext() );
+                            ticketManager.createTickets(newSchedule, new Tickets.ServerSyncListener() {
+                                @Override
+                                public void onSync(boolean isSynced) {
+                                    if ( !isSynced ) {
+                                        Toast.makeText( getApplicationContext(), "Trainly servers are unavailable at the moment", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else {
+                                        Toast.makeText( getApplicationContext(), "New tickets have been created", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
 
 
+                        }
+                    }
+
+
+                    // List all the schedules the train has
+                    ListView listSchedules = findViewById( R.id.listSchedules );
+                    schedules = currentTrain.getSchedules();
+
+                    if ( schedules.size() == 0) {
+                        idText.setText("No schedules were found for the train with the Id number " + currentTrain.getId() );
+                        idText.setTextColor(Color.RED);
+                    }
+                    else {
+                        CustomAdaptor customAdaptor = new CustomAdaptor();
+                        listSchedules.setAdapter( customAdaptor );
                     }
                 }
-
-
-                // List all the schedules the train has
-                ListView listSchedules = findViewById( R.id.listSchedules );
-                schedules = currentTrain.getSchedules();
-
-                if ( schedules.size() == 0) {
-                    idText.setText("No schedules were found for the train with the Id number " + currentTrain.getId() );
-                    idText.setTextColor(Color.RED);
-                }
-                else {
-                    CustomAdaptor customAdaptor = new CustomAdaptor();
-                    listSchedules.setAdapter( customAdaptor );
+                catch ( Exception e) {
+                    Log.e( "APP_DEBUG", e.toString());
                 }
 
             }
@@ -184,8 +199,9 @@ public class EditScheduleActivity extends AppCompatActivity {
         backButton.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick( View v ) {
-                Intent intent = new Intent( getApplicationContext(), TrainsActivity.class);
-                startActivity( intent);
+//                Intent intent = new Intent( getApplicationContext(), TrainsActivity.class);
+//                startActivity( intent);
+                finish();
             }
         });
 
@@ -213,7 +229,17 @@ public class EditScheduleActivity extends AppCompatActivity {
                             public void onDateSet( DatePicker view, int year,
                                                    int monthOfYear, int dayOfMonth ) {
 
-                                dDateText.setText( dayOfMonth + "/" + (monthOfYear + 1) + "/" + year );
+                                String dayStr = String.valueOf( dayOfMonth);
+                                String monthStr = String.valueOf( monthOfYear + 1);
+
+                                if ( dayStr.length() == 1) {
+                                    dayStr = "0" + dayStr;
+                                }
+                                if ( monthStr.length() == 1) {
+                                    monthStr = "0" + monthStr;
+                                }
+
+                                dDateText.setText( dayStr + "/" + monthStr + "/" + year );
 
                             }
                         }, dYear, dMonth, dDay);
@@ -234,7 +260,17 @@ public class EditScheduleActivity extends AppCompatActivity {
 
                             @Override
                             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                                dTimeText.setText( selectedHour + ":" + selectedMinute);
+                                String hourStr = String.valueOf( selectedHour);
+                                String minStr = String.valueOf( selectedMinute);
+
+                                if ( hourStr.length() == 1) {
+                                    hourStr = "0" + hourStr;
+                                }
+                                if ( minStr.length() == 1) {
+                                    minStr = "0" + minStr;
+                                }
+
+                                dTimeText.setText( hourStr + ":" + minStr);
                             }
                         }, dHour, dMinute, true);//Yes 24 hour time
                 timePickerDialog.show();
@@ -259,7 +295,17 @@ public class EditScheduleActivity extends AppCompatActivity {
                             public void onDateSet( DatePicker view, int year,
                                                    int monthOfYear, int dayOfMonth ) {
 
-                                aDateText.setText( dayOfMonth + "/" + (monthOfYear + 1) + "/" + year );
+                                String dayStr = String.valueOf( dayOfMonth);
+                                String monthStr = String.valueOf( monthOfYear + 1);
+
+                                if ( dayStr.length() == 1) {
+                                    dayStr = "0" + dayStr;
+                                }
+                                if ( monthStr.length() == 1) {
+                                    monthStr = "0" + monthStr;
+                                }
+
+                                aDateText.setText( dayStr + "/" + monthStr + "/" + year );
 
                             }
                         }, aYear, aMonth, aDay);
@@ -280,7 +326,17 @@ public class EditScheduleActivity extends AppCompatActivity {
 
                             @Override
                             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                                aTimeText.setText( selectedHour + ":" + selectedMinute);
+                                String hourStr = String.valueOf( selectedHour);
+                                String minStr = String.valueOf( selectedMinute);
+
+                                if ( hourStr.length() == 1) {
+                                    hourStr = "0" + hourStr;
+                                }
+                                if ( minStr.length() == 1) {
+                                    minStr = "0" + minStr;
+                                }
+
+                                aTimeText.setText( hourStr + ":" + minStr);
                             }
                         }, aHour, aMinute, true);//Yes 24 hour time
                 timePickerDialog.show();
@@ -312,7 +368,7 @@ public class EditScheduleActivity extends AppCompatActivity {
          */
         @Override
         public int getCount() {
-            return currentTrain.getSchedules().size();
+            return schedules.size();
         }
 
         @Override
@@ -338,26 +394,24 @@ public class EditScheduleActivity extends AppCompatActivity {
             Schedule schedule = schedules.get(position);
 
             // Get title text view
-            TextView tvScheduleTitle = view.findViewById(R.id.tvScheduleTitle);
-
             Calendar dDate = schedule.getDepartureDate();
             Calendar aDate = schedule.getArrivalDate();
 
-            TextView dDateSchedule = findViewById(R.id.tvDepartureDateSchedule);
+            TextView dDateSchedule = view.findViewById(R.id.tvDepartureDateSchedule);
             dDateSchedule.setText(dDate.get(Calendar.DAY_OF_MONTH) +
                     "/" + dDate.get(Calendar.MONTH) + "/" + dDate.get(Calendar.YEAR));
 
-            TextView dTimeSchedule = findViewById(R.id.tvDepartureTimeSchedule);
+            TextView dTimeSchedule = view.findViewById(R.id.tvDepartureTimeSchedule);
             dTimeSchedule.setText(dDate.get(Calendar.HOUR_OF_DAY) + ":" + dDate.get(Calendar.MINUTE));
 
-            TextView aDateSchedule = findViewById(R.id.tvArrivalDateSchedule);
+            TextView aDateSchedule = view.findViewById(R.id.tvArrivalDateSchedule);
             aDateSchedule.setText(aDate.get(Calendar.DAY_OF_MONTH) +
                     "/" + aDate.get(Calendar.MONTH) + "/" + aDate.get(Calendar.YEAR));
 
-            TextView aTimeSchedule = findViewById(R.id.tvArrivalTimeSchedule);
+            TextView aTimeSchedule = view.findViewById(R.id.tvArrivalTimeSchedule);
             aTimeSchedule.setText(aDate.get(Calendar.HOUR_OF_DAY) + ":" + aDate.get(Calendar.MINUTE));
 
-            TextView lineSchedule = findViewById(R.id.tvLineSchedule);
+            TextView lineSchedule = view.findViewById(R.id.tvLineSchedule);
             lineSchedule.setText(schedule.getLine() + "");
 
             return view;

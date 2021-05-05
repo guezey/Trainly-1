@@ -14,6 +14,7 @@ import java.util.Calendar;
 
 public class Train {
 
+    private static Train tempInstance = null;
     private double businessPrice;
     private double economyPrice;
     private String id;
@@ -147,5 +148,14 @@ public class Train {
      */
     public ArrayList<Schedule> getSchedules() {
         return schedules;
+    }
+
+    public static Train getTempInstance() {
+        return tempInstance;
+
+    }
+
+    public static void setTempInstance( Train train) {
+        Train.tempInstance = train;
     }
 }
