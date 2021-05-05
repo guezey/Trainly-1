@@ -153,14 +153,19 @@ public class AddTrainActivity extends AppCompatActivity {
                         biggestId = Integer.parseInt(a.getId());
                     }
                 }
-                String idRoot = biggestId + "";
-                String addId = "";
+                StringBuilder idRoot = new StringBuilder((biggestId + 1) + "");
                 for( int i = idRoot.length(); i < 3; i++) {
-                    addId += 0;
+                    idRoot.insert(0, "0");
                 }
-                addId += idRoot;
-                Train newTrain = new Train( currentUser, businessNum, economyNum, bPrice, ePrice, addId);
+                String id = String.valueOf(idRoot);
+                Train newTrain = new Train( currentUser, businessNum, economyNum, bPrice, ePrice, id);
                 currentUser.addTrain( newTrain);
+                currentUser.saveToServer(new User.ServerSyncListener() {
+                    @Override
+                    public void onSync(boolean isSynced) {
+
+                    }
+                });
             }
         });
 
