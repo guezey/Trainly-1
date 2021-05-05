@@ -155,7 +155,7 @@ public class AddTrainActivity extends AppCompatActivity {
                     }
                 }
                 biggestId++;
-                String idRoot = biggestId + "";
+                StringBuilder idRoot = new StringBuilder( biggestId + "");
                 String addId = "";
                 for( int i = idRoot.length(); i < 3; i++) {
                     idRoot.insert(0, "0");
