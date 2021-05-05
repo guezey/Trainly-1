@@ -19,6 +19,7 @@ import com.fliers.trainly.R;
 import com.fliers.trainly.models.users.Company;
 
 import com.fliers.trainly.models.trips.Train;
+import com.fliers.trainly.models.users.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 /**
@@ -125,7 +126,13 @@ public class TrainsActivity extends AppCompatActivity {
                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            currentUser.removeTrain( train);
+                            currentUser.getTrains().remove(position);
+                            currentUser.saveToServer(new User.ServerSyncListener() {
+                                @Override
+                                public void onSync(boolean isSynced) {
+
+                                }
+                            });
                         }
                     });
                     builder.show();
