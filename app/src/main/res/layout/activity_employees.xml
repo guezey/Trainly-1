@@ -99,10 +99,16 @@
 
         <ListView
             android:id="@+id/listEmployees"
-            android:layout_width="278dp"
-            android:layout_height="528dp"
-            tools:layout_editor_absoluteX="32dp"
-            tools:layout_editor_absoluteY="47dp" />
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="4dp"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/textView16"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

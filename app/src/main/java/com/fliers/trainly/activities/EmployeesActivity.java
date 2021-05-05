@@ -106,10 +106,10 @@ public class EmployeesActivity extends AppCompatActivity {
             TextView tvEmployeeStatus = view.findViewById( R.id.tvEmployeeStatus );
             if ( employees.get( position ).getAssignedTrain().isOnTrip() ) {
                 tvEmployeeStatus.setText( "On duty" );
-                tvEmployeeStatus.setTextColor( Color.RED );
+                tvEmployeeStatus.setTextColor( getResources().getColor( R.color.red900) );
             } else {
                 tvEmployeeStatus.setText( "Available" );
-                tvEmployeeStatus.setTextColor( Color.GREEN );
+                tvEmployeeStatus.setTextColor( getResources().getColor( R.color.teal800) );
             }
 
             return view;
