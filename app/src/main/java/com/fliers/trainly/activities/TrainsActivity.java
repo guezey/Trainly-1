@@ -14,6 +14,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fliers.trainly.R;
 import com.fliers.trainly.models.users.Company;
@@ -30,6 +31,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 public class TrainsActivity extends AppCompatActivity {
 
     Company currentUser;
+    ListView lvTrains;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +39,7 @@ public class TrainsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_trains);
 
         TextView tvTitle = findViewById(R.id.tvTitle);
-        ListView lvTrains = findViewById(R.id.lvTrains);
+        lvTrains = findViewById(R.id.lvTrains);
         ImageView btBack = findViewById(R.id.imageView2);
         FloatingActionButton fabAdd = findViewById(R.id.fabAdd);
 
@@ -109,11 +111,11 @@ public class TrainsActivity extends AppCompatActivity {
 
             if (train.isOnTrip()) {
                 tvStatusValue.setText("On trip");
-                tvStatusValue.setTextColor(Color.RED);
+                tvStatusValue.setTextColor( getResources().getColor( R.color.red900));
             }
             else {
                 tvStatusValue.setText("Available");
-                tvStatusValue.setTextColor(Color.GREEN);
+                tvStatusValue.setTextColor( getResources().getColor( R.color.teal800));
             }
 
             view.setOnLongClickListener(new View.OnLongClickListener() {
@@ -126,11 +128,20 @@ public class TrainsActivity extends AppCompatActivity {
                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            currentUser.getTrains().remove(position);
-                            currentUser.saveToServer(new User.ServerSyncListener() {
-                                @Override
-                                public void onSync(boolean isSynced) {
+                            currentUser.removeTrain( train);
 
+                            currentUser.saveToServer( new User.ServerSyncListener() {
+                                @Override
+                                public void onSync( boolean isSynced) {
+                                    if ( isSynced) {
+                                        Toast.makeText( getApplicationContext(), "Train removed", Toast.LENGTH_SHORT).show();
+
+                                        TrainsActivity.CustomAdaptor customAdaptor = new TrainsActivity.CustomAdaptor();
+                                        lvTrains.setAdapter( customAdaptor);
+                                    }
+                                    else {
+                                        Toast.makeText( getApplicationContext(), "Trainly servers are unavailable at the moment", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             });
                         }
@@ -143,6 +154,7 @@ public class TrainsActivity extends AppCompatActivity {
             view.setOnClickListener( new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Train.setTempInstance( train);
                     goToEditSchedule();
                 }
             });

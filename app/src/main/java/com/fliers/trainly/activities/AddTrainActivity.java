@@ -6,6 +6,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -147,23 +148,34 @@ public class AddTrainActivity extends AppCompatActivity {
                 double bPrice = Double.parseDouble( businessPrice.getText().toString());
                 double ePrice = Double.parseDouble( economyPrice.getText().toString());
                 ArrayList<Train> currentTrains = currentUser.getTrains();
-                int biggestId = 0;
+                int biggestId = 1;
                 for( Train a : currentTrains) {
                     if( biggestId < Integer.parseInt(a.getId())) {
                         biggestId = Integer.parseInt(a.getId());
                     }
                 }
-                StringBuilder idRoot = new StringBuilder((biggestId + 1) + "");
+                biggestId++;
+                String idRoot = biggestId + "";
+                String addId = "";
                 for( int i = idRoot.length(); i < 3; i++) {
                     idRoot.insert(0, "0");
                 }
                 String id = String.valueOf(idRoot);
                 Train newTrain = new Train( currentUser, businessNum, economyNum, bPrice, ePrice, id);
                 currentUser.addTrain( newTrain);
-                currentUser.saveToServer(new User.ServerSyncListener() {
-                    @Override
-                    public void onSync(boolean isSynced) {
 
+                add.setEnabled( false);
+                currentUser.saveToServer( new User.ServerSyncListener() {
+                    @Override
+                    public void onSync( boolean isSynced) {
+                        if ( isSynced) {
+                            Toast.makeText( getApplicationContext(), "New train is saved", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                        else {
+                            Toast.makeText( getApplicationContext(), "Trainly servers are unavailable at the moment", Toast.LENGTH_SHORT).show();
+                            add.setEnabled( true);
+                        }
                     }
                 });
             }
